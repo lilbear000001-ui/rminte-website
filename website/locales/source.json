@@ -234,8 +234,8 @@
     ]
   },
   {
-    "zh": "应用模组",
-    "en": "Application module",
+    "zh": "Agent 与应用模组",
+    "en": "Agent and application module",
     "sources": [
       "assets/site-data.js.modules.0.name"
     ]
@@ -248,8 +248,8 @@
     ]
   },
   {
-    "zh": "独立 x86 模组承载你的应用、数据库与软件依赖，减少迁移适配工作，也减少应用对显存的占用。从开发到现场运行，已有软件可以少走一些弯路。",
-    "en": "A dedicated x86 module runs your applications, databases, and software dependencies, reducing migration work and application use of GPU memory. Your existing software has a shorter path from development to on-site operation.",
+    "zh": "独立的 x86 计算机，为 Agent 与应用提供专属的运行资源。工具调用、代码执行与数据库访问在应用侧完成，模型推理由推理模组承担。兼容广泛的 x86 软件生态，让已有工具与业务应用更容易接入 Agent 工作流。",
+    "en": "A separate x86 computer provides dedicated resources for agents and applications. It handles tool calls, code execution, and database access, while the inference module runs the models. Broad compatibility with the x86 software ecosystem makes it easier to bring existing tools and business applications into agent workflows.",
     "sources": [
       "assets/site-data.js.modules.0.text"
     ]
@@ -485,8 +485,8 @@
     ]
   },
   {
-    "zh": "RM-01 将模型推理与应用运行带到你的业务现场。硬件架构、推理引擎与系统共同支撑 Agent，让它从理解需求走向执行任务。",
-    "en": "RM-01 brings model inference and applications to your business site. Its architecture, inference engine, and operating system support agents as they move from understanding your needs to carrying out tasks.",
+    "zh": "RM-01 为模型推理与 Agent 应用运行提供各自独立的计算空间，让智能在你的业务现场持续行动、交付结果。",
+    "en": "RM-01 gives model inference and AI agent applications their own dedicated computing resources, so agents can keep working and delivering results on site.",
     "sources": [
       "assets/site-data.js.ui.heroLead"
     ]
