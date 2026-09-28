@@ -507,10 +507,10 @@ function pageTemplate(config, rendered) {
   <link rel="stylesheet" href="../assets/guides.css?v=table-header-1">
   <script id="guidePageData" type="application/json">${pageData}</script>
   <script src="../visitor-language.js" defer></script>
-  <script src="../assets/translations.js" defer></script>
+  <script src="../assets/translations.js?v=contact-discussions-20260911" defer></script>
   <script src="../assets/i18n.js" defer></script>
   <script src="../assets/guides.js?v=docs-20260907" defer></script>
-  <script src="../assets/site-data.js?v=models-launch-1" defer></script>
+  <script src="../assets/site-data.js?v=contact-discussions-20260911" defer></script>
   <script src="../assets/footer.js?v=models-launch-1" defer></script>
 </head>
 <body class="guide-body guide-doc-body guide-accent-${config.accent}">
@@ -605,6 +605,10 @@ ${languages.map(lang => renderLanguagePane(lang, rendered[lang], config)).join('
           <a href="mailto:support@rminte.com">
             <span data-footer-text="supportContact">售前与售后服务</span>
             <strong>support@rminte.com</strong><svg class="contact-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
+          </a>
+          <a href="https://github.com/orgs/RMinte-AI/discussions" target="_blank" rel="noopener noreferrer">
+            <span data-footer-text="communityContact">产品与技术交流</span>
+            <strong>GitHub Discussions</strong><svg class="contact-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
           </a>
         </div>
       </div>

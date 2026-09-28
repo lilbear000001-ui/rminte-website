@@ -32,7 +32,7 @@ window.RM_SOFT = {
     }
   ],
   modules: [
-    { name: { zh: '应用模组', en: 'Application module' }, spec: { zh: 'x86 / 8 核 8 线程 / 16GB–32GB ECC / 512GB–2TB NVMe', en: 'x86 / 8 cores, 8 threads / 16GB–32GB ECC / 512GB–2TB NVMe' }, text: { zh: '独立 x86 模组承载你的应用、数据库与软件依赖，减少迁移适配工作，也减少应用对显存的占用。从开发到现场运行，已有软件可以少走一些弯路。', en: 'A dedicated x86 module runs your applications, databases, and software dependencies, reducing migration work and application use of GPU memory. Your existing software has a shorter path from development to on-site operation.' }, icon: 'icon-application-module.svg' },
+    { name: { zh: 'Agent 与应用模组', en: 'Agent and application module' }, spec: { zh: 'x86 / 8 核 8 线程 / 16GB–32GB ECC / 512GB–2TB NVMe', en: 'x86 / 8 cores, 8 threads / 16GB–32GB ECC / 512GB–2TB NVMe' }, text: { zh: '独立的 x86 计算机，为 Agent 与应用提供专属的运行资源。工具调用、代码执行与数据库访问在应用侧完成，模型推理由推理模组承担。兼容广泛的 x86 软件生态，让已有工具与业务应用更容易接入 Agent 工作流。', en: 'A separate x86 computer provides dedicated resources for agents and applications. It handles tool calls, code execution, and database access, while the inference module runs the models. Broad compatibility with the x86 software ecosystem makes it easier to bring existing tools and business applications into agent workflows.' }, icon: 'icon-application-module.svg' },
     { name: { zh: '推理模组', en: 'Inference module' }, spec: '64GB / 128GB+128GB VRAM · 275 TOPS INT8 / 1200–2070 TFLOPS FP4', text: { zh: '自研推理引擎与高速互联线路提高推理效率。资源集中用于模型推理与 KV Cache，为更大模型、更长上下文与更高并发留出空间。', en: 'Our inference engine and high-speed interconnect improve inference efficiency. Resources focus on model inference and KV Cache, making room for larger models, longer contexts, and higher concurrency.' }, icon: 'icon-inference-module.svg' },
     { name: { zh: '加密模组', en: 'Encryption module' }, spec: 'TPM 2.0 / RSA / ECC', text: { zh: '你的后训练模型、RAG 知识库、业务数据与应用代码，都值得保护。独立安全模组隔离私钥，硬件级非对称密钥保护降低私钥导出与复制风险，为业务资产建立设备级安全边界。', en: 'Your post-trained models, RAG knowledge bases, business data, and application code deserve protection. A dedicated security module isolates private keys. Hardware-backed asymmetric key protection reduces the risk of key export and duplication, creating a device-level security boundary for your business assets.' }, icon: 'icon-encryption-module.svg' },
     { name: { zh: '网络模组', en: 'Network module' }, spec: { zh: '内部交换 / 路由 / 统一 API', en: 'Internal switching / routing / unified API' }, text: { zh: '调用本地 AI，也可以沿用熟悉的云服务接口体验。内部交换、路由与统一 API 连接各个模组，减少系统扩展与维护所需的改动。', en: 'Access local AI through a familiar cloud-service interface. Internal switching, routing, and unified APIs connect the modules, reducing the changes needed for system expansion and maintenance.' }, icon: 'icon-network-module.svg' },
@@ -69,7 +69,7 @@ window.RM_SOFT = {
       mobileMenu: '菜单',
       closeMenu: '关闭',
       heroTitle: 'RM-01\n让 AI 在本地，\n为你工作',
-      heroLead: 'RM-01 将模型推理与应用运行带到你的业务现场。硬件架构、推理引擎与系统共同支撑 Agent，让它从理解需求走向执行任务。',
+      heroLead: 'RM-01 为模型推理与 Agent 应用运行提供各自独立的计算空间，让智能在你的业务现场持续行动、交付结果。',
       explore: '继续探索',
       scroll: '继续向下',
       productTitle: 'TianshanOS 让整机协同有序',
@@ -128,7 +128,8 @@ window.RM_SOFT = {
       contactTitle: '联系我们',
       salesContact: '销售与渠道合作',
       manufacturingContact: '制造与供应链合作',
-      supportContact: '售前与售后服务'
+      supportContact: '售前与售后服务',
+      communityContact: '产品与技术交流'
     },
     en: {
       chapter0: 'PURPOSE-BUILT FOR MODEL INFERENCE AND AI APPLICATIONS',
@@ -146,7 +147,7 @@ window.RM_SOFT = {
       mobileMenu: 'Menu',
       closeMenu: 'Close',
       heroTitle: 'RM-01\nAI working for you, locally',
-      heroLead: 'RM-01 brings model inference and applications to your business site. Its architecture, inference engine, and operating system support agents as they move from understanding your needs to carrying out tasks.',
+      heroLead: 'RM-01 gives model inference and AI agent applications their own dedicated computing resources, so agents can keep working and delivering results on site.',
       explore: 'Keep exploring',
       scroll: 'Continue',
       productTitle: 'TianshanOS Bringing the system together',
@@ -205,7 +206,8 @@ window.RM_SOFT = {
       contactTitle: 'Contact us',
       salesContact: 'Sales & channel partnerships',
       manufacturingContact: 'Manufacturing & supply chain partnerships',
-      supportContact: 'Pre-sales & after-sales service'
+      supportContact: 'Pre-sales & after-sales service',
+      communityContact: 'Product & technical discussions'
     }
   }
 };

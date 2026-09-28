@@ -17,9 +17,9 @@
   "Delivering models, keys, and site parameters calls for a clear security boundary. Config packs support ECDH, AES-256-GCM, and ECDSA signatures, providing encryption and signatures for delivery.": "La livraison de modèles, de clés et de paramètres de site exige un périmètre de sécurité clair. Les paquets de configuration prennent en charge ECDH, AES-256-GCM et les signatures ECDSA pour chiffrer et signer les éléments transmis.",
   "OTA and automation": "OTA et automatisation",
   "Update your device through HTTPS or an SD card, with automatic rollback if an update fails. Manage it through WebUI, CLI, or API. The rule engine handles repeat operations, reducing manual work in day-to-day maintenance.": "Mettez l’appareil à jour par HTTPS ou carte SD, avec retour automatique à la version précédente en cas d’échec. Administrez-le par WebUI, CLI ou API. Le moteur de règles prend en charge les opérations répétées et réduit les interventions manuelles au quotidien.",
-  "Application module": "Module applicatif",
+  "Agent and application module": "Module agents et applications",
   "x86 / 8 cores, 8 threads / 16GB–32GB ECC / 512GB–2TB NVMe": "x86 / 8 cœurs, 8 threads / 16GB–32GB ECC / 512GB–2TB NVMe",
-  "A dedicated x86 module runs your applications, databases, and software dependencies, reducing migration work and application use of GPU memory. Your existing software has a shorter path from development to on-site operation.": "Un module x86 dédié exécute vos applications, bases de données et dépendances logicielles. Il réduit le travail de migration et l’utilisation de la mémoire GPU par les applications. Vos logiciels existants passent plus simplement du développement à l’exploitation sur site.",
+  "A separate x86 computer provides dedicated resources for agents and applications. It handles tool calls, code execution, and database access, while the inference module runs the models. Broad compatibility with the x86 software ecosystem makes it easier to bring existing tools and business applications into agent workflows.": "Un ordinateur x86 indépendant fournit des ressources dédiées aux agents et aux applications. Il prend en charge les appels d’outils, l’exécution de code et l’accès aux bases de données, tandis que le module d’inférence exécute les modèles. Sa large compatibilité avec l’écosystème logiciel x86 facilite l’intégration des outils et applications métier existants aux flux de travail des agents.",
   "Inference module": "Module d’inférence",
   "Our inference engine and high-speed interconnect improve inference efficiency. Resources focus on model inference and KV Cache, making room for larger models, longer contexts, and higher concurrency.": "Notre moteur d’inférence et l’interconnexion à haut débit améliorent l’efficacité de l’inférence. Les ressources se concentrent sur le modèle et le cache KV, laissant de la place à des modèles plus grands, des contextes plus longs et davantage de requêtes simultanées.",
   "Encryption module": "Module de chiffrement",
@@ -51,7 +51,7 @@
   "Menu": "Menu",
   "Close": "Fermer",
   "RM-01\nAI working for you, locally": "RM-01\nL’IA à votre service, sur place",
-  "RM-01 brings model inference and applications to your business site. Its architecture, inference engine, and operating system support agents as they move from understanding your needs to carrying out tasks.": "RM-01 installe l’inférence et les applications sur votre site d’activité. Son architecture, son moteur d’inférence et son système d’exploitation accompagnent les agents, de la compréhension de vos besoins à l’exécution des tâches.",
+  "RM-01 gives model inference and AI agent applications their own dedicated computing resources, so agents can keep working and delivering results on site.": "RM-01 fournit des ressources de calcul distinctes à l’inférence des modèles et à l’exécution des applications d’agents IA, pour permettre aux agents de travailler dans la durée et de produire des résultats sur votre site.",
   "Keep exploring": "Poursuivre l’exploration",
   "Continue": "Continuer",
   "TianshanOS Bringing the system together": "TianshanOS, un système qui agit de concert",
@@ -482,5 +482,10 @@
   "© 2026 RMinte (Chengdu) Artificial Intelligence Technology Co., Ltd. · RM-01 Portable AI Supercomputer": "© 2026 RMinte ( Chengdu ) Artificial Intelligence Technology Co., Ltd. · Supercalculateur IA portable RM-01",
   "RMinte Inference": "Moteur d’inférence RMinte",
   "Paged KV Cache": "Cache KV paginé",
-  "RMinte C++ Runtime": "Environnement d’exécution C++ de RMinte"
+  "RMinte C++ Runtime": "Environnement d’exécution C++ de RMinte",
+  "RM-01 Hardware Security (Chinese)": "RM-01 Sécurité matérielle (chinois)",
+  "Hardware security and supporting management functions · Chinese · 11 pages · PDF · 350 KB · 2026-09-11": "Sécurité matérielle et fonctions de gestion associées · Chinois · 11 pages · PDF · 350 Ko · 2026-09-11",
+  "RM-01 Hardware Security (English)": "RM-01 Sécurité matérielle (anglais)",
+  "Hardware security and supporting management functions · English · 13 pages · PDF · 93 KB · 2026-09-11": "Sécurité matérielle et fonctions de gestion associées · Anglais · 13 pages · PDF · 93 Ko · 2026-09-11",
+  "Product & technical discussions": "Échanges sur les produits et les questions techniques"
 }
