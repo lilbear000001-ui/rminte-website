@@ -20,6 +20,7 @@
   <meta name="theme-color" content="#000000">
   <script src="visitor-language.js" defer></script>
   <script src="assets/translations.js?v=agent-module-20260923" defer></script>
+  <script src="assets/demo-copy.js" defer></script>
   <script src="assets/i18n.js" defer></script>
   <script>
     (function () {
@@ -36,9 +37,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/brand.css?v=product-black-1">
   <link rel="stylesheet" href="assets/styles.css?v=craft-footer-1">
+  <link rel="stylesheet" href="assets/tianshanos-demo-modal.css">
   <script src="assets/site-data.js?v=agent-module-20260923" defer></script>
   <script src="assets/home-architecture.js?v=architecture-610b2b5" defer></script>
   <script src="assets/main.js?v=craft-footer-1" defer></script>
+  <script src="assets/tianshanos-demo-modal.js" defer></script>
   <script src="assets/footer.js?v=models-launch-1" defer></script>
 </head>
 <body class="home-body">
@@ -120,6 +123,7 @@
           <p class="chapter-label" data-ui="chapter2">整机协同</p>
           <h2 id="productTitle" data-ui="productTitle" data-title-size="large">TianshanOS 让整机协同有序</h2>
           <p data-ui="productLead">一台设备的运行，离不开内部各个部分的配合。TianshanOS 管理 RM-01 的内部设备与系统行为，让推理、应用与存储共同工作。无需专门建设供电、网络与机房环境，RM-01 就能走进业务现场。</p>
+          <button class="cta-button system-demo-action" type="button" aria-haspopup="dialog" aria-controls="tsDemoModal" data-demo-open><span data-ui="systemDemoAction">查看界面演示</span><svg class="cta-dot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button>
         </div>
         <figure class="network-graph" id="networkGraph" aria-label="两台计算机分别经以太网控制器和 PHY 接入板载交换机，ESP32 经 W5500 接入并拥有配置存储；两台计算机各有独立存储。" data-i18n-aria-label-zh="两台计算机分别经以太网控制器和 PHY 接入板载交换机，ESP32 经 W5500 接入并拥有配置存储；两台计算机各有独立存储。" data-i18n-aria-label-en="Both computers connect to the onboard switch through Ethernet controllers and PHYs. ESP32 connects through W5500 and has configuration storage. Each computer has its own storage."></figure>
         <div class="system-reading" id="systemReading"></div>
@@ -325,6 +329,20 @@
     </section>
 
   </main>
+
+  <div class="demo-modal" id="tsDemoModal" role="dialog" aria-modal="true" aria-labelledby="tsDemoTitle" aria-hidden="true" data-demo-modal>
+    <div class="demo-modal-panel">
+      <div class="demo-modal-head">
+        <h2 id="tsDemoTitle" data-i18n-text data-zh="TianshanOS 界面演示" data-en="TianshanOS interface demo">TianshanOS 界面演示</h2>
+        <button class="demo-modal-close" type="button" aria-label="关闭演示" data-i18n-aria-label-zh="关闭演示" data-i18n-aria-label-en="Close demo" data-demo-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <div class="demo-modal-content">
+        <p class="demo-modal-note" data-i18n-text data-zh="以下为 TianshanOS 界面演示，数据仅供展示，不代表真实设备状态。" data-en="This is a TianshanOS interface demo. All data is illustrative and does not represent a real device.">以下为 TianshanOS 界面演示，数据仅供展示，不代表真实设备状态。</p>
+        <iframe id="ts-demo" data-src="/tianshanos-demo/index.html" title="天山OS 界面预览" data-i18n-title-zh="天山OS 界面预览" data-i18n-title-en="TianshanOS interface preview"></iframe>
+        <p class="demo-mobile-message" data-i18n-text data-zh="请用电脑查看完整演示。" data-en="Please use a computer to view the full demo.">请用电脑查看完整演示。</p>
+      </div>
+    </div>
+  </div>
 
   <aside class="contact-popover" id="contactPopover" role="dialog" aria-labelledby="contactTitle" aria-hidden="true" data-contact-popover>
     <div class="contact-card">

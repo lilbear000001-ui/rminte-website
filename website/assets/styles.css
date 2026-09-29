@@ -3546,7 +3546,8 @@ html:is(:lang(ja),:lang(ko),:lang(es),:lang(fr)) .home-body .memory-grid,html:is
 .home-body .system-heading{grid-area:heading;max-width:100%;margin:0}
 .home-body .system-heading h2{font-size:clamp(32px,2.8vw,43px);line-height:1.18;letter-spacing:-.03em;text-wrap:balance}
 .home-body #productTitle>.rm-mark{display:block;margin-bottom:10px}
-.home-body .system-heading>p:last-child{font-size:14px;line-height:1.75;margin:20px 0 0;max-width:none;color:var(--muted)}
+.home-body .system-heading>p[data-ui="productLead"]{font-size:14px;line-height:1.75;margin:20px 0 0;max-width:none;color:var(--muted)}
+.home-body .system-demo-action{margin-top:28px;border:0;cursor:pointer}
 .home-body .system-reading{grid-area:reading;min-width:0;margin:0}
 .home-body .system-tabs{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
 .home-body .system-tabs button{position:relative;border:0;border-bottom:1px solid var(--line);padding:12px 0;background:transparent;color:var(--dim);text-align:left;font:500 15px/1.4 var(--font-ui);cursor:pointer;transition:color 220ms ease;letter-spacing:-.01em}
