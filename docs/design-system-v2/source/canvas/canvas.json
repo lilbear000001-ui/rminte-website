@@ -1,0 +1,172 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Hardware.dc.html": {
+      "h": 1130,
+      "title": "05 硬件模块 · 优化稿",
+      "w": 1440,
+      "x": 1520,
+      "y": 4700
+    },
+    "Hero.dc.html": {
+      "h": 900,
+      "title": "04 首屏 · 优化稿",
+      "w": 1440,
+      "x": 0,
+      "y": 4700
+    },
+    "Main.dc.html": {
+      "h": 2480,
+      "title": "01 现状风格总结",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "Mobile.dc.html": {
+      "h": 844,
+      "title": "06 手机首屏 · 优化稿",
+      "w": 390,
+      "x": 3040,
+      "y": 4700
+    },
+    "Review.dc.html": {
+      "h": 4220,
+      "title": "02 诊断、评分与决定",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "Spec.dc.html": {
+      "h": 3290,
+      "title": "03 设计规范 v2（提案）",
+      "w": 1440,
+      "x": 3040,
+      "y": 0
+    },
+    "Pages.dc.html": {
+      "h": 1810,
+      "title": "07 子页面诊断与规则",
+      "w": 1440,
+      "x": 0,
+      "y": 6300
+    },
+    "Gallery.dc.html": {
+      "h": 900,
+      "title": "09 图册 · 优化稿",
+      "w": 1440,
+      "x": 1520,
+      "y": 6300
+    },
+    "Models.dc.html": {
+      "h": 1240,
+      "title": "10 模型页 · 优化稿",
+      "w": 1440,
+      "x": 3040,
+      "y": 6300
+    },
+    "Downloads.dc.html": {
+      "h": 990,
+      "title": "11 下载中心 · 优化稿",
+      "w": 1440,
+      "x": 1520,
+      "y": 8200
+    },
+    "Guides.dc.html": {
+      "h": 1410,
+      "title": "12 指南入口 · 优化稿",
+      "w": 1440,
+      "x": 3040,
+      "y": 8200
+    },
+    "Signature.dc.html": {
+      "h": 2100,
+      "title": "08 标志性设计语言",
+      "w": 1440,
+      "x": 0,
+      "y": 8200
+    },
+    "GuideDoc.dc.html": {
+      "h": 1320,
+      "title": "13 指南正文 · 优化稿",
+      "w": 1440,
+      "x": 0,
+      "y": 10380
+    },
+    "BgCompare.dc.html": {
+      "h": 940,
+      "title": "14 底色对比（D6）",
+      "w": 1440,
+      "x": 1520,
+      "y": 10380
+    },
+    "GuideMobile.dc.html": {
+      "h": 1100,
+      "title": "15 指南正文 · 手机",
+      "w": 390,
+      "x": 3040,
+      "y": 10380
+    },
+    "GuideDocB.dc.html": {
+      "h": 2910,
+      "title": "16 指南正文 · 续（第 2–3 章）",
+      "w": 1440,
+      "x": 0,
+      "y": 11780
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-02T21:20:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "t1": {
+      "kind": "title1",
+      "maxW": 4480,
+      "text": "现状 → 诊断 → 规范（提案）",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "t2": {
+      "kind": "title1",
+      "maxW": 4480,
+      "text": "落地稿（尚未改动生产代码，待你确认后再实施）",
+      "w": 240,
+      "x": 0,
+      "y": 4440
+    },
+    "t3": {
+      "kind": "title1",
+      "maxW": 4480,
+      "text": "子页面：规则 · 标志性语言 · 图册 · 模型 · 下载 · 指南 · 底色对比",
+      "w": 240,
+      "x": 0,
+      "y": 6040
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Review.dc.html",
+    "Spec.dc.html",
+    "Hero.dc.html",
+    "Hardware.dc.html",
+    "Mobile.dc.html",
+    "Pages.dc.html",
+    "Signature.dc.html",
+    "Gallery.dc.html",
+    "Models.dc.html",
+    "Downloads.dc.html",
+    "Guides.dc.html",
+    "GuideDoc.dc.html",
+    "BgCompare.dc.html",
+    "GuideMobile.dc.html",
+    "GuideDocB.dc.html"
+  ],
+  "pages": [],
+  "title": "RMinte 官网设计方案"
+}

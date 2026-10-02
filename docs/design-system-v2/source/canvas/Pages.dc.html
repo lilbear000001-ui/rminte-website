@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>子页面诊断与规则</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+body{margin:0;background:#000}
+.r{width:1440px;box-sizing:border-box;background:#000;color:#F2F4F6;font-family:"Geist","Noto Sans SC",sans-serif;-webkit-font-smoothing:antialiased;padding:96px;display:flex;flex-direction:column;gap:72px}
+.r h1,.r h2,.r h3,.r p{margin:0}
+.k{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#858C95}
+.sec{display:flex;flex-direction:column;gap:28px}
+.hd{display:flex;align-items:baseline;gap:20px;border-top:1px solid rgba(255,255,255,.14);padding-top:24px}
+.hd h2{font-size:28px;font-weight:500;letter-spacing:-.02em}
+.m{font-size:13px;line-height:1.7;color:#B6BCC4}
+.pg{display:grid;grid-template-columns:150px 1fr 1.2fr 1fr;column-gap:28px;padding:24px 0;border-bottom:1px solid rgba(255,255,255,.08);align-items:start}
+.pg.h{padding:0 0 12px;border-bottom:1px solid rgba(255,255,255,.14)}
+.pg b{font-size:17px;font-weight:500}
+.pg p{font-size:13px;line-height:1.75;color:#B6BCC4}
+.lock{color:#858C95!important}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.dc{padding:24px;border-radius:12px;background:#0D0F12;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);display:flex;flex-direction:column;gap:10px}
+.dc b{font-size:16px;font-weight:500}
+</style>
+</helmet>
+<div class="r">
+
+<div style="display:flex;flex-direction:column;gap:24px">
+<span class="k">Sub-pages · Gallery · Models · Downloads · Guides</span>
+<h1 style="font-size:72px;font-weight:500;letter-spacing:-.04em;line-height:1.02">子页面诊断与规则</h1>
+<p style="font-size:20px;line-height:1.6;color:#B6BCC4;max-width:880px">四类子页面职责不同：图册要「安静」，模型要「有信息量」，下载要「找得到」，指南要「读得下去」。共用同一套令牌，各自只调整密度与节奏。</p>
+<p class="m" style="color:#858C95">依据：gallery.css / models.css / downloads.css / guides.css 与各页 HTML。指南正文（四篇长文）本轮只列规则，尚未出落地稿。</p>
+</div>
+
+<div class="sec">
+<div class="hd"><h2>逐页对策</h2><span class="k">Per page</span></div>
+<div>
+<div class="pg h"><span class="k">页面</span><span class="k">现状观察</span><span class="k">优化</span><span class="k">不可动</span></div>
+
+<div class="pg"><b>图册</b>
+<p>标题 36px、简介 14px、HDR 提示灰字；照片 contain 完整展示；44px 圆形箭头；切换为 260ms 透明度。整体已经很安静。</p>
+<p>计数改 Geist Pixel 点阵数字「09 / 11」（D7），并显示照片真实 EXIF；箭头与按钮加倒角高光；切换改 480ms 缓动；预取相邻一张（不改文件）；HDR 提示做成细边胶囊，图标保持银白。焦点环保持银白，不用蓝宝石色。</p>
+<p class="lock">11 张照片原文件、顺序、contain、HDR；不加任何颗粒或叠层；不加缩略图条与分段进度（已确认移除）。</p></div>
+
+<div class="pg"><b>模型</b>
+<p>卡片用 135° 线性渐变（#191d20 → #101214）与 8px 圆角；标签 11px 灰字；Dense / MoE 玻璃示意带 screen 混合；评测尚未公布。</p>
+<p>卡片改平面 n-2 + 倒角高光 + 16px 圆角；架构标签（Dense / MoE）做成胶囊；模型名用 Quantify 放大；能力列表用细线分隔；可加 3–4% 颗粒（D4）。</p>
+<p class="lock">Dense / MoE 动态示意、场景切换、粒子交互、引擎页签；评测预告与禁用的模型主页入口不伪造。</p></div>
+
+<div class="pg"><b>下载</b>
+<p>行式列表是对的；文件类型块 56×64；元信息是一整句灰字「硬件安全与配套管理能力 · 中文 · 11 页 · PDF · 350 KB · 2026-09-11」，不好扫读。</p>
+<p>元信息拆成字段：语言 / 页数 / 格式 / 大小 / 日期，用等宽小号；分类概览加当前章节的蓝宝石细线；行悬停 n-2 底；下载按钮仍是 44px 银白胶囊。</p>
+<p class="lock">链接、文件名、版本日期、发布入口；不新增序号与英文装饰标签。</p></div>
+
+<div class="pg"><b>指南入口</b>
+<p>搜索框（32px 圆角容器）很好；角色卡 admin / root / 安全 + 网络专题横卡；卡片 8px 圆角，悬停变灰；root 的「高权限操作」只是灰字。</p>
+<p>卡片 16px + 倒角高光；章节数用等宽；root 卡的高权限提示加琥珀小点（功能语义色，不靠颜色单独表达）；搜索结果里命中词用蓝宝石下划线。</p>
+<p class="lock">角色等权、搜索行为、目录锚点、复制、六语言。</p></div>
+
+<div class="pg" style="border-bottom:0"><b>指南正文</b>
+<p>正文 16px / 行高 1.9；无外层大卡片；目录与锚点已有。</p>
+<p>行高收到 1.85；目录当前章节加蓝宝石细线；代码块用 Geist Mono，复制按钮 44px；表头与代码块在自身容器内横向滚动（保持）。</p>
+<p class="lock">内容层级、六语言正文、表格与代码的容器内滚动。</p></div>
+</div>
+</div>
+
+<div class="sec">
+<div class="hd"><h2>共用规则</h2><span class="k">Shared</span></div>
+<div class="g3">
+<div class="dc"><span class="k">背景</span><b>产品页 n-0，支持页 n-2（D6 已确认）</b><p class="m">首页、图册、模型纯黑；下载、指南改用抬升黑 #0D0F12（取代原 #141618）。同一语义色阶，不再各写十六进制。</p></div>
+<div class="dc"><span class="k">导航</span><b>六项，顺序不变</b><p class="m">图册 · 模型 · 产品 · 架构 · 指南 · 下载。导航胶囊采用相同高度与悬停；当前页用银白底而不是彩色。</p></div>
+<div class="dc"><span class="k">颗粒（D4）</span><b>仅首页与模型页</b><p class="m">图册、下载、指南不加，避免影响照片与长文阅读。</p></div>
+</div>
+</div>
+
+<div class="sec">
+<div class="hd"><h2>顺带发现</h2><span class="k">Found on the way</span></div>
+<div class="dc" style="max-width:900px"><b>页脚版权拼写已修正</b><p class="m">Protable → Portable，已改在仓库（未提交）。</p></div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1850}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
