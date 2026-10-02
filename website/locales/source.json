@@ -3081,8 +3081,8 @@
     ]
   },
   {
-    "zh": "v0.5.1 · 刷写固件时必须同时准备 TianShanOS.bin 和 www.bin。",
-    "en": "v0.5.1 · Both TianShanOS.bin and www.bin are required when flashing the firmware.",
+    "zh": "刷写固件时必须同时准备 TianShanOS.bin 和 www.bin。",
+    "en": "Both TianShanOS.bin and www.bin are required when flashing the firmware.",
     "sources": [
       "downloads/index.html:320"
     ]
@@ -3096,15 +3096,15 @@
     ]
   },
   {
-    "zh": "TianshanOS 主固件镜像 · v0.5.1 · 2.1 MB · 刷机必需",
-    "en": "TianshanOS main firmware image · v0.5.1 · 2.1 MB · Required for flashing",
+    "zh": "TianshanOS 主固件镜像 · v0.6.0 · 2.1 MB · 刷机必需",
+    "en": "TianshanOS main firmware image · v0.6.0 · 2.1 MB · Required for flashing",
     "sources": [
       "downloads/index.html:331"
     ]
   },
   {
-    "zh": "TianshanOS WebUI 文件系统镜像 · v0.5.1 · 3.0 MB · 刷机必需",
-    "en": "TianshanOS WebUI filesystem image · v0.5.1 · 3.0 MB · Required for flashing",
+    "zh": "TianshanOS WebUI 文件系统镜像 · v0.6.0 · 3.0 MB · 刷机必需",
+    "en": "TianshanOS WebUI filesystem image · v0.6.0 · 3.0 MB · Required for flashing",
     "sources": [
       "downloads/index.html:342"
     ]
