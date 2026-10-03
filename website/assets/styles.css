@@ -29,7 +29,21 @@
   --thermal-warm: #e58b5a;
   --status-amber: #e5b15a;
 
-  /* Bridge tokens: pre-v2 values, 41 in use */
+  /* Motion (DESIGN.md section 10): five durations, three easings, one stagger step */
+  --dur-press: 120ms;
+  --dur-hover: 240ms;
+  --dur-panel: 480ms;
+  --dur-enter: 800ms;
+  --dur-count: 1200ms;
+  --stagger: 70ms;
+  --ease-settle: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+  /* Keyboard focus ring: sapphire, 2px */
+  --focus-ring: var(--sapphire-300);
+
+  /* Bridge tokens: pre-v2 values, 39 in use */
   /* Text */
   --lg-04100e:          #04100e; /* .skip-link:focus-visible */
   --lg-111111:          #111111; /* ::selection */
@@ -46,8 +60,6 @@
 
   /* Lines */
   --lg-235-238-240-a16: rgba(235, 238, 240, 0.16); /* .eyebrow +1 */
-  --lg-235-238-240-a75: rgba(235, 238, 240, 0.75); /* .language-toggle:focus-visible, .menu-butto... */
-  --lg-e8eaed:          #e8eaed; /* a:focus-visible,button:focus-visible */
   --lg-w-a11:           rgba(255, 255, 255, 0.11); /* .card-core, .product-core, .bezel-core */
   --lg-w-a22:           rgba(255, 255, 255, 0.22); /* .thermal-detail figcaption +1 */
   --lg-w-a27:           rgba(255, 255, 255, 0.27); /* .thermal-detail figcaption */
@@ -81,6 +93,9 @@
 }
 
 html.i18n-loading body { visibility: hidden; }
+
+/* The gallery never uses the accent colour, so its focus ring stays silver */
+.gallery-body { --focus-ring: var(--ink); }
 
 * {
   box-sizing: border-box;
@@ -205,8 +220,8 @@ main, .footer {
 
 .nav-island a {
   text-align: center;
-  transition: color 560ms var(--motion),
-      background 560ms var(--motion);
+  transition: color var(--dur-hover) var(--ease-settle),
+      background var(--dur-hover) var(--ease-settle);
 }
 
 .nav-island a:hover, .nav-island a.active {
@@ -228,9 +243,9 @@ main, .footer {
   background: var(--lg-8-10-9-a72);
   box-shadow: inset 0 0 0 1px var(--line), 0 20px 70px var(--lg-k-a24);
   backdrop-filter: blur(24px);
-  transition: transform 560ms var(--motion),
-      background 560ms var(--motion),
-      color 560ms var(--motion);
+  transition: transform var(--dur-hover) var(--ease-settle),
+      background var(--dur-hover) var(--ease-settle),
+      color var(--dur-hover) var(--ease-settle);
 }
 
 .language-toggle, .ghost-button {
@@ -255,8 +270,14 @@ main, .footer {
 }
 
 .language-toggle:focus-visible, .menu-button:focus-visible, .ghost-button:focus-visible, .nav-island a:focus-visible, .brand-mark:focus-visible, .cta-button:focus-visible, .secondary-link:focus-visible {
-  outline: 2px solid var(--lg-235-238-240-a75);
-  outline-offset: 4px;
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--n-0);
+}
+
+/* These controls sit over the hero video: the black 2px band keeps the ring at 3:1 or better on any frame, and they keep their own edge */
+.language-toggle:focus-visible, .menu-button:focus-visible, .ghost-button:focus-visible {
+  box-shadow: inset 0 0 0 1px var(--line), 0 0 0 2px var(--n-0);
 }
 
 body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardown-active .language-toggle, body.teardown-active .menu-button, body.teardown-active .ghost-button {
@@ -411,13 +432,14 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
 .cta-button {
   display: inline-flex;
   align-items: center;
-  transition: transform 620ms var(--motion),
-      box-shadow 620ms var(--motion),
-      background 620ms var(--motion);
+  transition: transform var(--dur-hover) var(--ease-settle),
+      box-shadow var(--dur-hover) var(--ease-settle),
+      background var(--dur-hover) var(--ease-settle);
 }
 
 .cta-button:active {
   transform: scale(0.98);
+  transition-duration: var(--dur-press);
 }
 
 .cta-dot {
@@ -425,7 +447,7 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
   flex: none;
   width: 24px;
   height: 24px;
-  transition: transform 620ms var(--motion);
+  transition: transform var(--dur-hover) var(--ease-settle);
 }
 
 .secondary-link {
@@ -448,7 +470,7 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
   gap: 8px;
   align-items: center;
   transform: translateX(-50%);
-  transition: color 520ms var(--motion), transform 520ms var(--motion);
+  transition: color var(--dur-hover) var(--ease-settle), transform var(--dur-hover) var(--ease-settle);
 }
 
 .scroll-cue:hover {
@@ -1293,13 +1315,13 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
   font-weight: 760;
   cursor: pointer;
   border: 0;
-  transition: transform 520ms var(--motion), background 520ms var(--motion), color 520ms var(--motion);
+  transition: transform var(--dur-hover) var(--ease-settle), background var(--dur-hover) var(--ease-settle), color var(--dur-hover) var(--ease-settle);
 }
 
 .footer-github svg {
   width: 22px;
   height: 22px;
-  transition: transform 520ms var(--motion);
+  transition: transform var(--dur-hover) var(--ease-settle);
 }
 
 .footer-contact:hover, .footer-github:hover {
@@ -2176,7 +2198,7 @@ html:lang(ja) .home-body h2 { white-space: pre-line; }
 .language-options[hidden] { display: none; }
 .language-options button { display: block; width: 100%; min-height: 42px; padding: 9px 12px; border: 0; border-radius: 7px; color: var(--ink); background: transparent; text-align: left; font: inherit; font-size: 13px; cursor: pointer; }
 .language-options button:hover, .language-options button[aria-checked="true"] { background: var(--lg-ffffff12); }
-.language-options button:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+.language-options button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -2px; }
 
 .menu-button {
   border-radius: var(--radius-button);
@@ -2224,7 +2246,7 @@ html:lang(ja) .home-body h2 { white-space: pre-line; }
 .cta-button:hover {
   background: white;
   box-shadow: none;
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .cta-button:hover .cta-dot {
@@ -2483,8 +2505,8 @@ html:lang(ja) .home-body h2 { white-space: pre-line; }
 }
 
 a:focus-visible,button:focus-visible {
-  outline: 2px solid var(--lg-e8eaed);
-  outline-offset: 5px;
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 4px;
 }
 
 @media(max-width:1120px) {
@@ -2871,7 +2893,7 @@ html:lang(ja) .home-body .stack-plane>span{word-break:keep-all}
 .home-body .engine-topic-toggle[aria-expanded=true] .topic-chevron{transform:rotate(180deg)}
 .home-body .engine-detail p{font-size:16px;line-height:1.9;color:var(--muted);margin:18px 0 0}
 .home-body .engine-detail[hidden],.home-body .system-panel[hidden]{display:none}
-.home-body .engine-topic-toggle:focus-visible,.home-body .system-tabs button:focus-visible,.home-body .system-panel:focus-visible{outline:2px solid var(--ink);outline-offset:8px;border-radius:2px}
+.home-body .engine-topic-toggle:focus-visible,.home-body .system-tabs button:focus-visible,.home-body .system-panel:focus-visible{outline:2px solid var(--focus-ring);outline-offset:8px;border-radius:2px}
 @media(max-width:1120px){
 .home-body .engine-experience{gap:42px}.home-body .engine-topic-toggle{font-size:19px}
 }
@@ -2940,7 +2962,7 @@ html:is(:lang(ja),:lang(ko),:lang(es),:lang(fr)) .home-body .memory-grid,html:is
 .home-body .part-interface .part-interior{inset:calc(var(--part-unit) * 9) calc(var(--part-unit) * 9) calc(var(--part-unit) * 28);gap:calc(var(--part-unit) * 4)}
 .home-body .part-interface .part-name{left:calc(var(--part-unit) * 9);bottom:calc(var(--part-unit) * 9);font-size:calc(var(--part-unit) * 10)}
 .home-body .part-storage .part-interior,.home-body .part-config .part-interior{inset:calc(var(--part-unit) * 8);gap:calc(var(--part-unit) * 5)}
-.home-body .system-part:focus-visible{outline:calc(var(--part-unit) * 2) solid #e5e7e8;outline-offset:calc(var(--part-unit) * 5)}
+.home-body .system-part:focus-visible{outline:calc(var(--part-unit) * 2) solid var(--focus-ring);outline-offset:calc(var(--part-unit) * 5)}
 .home-body .system-part[data-lit=true] .part-frost,
 .home-body .system-part[aria-pressed=true] .part-frost,
 .home-body .system-part:focus-visible .part-frost{backdrop-filter:blur(0);-webkit-backdrop-filter:blur(0);border-color:#ccd8e0b3}
@@ -3193,11 +3215,9 @@ main .module-bento {
   margin-top: 64px;
 }
 
-/* As before, the cards appear at once when revealed (this transition replaces the reveal fade); entrance choreography is stage 2. */
 .module-card {
   display: flex;
   grid-column: span 2;
-  transition: background .35s var(--motion);
 }
 
 .module-card.is-feature {
@@ -3218,25 +3238,10 @@ main .module-bento {
 }
 
 .module-card.is-feature .card-core {
+  --bi: 20px;
   gap: 20px;
   min-height: 400px;
   padding: 36px;
-}
-
-.module-card .card-core::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 16px;
-  left: 16px;
-  height: 1px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .28), rgba(255, 255, 255, 0));
-}
-
-.module-card.is-feature .card-core::before {
-  right: 20px;
-  left: 20px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .34), rgba(255, 255, 255, 0));
 }
 
 .module-card .card-core h3 {
@@ -3448,5 +3453,173 @@ main .module-bento {
   .home-body main p.chapter-label.hero-eyebrow {
     font-size: 10px;
     letter-spacing: .14em;
+  }
+}
+
+/* Motion, design system v2 stage 2 (DESIGN.md section 10). Tokens are at the top of this file; the scripts are main.js and motion.js. */
+
+/* Bevel edge light: a 1px highlight on the top edge that follows the pointer (motion.js sets --bx). One pseudo-element, no blur,
+   no shadow. At rest, and on touch or with reduced motion, it sits at the middle. */
+:where([data-bevel]) {
+  position: relative;
+}
+
+[data-bevel] {
+  --bx: 50%;
+  --bw: 30%;
+  --ba: .5;
+  --bi: 16px;
+}
+
+[data-bevel]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: var(--bi);
+  left: var(--bi);
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) calc(var(--bx) - var(--bw)), rgba(255, 255, 255, var(--ba)) var(--bx), rgba(255, 255, 255, 0) calc(var(--bx) + var(--bw)));
+}
+
+.cta-button[data-bevel] {
+  --ba: 1;
+  --bi: 22px;
+}
+
+/* Hero entrance: the title lines rise out of a mask, then the lead, the button and the figures follow, one 70ms step apart.
+   html.motion-js is set by an inline script and html.motion-ready two frames after the page is shown; without script nothing is hidden. */
+.hero-section [data-enter="rise"] {
+  transition: opacity var(--dur-enter) var(--ease-reveal), transform var(--dur-enter) var(--ease-reveal);
+  transition-delay: calc(var(--e, 0) * var(--stagger));
+}
+
+.hero-section [data-enter="line"] {
+  clip-path: inset(-.14em -.1em);
+}
+
+.hero-section [data-enter="line"] > .line-in {
+  display: block;
+  transition: transform var(--dur-enter) var(--ease-reveal);
+  transition-delay: calc(var(--e, 0) * var(--stagger));
+}
+
+html.motion-js:not(.motion-ready) .hero-section [data-enter="rise"] {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+html.motion-js:not(.motion-ready) .hero-section [data-enter="line"] > .line-in {
+  transform: translateY(112%);
+}
+
+/* The figures: each character lights from dim to bright as a hard-edged scan crosses it, left to right across the row, 1.2s in all.
+   The row is lit by main.js when it scrolls into view. */
+.hero-metrics-row {
+  --ch-each: 408ms;
+  --ch-gap: 46.6ms;
+  --ch-base: calc(var(--e, 0) * var(--stagger) + 220ms);
+}
+
+.hero-metrics-row .ch {
+  --lit: var(--text-1);
+  --dim: #20262c;
+  color: transparent;
+  background: linear-gradient(90deg, var(--lit) 50%, var(--dim) 50%) 100% 0 / 200% 100% no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.hero-metrics-row .ch.is-unit {
+  --lit: var(--sapphire-300);
+  --dim: #262c3e;
+}
+
+.hero-metrics-row.is-lit .ch {
+  animation: figure-scan var(--ch-each) linear calc(var(--ci, 0) * var(--ch-gap) + var(--ch-base)) both;
+}
+
+.hero-metrics-row.is-settled .ch,
+.hero-metrics-row.is-done .ch {
+  animation: none;
+  color: var(--lit);
+  background: none;
+}
+
+@keyframes figure-scan {
+  to {
+    background-position: 0 0;
+  }
+}
+
+/* The hardware heading: label, then title, 70ms apart */
+.section-heading.reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+.section-heading.reveal > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--dur-enter) var(--ease-reveal), transform var(--dur-enter) var(--ease-reveal);
+}
+
+.section-heading.reveal > :nth-child(2) {
+  transition-delay: var(--stagger);
+}
+
+.section-heading.reveal.visible > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* The module cards come in one after another with the same curve (the delay per card is set in main.js) */
+.module-card.reveal {
+  transform: translateY(32px);
+  transition: opacity var(--dur-enter) var(--ease-reveal), transform var(--dur-enter) var(--ease-reveal);
+}
+
+.module-card.reveal.visible {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Reduced motion keeps only a 120ms fade: nothing moves, the figures are simply lit, the cards simply show */
+  html.motion-js:not(.motion-ready) .hero-section [data-enter] {
+    opacity: 0;
+  }
+
+  html.motion-js:not(.motion-ready) .hero-section [data-enter="rise"],
+  html.motion-js:not(.motion-ready) .hero-section [data-enter="line"] > .line-in {
+    transform: none;
+  }
+
+  .hero-section [data-enter] {
+    transition: opacity var(--dur-press) linear !important;
+    transition-delay: 0s !important;
+  }
+
+  .hero-section [data-enter="line"] > .line-in {
+    transition: none !important;
+  }
+
+  .hero-metrics-row .ch {
+    color: var(--lit);
+    background: none;
+    animation: none;
+  }
+
+  .section-heading.reveal > *,
+  .module-card.reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .hero-metrics-row .ch {
+    color: CanvasText;
+    background: none;
   }
 }

@@ -4,8 +4,13 @@
   <meta charset="UTF-8">
   <script>
     // Reveal after deferred localization; without JavaScript the source page stays readable.
-    document.documentElement.classList.add('i18n-loading');
-    document.addEventListener('DOMContentLoaded', () => document.documentElement.classList.remove('i18n-loading'), { once: true });
+    // motion-js lets the hero start hidden, motion-ready (two frames after the page is shown) starts its entrance.
+    const root = document.documentElement;
+    root.classList.add('i18n-loading', 'motion-js');
+    document.addEventListener('DOMContentLoaded', () => {
+      root.classList.remove('i18n-loading');
+      requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('motion-ready')));
+    }, { once: true });
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="RM-01 便携 AI 超算，面向本地部署、低功耗推理和生产级 AI 应用交付。" data-i18n-attr="content" data-zh="RM-01 便携 AI 超算，面向本地部署、低功耗推理和生产级 AI 应用交付。" data-en="RM-01 Portable AI Supercomputer for local deployment, low-power inference, and production AI applications.">
@@ -46,13 +51,14 @@
     })();
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script src="assets/motion.js?v=stage2-2" defer></script>
   <link rel="preload" href="assets/fonts/GeistPixel-Circle.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/brand.css?v=product-black-1">
-  <link rel="stylesheet" href="assets/styles.css?v=stage1-1">
+  <link rel="stylesheet" href="assets/styles.css?v=stage2-2">
   <link rel="stylesheet" href="assets/tianshanos-demo-modal.css">
   <script src="assets/site-data.js?v=footer-portable-20261003" defer></script>
   <script src="assets/home-architecture.js?v=architecture-610b2b5" defer></script>
-  <script src="assets/main.js?v=stage1-1" defer></script>
+  <script src="assets/main.js?v=stage2-1" defer></script>
   <script src="assets/tianshanos-demo-modal.js" defer></script>
   <script src="assets/footer.js?v=models-launch-1" defer></script>
 </head>
@@ -89,20 +95,20 @@
         <source src="assets/images/hero-bg.mp4?v=20261003-silent" type="video/mp4">
       </video>
       <div class="hero-shade" aria-hidden="true"></div>
-      <div class="section-inner hero-grid reveal">
+      <div class="section-inner hero-grid">
         <div class="hero-copy">
-          <p class="chapter-label hero-eyebrow"><svg class="prism" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M2 3h20L12 21z"/></svg><span data-ui="chapter0">为模型推理及AI应用原生设计</span></p>
-          <h1 id="heroTitle" data-hero-title><span class="hero-title-line"><span class="rm-mark">RM-01</span></span><span class="hero-title-line">让 AI 在本地，</span><span class="hero-title-line">为你工作</span></h1>
-          <p class="hero-lead" data-ui="heroLead">RM-01 为模型推理与 Agent 应用运行提供各自独立的计算空间，让智能在你的业务现场持续行动、交付结果。</p>
-          <div class="hero-actions">
-            <a class="cta-button" href="#teardown">
+          <p class="chapter-label hero-eyebrow" data-enter="rise"><svg class="prism" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M2 3h20L12 21z"/></svg><span data-ui="chapter0">为模型推理及AI应用原生设计</span></p>
+          <h1 id="heroTitle" data-hero-title><span class="hero-title-line" data-enter="line"><span class="line-in"><span class="rm-mark">RM-01</span></span></span><span class="hero-title-line" data-enter="line"><span class="line-in">让 AI 在本地，</span></span><span class="hero-title-line" data-enter="line"><span class="line-in">为你工作</span></span></h1>
+          <p class="hero-lead" data-ui="heroLead" data-enter="rise">RM-01 为模型推理与 Agent 应用运行提供各自独立的计算空间，让智能在你的业务现场持续行动、交付结果。</p>
+          <div class="hero-actions" data-enter="rise">
+            <a class="cta-button" href="#teardown" data-bevel>
               <span data-ui="explore">继续探索</span>
               <svg class="cta-dot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
             </a>
           </div>
         </div>
       </div>
-      <div class="section-inner hero-metrics-row reveal" id="heroMetrics" role="group" aria-label="RM-01 核心指标" data-i18n-aria-label-zh="RM-01 核心指标" data-i18n-aria-label-en="RM-01 key specifications"></div>
+      <div class="section-inner hero-metrics-row" id="heroMetrics" data-enter="rise" role="group" aria-label="RM-01 核心指标" data-i18n-aria-label-zh="RM-01 核心指标" data-i18n-aria-label-en="RM-01 key specifications"></div>
       <a class="scroll-cue" href="#engine">
         <span data-ui="scroll">继续向下</span>
         <span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;flex-shrink:0;pointer-events:none" aria-hidden="true" focusable="false"><path d="M12 5v14m-5-5 5 5 5-5"/></svg></span>
@@ -135,7 +141,7 @@
           <p class="chapter-label" data-ui="chapter2">整机协同</p>
           <h2 id="productTitle" data-ui="productTitle" data-title-size="large">TianshanOS 让整机协同有序</h2>
           <p data-ui="productLead">一台设备的运行，离不开内部各个部分的配合。TianshanOS 管理 RM-01 的内部设备与系统行为，让推理、应用与存储共同工作。无需专门建设供电、网络与机房环境，RM-01 就能走进业务现场。</p>
-          <button class="cta-button system-demo-action" type="button" aria-haspopup="dialog" aria-controls="tsDemoModal" data-demo-open><span data-ui="systemDemoAction">查看界面演示</span><svg class="cta-dot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button>
+          <button class="cta-button system-demo-action" type="button" data-bevel aria-haspopup="dialog" aria-controls="tsDemoModal" data-demo-open><span data-ui="systemDemoAction">查看界面演示</span><svg class="cta-dot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button>
         </div>
         <figure class="network-graph" id="networkGraph" aria-label="两台计算机分别经以太网控制器和 PHY 接入板载交换机，ESP32 经 W5500 接入并拥有配置存储；两台计算机各有独立存储。" data-i18n-aria-label-zh="两台计算机分别经以太网控制器和 PHY 接入板载交换机，ESP32 经 W5500 接入并拥有配置存储；两台计算机各有独立存储。" data-i18n-aria-label-en="Both computers connect to the onboard switch through Ethernet controllers and PHYs. ESP32 connects through W5500 and has configuration storage. Each computer has its own storage."></figure>
         <div class="system-reading" id="systemReading"></div>

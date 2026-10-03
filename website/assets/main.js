@@ -62,7 +62,13 @@
     });
     const title = $('[data-hero-title]');
     if (title) {
-      title.replaceChildren(...ui('heroTitle').split('\n').map((line) => textEl('span', line, 'hero-title-line')));
+      title.replaceChildren(...ui('heroTitle').split('\n').map((line) => {
+        const outer = document.createElement('span');
+        outer.className = 'hero-title-line';
+        outer.dataset.enter = 'line';
+        outer.append(textEl('span', line, 'line-in'));
+        return outer;
+      }));
     }
 
     const close = $('[data-menu-close]');
@@ -182,17 +188,35 @@
   function renderMetrics() {
     const root = $('#heroMetrics');
     if (!root) return;
+    let glyphs = 0;
     root.replaceChildren(...data.metrics.map((metric, index) => {
       const item = document.createElement('div');
       item.className = 'metric';
       item.style.setProperty('--i', index);
       // "140W" shows its unit set apart; values such as 7x24 and 30B-200B stay whole.
+      // Every character gets its own span (.ch) and a running index, so the row can light up left to right.
       const [, number, unit] = /^(\d+)([A-Za-z]+)$/.exec(metric.value) || [];
-      const value = textEl('strong', number || metric.value);
-      if (unit) value.append(textEl('span', unit, 'unit'));
+      const value = document.createElement('strong');
+      const glyph = (character, className) => {
+        const el = document.createElement('span');
+        el.className = `ch ${className}`.trim();
+        el.style.setProperty('--ci', glyphs++);
+        el.textContent = character;
+        return el;
+      };
+      value.append(...[...(number || metric.value)].map((character) => glyph(character, '')));
+      if (unit) {
+        const wrap = document.createElement('span');
+        wrap.className = 'unit';
+        wrap.append(...[...unit].map((character) => glyph(character, 'is-unit')));
+        value.append(wrap);
+      }
       item.append(value, textEl('span', t(metric.label)));
       return item;
     }));
+    // After the first draw (a language switch), the figures stay lit instead of sweeping again.
+    root.classList.toggle('is-settled', Boolean(root.dataset.drawn));
+    root.dataset.drawn = '1';
   }
 
   // One spec cell: each number stays large and the unit right after it is set small, in the order the text gives them.
@@ -252,7 +276,8 @@
         textEl('p', t(module.text)),
         isFeature ? specGrid(spec) : textEl('span', spec, 'module-spec')
       ], `module-card${isFeature ? ' is-feature' : ''} reveal`);
-      card.dataset.revealDelay = String(index * 60);
+      card.firstElementChild.dataset.bevel = '';
+      card.dataset.revealDelay = String(index * 70);
       return card;
     }));
   }
@@ -823,12 +848,45 @@
     update();
   }
 
+  // Hero entrance order: eyebrow, title lines, lead, then the button and the figures together,
+  // so the whole sequence stays under 1.2s (the 70ms steps live in the stylesheet).
+  function orderHeroEntrance() {
+    const items = $$('.hero-section [data-enter]');
+    items.forEach((el, index) => el.style.setProperty('--e', Math.min(index, items.length - 2)));
+  }
+
+  // The figures light up left to right when the row comes into view, and again each time it comes back.
+  // Reduced motion needs no script: the stylesheet shows them lit.
+  function setupFigures() {
+    const row = $('#heroMetrics');
+    if (!row || row.dataset.watched || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    row.dataset.watched = '1';
+    let played = false, finished = 0, total = 0;
+    // When the last character has been scanned the row goes back to ordinary text, exactly as it was drawn before the sweep existed.
+    row.addEventListener('animationend', (event) => {
+      if (event.animationName === 'figure-scan' && ++finished >= total) row.classList.add('is-done');
+    });
+    const lightUp = () => {
+      row.classList.remove('is-settled', 'is-lit', 'is-done');
+      row.style.setProperty('--ch-base', played ? '100ms' : ''); // first time: wait for the row's own entrance
+      void row.offsetWidth; // restart the CSS animation
+      finished = 0;
+      total = row.querySelectorAll('.ch').length;
+      row.classList.add('is-lit');
+      played = true;
+    };
+    if (!('IntersectionObserver' in window)) return lightUp();
+    new IntersectionObserver(([entry]) => (entry.isIntersecting ? lightUp() : row.classList.remove('is-lit', 'is-done')), { threshold: 0.6 }).observe(row);
+  }
+
   function renderAll() {
     setUiText();
     renderNav();
     renderMetrics();
     renderModules();
     renderExperience();
+    orderHeroEntrance();
+    setupFigures();
     setupReveal();
     setupActiveNav();
   }

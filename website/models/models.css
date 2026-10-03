@@ -1,7 +1,7 @@
     .models-page { background:var(--bg); color-scheme:dark; }
     .models-page::after { display:none; }
     .models-page .rm-mark { font-family:var(--font-brand); font-weight:700; }
-    .models-page :focus-visible { outline:2px solid var(--ink); outline-offset:5px; }
+    .models-page :focus-visible { outline:2px solid var(--focus-ring); outline-offset:5px; }
     .models-page .site-shell { top:0; left:0; transform:none; width:100%; padding:calc(24px + var(--safe-top, 0px)) max(var(--section-x),calc((100% - var(--section-w))/2)) 20px; background:var(--bg); }
     .models-page .site-shell::after { content:""; position:absolute; top:100%; inset-inline:0; height:24px; background:linear-gradient(var(--bg),transparent); pointer-events:none; }
     .models-page .menu-button svg { display:block; margin:auto; }
