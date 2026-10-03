@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>棱镜光圈转场 · 动效原型</title>
+<link rel="stylesheet" href="motion.css">
+<style>
+  @font-face { font-family: "Quantify RM"; src: url("../../website/assets/fonts/Quantify-Bold.ttf") format("truetype"); font-weight: 700; }
+  /* A contained "browser" so the controls stay visible while pages change. */
+  .frame { position: relative; width: 100%; aspect-ratio: 16 / 9; max-height: 640px; border: 1px solid var(--line-2); border-radius: 8px; overflow: hidden; background: #000; isolation: isolate; }
+  .page { position: absolute; inset: 0; display: none; padding: 28px 40px; overflow: hidden; }
+  .page.on { display: block; }
+  .page.incoming { z-index: 2; }
+  .page .nav { display: flex; gap: 6px; align-items: center; }
+  .page .nav b { margin-right: auto; font: 700 18px/1 "Quantify RM", var(--font-ui); letter-spacing: .035em; }
+  .page .nav a { padding: 8px 16px; border-radius: 999px; font-size: 12px; color: var(--n-8); background: rgba(25, 28, 31, .82); box-shadow: inset 0 0 0 1px var(--line-1); cursor: pointer; }
+  .page .nav a:hover, .page .nav a.cur { background: rgba(255, 255, 255, .08); color: #fff; }
+  .page .nav a:focus-visible { outline: 2px solid var(--sapphire-300); outline-offset: 2px; }
+  #p-home { background: #000; }
+  #p-home .mark { position: absolute; left: 40px; bottom: 72px; font: 700 clamp(56px, 12vw, 150px)/.95 "Quantify RM", var(--font-ui); letter-spacing: .035em; }
+  #p-home .sub { position: absolute; left: 44px; bottom: 36px; color: var(--n-8); font-size: 15px; }
+  #p-gallery { background: #000; }
+  #p-gallery .media { position: absolute; left: 40px; right: 40px; top: 84px; bottom: 28px; border-radius: 8px; overflow: hidden; cursor: none; }
+  #p-gallery .media img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(.92) brightness(.9); }
+  #p-downloads { background: var(--n-2); }
+  #p-downloads h2 { margin: 56px 0 18px; font: 500 clamp(32px, 6vw, 72px)/1.04 var(--font-ui); letter-spacing: -.04em; }
+  #p-downloads .rows { border-top: 1px solid var(--line-2); max-width: 720px; }
+  #p-downloads .rows div { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--line-1); color: var(--n-8); font-size: 14px; }
+  #p-downloads .rows span:last-child { font-family: var(--font-mono); color: var(--n-7); font-size: 12px; }
+  .iris-line { position: absolute; inset: 0; z-index: 3; pointer-events: none; width: 100%; height: 100%; }
+  .iris-line polygon, .iris-line circle { fill: none; stroke: var(--sapphire-300); stroke-width: 1; vector-effect: non-scaling-stroke; }
+  /* Prism cursor over imagery: 12px hollow inverted triangle that follows the pointer, plus the word 查看. */
+  .cursor { position: absolute; left: 0; top: 0; z-index: 5; pointer-events: none; display: none; align-items: center; gap: 10px; transform: translate(-50%, -50%); font-size: 12px; color: var(--n-9); white-space: nowrap; }
+  .cursor.on { display: inline-flex; }
+  .cursor .prism { width: 16px; height: 15px; }
+  .cursor span { padding: 3px 10px; border-radius: 999px; background: rgba(0, 0, 0, .55); border: 1px solid var(--line-2); }
+  .legend { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 8px; align-items: center; }
+  .legend .item { display: flex; gap: 12px; align-items: center; color: var(--n-8); font-size: 13px; }
+</style>
+</head>
+<body class="motion-demo">
+<div class="wrap">
+  <div class="topbar"><a href="index.html">← 动效原型</a><span>棱镜 · 光圈转场</span><span class="tag">PROTOTYPE · 未进入生产</span></div>
+  <span class="label"><i class="prism"><svg viewBox="0 0 12 11"><path d="M1.2 1.2h9.6L6 9.8z"/></svg></i>页面切换</span>
+  <h1>三角形光圈展开</h1>
+  <p>页面切换时，新页面从点击位置的一个小倒三角里“撑开”，480ms、reveal 缓动（尺寸按指数增长，边缘才看得出在展开；改成「线性尺寸」会在前 80ms 就铺满）；光圈前沿留一条 1px 蓝宝石细线，随展开淡出。影像悬停时指针变成空心棱镜加「查看」。下面的小窗里点导航切换页面，把鼠标移到图片上看光标。</p>
+
+  <div class="controls">
+    <label>时长 <input id="dur" type="range" min="240" max="1000" step="20" value="480"><output id="durO">480 ms</output></label>
+    <div class="seg" role="radiogroup" aria-label="形状">
+      <input type="radio" name="shape" id="s-tri" value="tri" checked><label for="s-tri">倒三角（棱镜）</label>
+      <input type="radio" name="shape" id="s-circ" value="circ"><label for="s-circ">圆形（对照）</label>
+    </div>
+    <div class="seg" role="radiogroup" aria-label="展开曲线">
+      <input type="radio" name="map" id="m-exp" value="exp" checked><label for="m-exp">指数展开（推荐）</label>
+      <input type="radio" name="map" id="m-lin" value="lin"><label for="m-lin">线性尺寸</label>
+    </div>
+    <label><input id="edge" type="checkbox" checked> 光圈边线</label>
+    <label><input id="rm" type="checkbox"> 模拟「减少动效」（改为 120ms 淡入）</label>
+  </div>
+
+  <div class="frame" id="frame">
+    <section class="page on" id="p-home" aria-label="首页">
+      <div class="nav"><b>RMinte</b><a data-go="home" class="cur">首页</a><a data-go="gallery">图册</a><a data-go="downloads">下载</a></div>
+      <div class="mark">RM-01</div>
+      <div class="sub">让 AI 在本地，为你工作</div>
+    </section>
+    <section class="page" id="p-gallery" aria-label="图册">
+      <div class="nav"><b>RMinte</b><a data-go="home">首页</a><a data-go="gallery" class="cur">图册</a><a data-go="downloads">下载</a></div>
+      <div class="media" id="media"><img src="../../website/assets/images/cartridge-tvc-v2-poster.jpg" alt="RM-01 换卡"></div>
+    </section>
+    <section class="page" id="p-downloads" aria-label="下载">
+      <div class="nav"><b>RMinte</b><a data-go="home">首页</a><a data-go="gallery">图册</a><a data-go="downloads" class="cur">下载</a></div>
+      <h2>下载</h2>
+      <div class="rows"><div><span>TianshanOS 管理员日常使用指南</span><span>PDF · 582 KB</span></div><div><span>TianshanOS root 运维指南</span><span>PDF · 681 KB</span></div><div><span>RM-01 硬件安全说明</span><span>PDF · 358 KB</span></div></div>
+    </section>
+    <svg class="iris-line" id="irisLine" aria-hidden="true"></svg>
+    <div class="cursor" id="cursor"><i class="prism"><svg viewBox="0 0 12 11"><path d="M1.2 1.2h9.6L6 9.8z"/></svg></i><span>查看</span></div>
+  </div>
+  <p class="small" id="status">当前：首页</p>
+
+  <h2>棱镜在界面里的另外两处</h2>
+  <div class="legend">
+    <div class="item"><i class="prism"><svg viewBox="0 0 12 11"><path d="M1.2 1.2h9.6L6 9.8z"/></svg></i>章节标记：12px 空心倒三角，取代短横线</div>
+    <div class="item"><span class="label"><i class="prism"><svg viewBox="0 0 12 11"><path d="M1.2 1.2h9.6L6 9.8z"/></svg></i>推理引擎</span>标签只写名称，不带序号</div>
+  </div>
+
+  <h2>边界（来自 Signature.md）</h2>
+  <ul class="notes">
+    <li>只描边（2px <code>#A8B8F0</code>）与 12% 填充，不发光；每屏最多一处大尺寸棱镜。</li>
+    <li>转场 480ms、reveal 缓动 <code>cubic-bezier(.16,1,.3,1)</code>；减少动效时只做 120ms 透明度变化，内容始终完整可见。</li>
+    <li>这里为演示在同一文档内切换；上线时可用浏览器的 View Transitions（跨页面）做同样的形状，不支持的浏览器直接切换即可。</li>
+  </ul>
+</div>
+
+<script>
+const $ = (s, r = document) => r.querySelector(s);
+const frame = $('#frame'), line = $('#irisLine'), status_ = $('#status');
+const cfg = { dur: 480, shape: 'tri', map: 'exp', edge: true, reduced: matchMedia('(prefers-reduced-motion: reduce)').matches };
+$('#rm').checked = cfg.reduced;
+let current = 'home', busy = false;
+const names = { home: '首页', gallery: '图册', downloads: '下载' };
+
+// CSS cubic-bezier solver (same curve the site calls "reveal").
+function bezier(x1, y1, x2, y2) {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const X = (t) => ((ax * t + bx) * t + cx) * t, Y = (t) => ((ay * t + by) * t + cy) * t, dX = (t) => (3 * ax * t + 2 * bx) * t + cx;
+  return (x) => { let t = x; for (let i = 0; i < 8; i++) { const e = X(t) - x; if (Math.abs(e) < 1e-5) break; const d = dX(t); if (Math.abs(d) < 1e-6) break; t -= e / d; } let lo = 0, hi = 1; if (t < 0 || t > 1) { t = x; while (lo < hi) { const m = X(t); if (Math.abs(m - x) < 1e-5) break; if (x > m) lo = t; else hi = t; t = (hi - lo) / 2 + lo; } } return Y(t); };
+}
+const reveal = bezier(.16, 1, .3, 1);
+
+// An inverted equilateral triangle whose centroid is (cx, cy); s is half of its top edge.
+const tri = (cx, cy, s) => [[cx - s, cy - s * .5774], [cx + s, cy - s * .5774], [cx, cy + s * 1.1547]];
+function inside(p, [a, b, c]) { const s = (p1, p2, p3) => (p1[0] - p3[0]) * (p2[1] - p3[1]) - (p2[0] - p3[0]) * (p1[1] - p3[1]); const d1 = s(p, a, b), d2 = s(p, b, c), d3 = s(p, c, a); return !((d1 < 0 || d2 < 0 || d3 < 0) && (d1 > 0 || d2 > 0 || d3 > 0)); }
+function coverSize(cx, cy, w, h) {
+  const corners = [[0, 0], [w, 0], [0, h], [w, h]];
+  let lo = 4, hi = 8000;
+  for (let i = 0; i < 30; i++) { const mid = (lo + hi) / 2; if (corners.every((p) => inside(p, tri(cx, cy, mid)))) hi = mid; else lo = mid; }
+  return hi;
+}
+const farthest = (cx, cy, w, h) => Math.max(...[[0, 0], [w, 0], [0, h], [w, h]].map(([x, y]) => Math.hypot(x - cx, y - cy)));
+
+function goto(name, ev) {
+  if (busy || name === current) return;
+  const from = $(`#p-${current}`), to = $(`#p-${name}`);
+  busy = true;
+  document.querySelectorAll('.nav a').forEach((a) => a.classList.toggle('cur', a.dataset.go === name));
+  const finish = () => { from.classList.remove('on'); to.classList.remove('incoming'); to.style.clipPath = ''; to.style.opacity = ''; line.innerHTML = ''; current = name; busy = false; status_.textContent = `当前：${names[name]}`; };
+  if (cfg.reduced) {
+    // Reduced motion: no movement, only a 120ms opacity change.
+    to.style.opacity = 0; to.classList.add('on', 'incoming');
+    const t0 = performance.now();
+    const step = (now) => { const p = Math.min(1, (now - t0) / 120); to.style.opacity = p; if (p < 1) requestAnimationFrame(step); else finish(); };
+    return requestAnimationFrame(step);
+  }
+  const r = frame.getBoundingClientRect(), w = r.width, h = r.height;
+  const cx = ev ? ev.clientX - r.left : w / 2, cy = ev ? ev.clientY - r.top : h / 2;
+  const isTri = cfg.shape === 'tri';
+  const sEnd = isTri ? coverSize(cx, cy, w, h) : farthest(cx, cy, w, h), s0 = isTri ? 5 : 3;
+  const shapeAt = (s) => (isTri ? `polygon(${tri(cx, cy, s).map(([x, y]) => `${x}px ${y}px`).join(',')})` : `circle(${s}px at ${cx}px ${cy}px)`);
+  const edgeAt = (s, p) => (!cfg.edge ? '' : isTri ? `<polygon points="${tri(cx, cy, s).map((q) => q.join(',')).join(' ')}" style="opacity:${(1 - p * p).toFixed(3)}"/>` : `<circle cx="${cx}" cy="${cy}" r="${s}" style="opacity:${(1 - p * p).toFixed(3)}"/>`);
+  to.style.clipPath = shapeAt(s0);          // set before the page becomes visible, so it never flashes full-size
+  to.classList.add('on', 'incoming');
+  const D = cfg.dur, t0 = performance.now();
+  const draw = (now) => {
+    const p = Math.min(1, (now - t0) / D), e = reveal(p), s = cfg.map === 'exp' ? s0 * Math.pow(sEnd / s0, e) : s0 + (sEnd - s0) * e;
+    to.style.clipPath = shapeAt(s); line.innerHTML = edgeAt(s, p);
+    if (p < 1) requestAnimationFrame(draw); else finish();
+  };
+  requestAnimationFrame(draw);
+}
+frame.addEventListener('click', (e) => { const a = e.target.closest('[data-go]'); if (a) { e.preventDefault(); goto(a.dataset.go, e); } });
+frame.addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-go]')) { e.preventDefault(); goto(e.target.dataset.go, null); } });
+document.querySelectorAll('.nav a').forEach((a) => { a.tabIndex = 0; a.setAttribute('role', 'link'); });
+
+// Prism cursor over imagery (fine pointers only)
+const cur = $('#cursor'), media = $('#media');
+let tx = 0, ty = 0, cx = 0, cy = 0, craf = 0;
+const fine = matchMedia('(pointer: fine)').matches;
+function follow() { cx += (tx - cx) * .22; cy += (ty - cy) * .22; cur.style.left = cx + 'px'; cur.style.top = cy + 'px'; craf = cur.classList.contains('on') ? requestAnimationFrame(follow) : 0; }
+if (fine) {
+  media.addEventListener('pointerenter', (e) => { const r = frame.getBoundingClientRect(); tx = cx = e.clientX - r.left; ty = cy = e.clientY - r.top; cur.classList.add('on'); if (!craf) follow(); });
+  media.addEventListener('pointermove', (e) => { const r = frame.getBoundingClientRect(); tx = e.clientX - r.left; ty = e.clientY - r.top; });
+  media.addEventListener('pointerleave', () => cur.classList.remove('on'));
+} else media.style.cursor = 'auto';
+
+$('#dur').oninput = (e) => { cfg.dur = +e.target.value; $('#durO').textContent = cfg.dur + ' ms'; };
+document.querySelectorAll('input[name=shape]').forEach((r) => r.onchange = () => { cfg.shape = r.value; });
+document.querySelectorAll('input[name=map]').forEach((r) => r.onchange = () => { cfg.map = r.value; });
+$('#edge').onchange = (e) => { cfg.edge = e.target.checked; };
+$('#rm').onchange = (e) => { cfg.reduced = e.target.checked; };
+</script>
+</body>
+</html>

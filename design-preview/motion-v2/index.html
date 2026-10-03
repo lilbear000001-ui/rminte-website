@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>设计系统 v2 · 动效原型</title>
+<link rel="stylesheet" href="motion.css">
+<style>
+  .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+  .card { display: flex; flex-direction: column; background: var(--n-2); border: 1px solid var(--line-1); border-radius: 16px; padding: 28px; min-height: 280px; transition: border-color 240ms var(--ease-settle); }
+  .card:hover { border-color: var(--line-3); }
+  .card:focus-visible { outline: 2px solid var(--sapphire-300); outline-offset: 3px; }
+  .card h3 { margin: 18px 0 10px; font: 500 22px/1.3 var(--font-ui); letter-spacing: -.02em; }
+  .card p { margin: 0; font-size: 14px; line-height: 1.8; }
+  .card .go { margin-top: auto; padding-top: 22px; color: var(--n-7); font-size: 13px; }
+  .fig { font: 400 40px/1 var(--font-pixel); color: var(--n-9); }
+  .fig i { font-style: normal; color: var(--sapphire-300); }
+  @media (max-width: 900px) { .cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body class="motion-demo">
+<div class="wrap">
+  <div class="topbar"><span>RMinte 设计系统 v2</span><span class="tag">PROTOTYPES · 未进入生产</span></div>
+  <h1>三个动效手法的手感</h1>
+  <p>这是三个独立的小页面，只为让你先看手感；它们不在 <code>website/</code> 里，也没有接进任何生产页面。你同意哪一种、要怎么调，我再把它实现到网站。每页都有控制条，可以调时长和强度，并能模拟「减少动效」与触屏。</p>
+  <div class="cards">
+    <a class="card" href="digits.html"><span class="fig">140<i>W</i></span><h3>点阵数字逐位点亮</h3><p>首屏指标行的数字用 Geist Pixel 点阵，进入视口时逐位点亮 1.2s。三种做法：硬边扫描、逐位渐亮、逐点点亮。</p><span class="go">打开 →</span></a>
+    <a class="card" href="bevel.html"><span class="label">卡片 · 按钮 · 搜索框</span><h3>倒角边光</h3><p>顶边一段 1px 高光，随指针横向移动，两端渐隐。无模糊、无阴影；触屏与减少动效时固定在中间。</p><span class="go">打开 →</span></a>
+    <a class="card" href="iris.html"><span class="label"><i class="prism"><svg viewBox="0 0 12 11"><path d="M1.2 1.2h9.6L6 9.8z"/></svg></i>页面切换</span><h3>棱镜光圈转场</h3><p>新页面从点击处的小倒三角里展开，480ms；影像悬停时光标变成空心棱镜加「查看」。</p><span class="go">打开 →</span></a>
+  </div>
+  <h2>看的时候请留意</h2>
+  <ul class="notes">
+    <li><b>点阵数字</b>：三种里你更接受哪一种？亮起的速度、最后那一下“更白”的提亮是否合适？手机 32px 下是否还成立？</li>
+    <li><b>倒角边光</b>：亮度 0.5 是否够“一线反光”又不抢眼？跟随惯性是跟手还是有拖尾更好？</li>
+    <li><b>光圈转场</b>：480ms 的节奏、指数展开与线性展开哪种更对？边线要不要保留？</li>
+    <li>三者都遵守同一条边界：不发光、不渐变底色、蓝宝石色只用于细线与描边；减少动效时内容始终完整可见。</li>
+  </ul>
+  <h2>字体与来源</h2>
+  <p class="small">Geist Pixel（Circle）、Geist、Geist Mono 取自 npm 包 <code>geist@1.7.2</code>（SIL Open Font License 1.1，许可文件在 <code>fonts/OFL.txt</code>）。品牌字标 Quantify RM 引用站点里的字体文件。原型页面只用于本地查看。</p>
+</div>
+</body>
+</html>
