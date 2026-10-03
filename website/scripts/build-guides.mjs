@@ -503,12 +503,23 @@ function pageTemplate(config, rendered) {
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&amp;family=Noto+Sans+SC:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/brand.css?v=slate-2">
-  <link rel="stylesheet" href="../assets/styles.css?v=solid-header-1">
+  <link rel="stylesheet" href="../assets/styles.css?v=tokens-1">
   <link rel="stylesheet" href="../assets/guides.css?v=table-header-1">
   <script id="guidePageData" type="application/json">${pageData}</script>
-  <script src="../visitor-language.js" defer></script>
-  <script src="../assets/translations.js?v=footer-portable-20261003" defer></script>
-  <script src="../assets/i18n.js" defer></script>
+  <script>
+    // ja/ko/es/fr carry their own catalog file; zh and en need none. Resolve the language the way i18n.js does and load only that file.
+    (function (up) {
+      var ok = /^(zh|en|ja|ko|es|fr)$/, c = window.RM_CATALOG = { base: up + 'assets/translations/', v: 'catalogs-20261003' };
+      c.load = function () {
+        var s; try { s = localStorage.getItem('rm-soft-lang'); } catch (e) {}
+        var l = [new URLSearchParams(location.search).get('lang'), (location.hash.match(/^#(zh|en|ja|ko|es|fr)-/) || [])[1], s, window.RM_DEFAULT_LANG].filter(function (x) { return ok.test(x); })[0];
+        if (l && l !== 'zh' && l !== 'en') document.write('<script src="' + c.base + l + '.js?v=' + c.v + '" defer><\\/script>');
+        return l;
+      };
+      if (!c.load()) document.write('<script src="' + up + 'visitor-language.js"><\\/script><script>RM_CATALOG.load()<\\/script>');
+    })('../');
+  </script>
+  <script src="../assets/i18n.js?v=catalogs-20261003" defer></script>
   <script src="../assets/guides.js?v=docs-20260907" defer></script>
   <script src="../assets/site-data.js?v=footer-portable-20261003" defer></script>
   <script src="../assets/footer.js?v=models-launch-1" defer></script>

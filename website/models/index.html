@@ -18,7 +18,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/brand.css">
-  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="stylesheet" href="../assets/styles.css?v=tokens-1">
   <link rel="stylesheet" href="models.css?v=benchmark-clean-1">
 </head>
 <body class="models-page">
@@ -210,9 +210,20 @@
 
   <dialog class="mp-dialog mp-menu-dialog" id="mobileMenu" aria-label="导航菜单" data-i18n-aria-label-zh="导航菜单" data-i18n-aria-label-en="Navigation menu"><div class="mp-dialog-top"><img src="../assets/images/logo-white.svg" alt="RMinte"><button class="mp-close" type="button" data-close-dialog aria-label="关闭" data-i18n-aria-label-zh="关闭" data-i18n-aria-label-en="Close"><svg class="mp-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div><nav class="mp-mobile-links" aria-label="移动导航" data-i18n-aria-label-zh="移动导航" data-i18n-aria-label-en="Mobile navigation"><a href="../gallery/index.html" data-zh="图册" data-en="Gallery">图册</a><a href="#main" aria-current="page" data-zh="模型" data-en="Models">模型</a><a href="../index.html#engine" data-zh="产品" data-en="Product">产品</a><a href="../index.html#teardown" data-zh="架构" data-en="Architecture">架构</a><a href="../guides/index.html" data-zh="指南" data-en="Guides">指南</a><a href="../downloads/index.html" data-zh="下载" data-en="Downloads">下载</a></nav></dialog>
 
-  <script src="../visitor-language.js" defer></script>
-  <script src="../assets/translations.js?v=footer-portable-20261003" defer></script>
-  <script src="../assets/i18n.js" defer></script>
+  <script>
+    // ja/ko/es/fr carry their own catalog file; zh and en need none. Resolve the language the way i18n.js does and load only that file.
+    (function (up) {
+      var ok = /^(zh|en|ja|ko|es|fr)$/, c = window.RM_CATALOG = { base: up + 'assets/translations/', v: 'catalogs-20261003' };
+      c.load = function () {
+        var s; try { s = localStorage.getItem('rm-soft-lang'); } catch (e) {}
+        var l = [new URLSearchParams(location.search).get('lang'), (location.hash.match(/^#(zh|en|ja|ko|es|fr)-/) || [])[1], s, window.RM_DEFAULT_LANG].filter(function (x) { return ok.test(x); })[0];
+        if (l && l !== 'zh' && l !== 'en') document.write('<script src="' + c.base + l + '.js?v=' + c.v + '" defer><\/script>');
+        return l;
+      };
+      if (!c.load()) document.write('<script src="' + up + 'visitor-language.js"><\/script><script>RM_CATALOG.load()<\/script>');
+    })('../');
+  </script>
+  <script src="../assets/i18n.js?v=catalogs-20261003" defer></script>
   <script src="../assets/site-data.js?v=footer-portable-20261003" defer></script>
   <script src="../assets/footer.js?v=models-launch-1" defer></script>
   <script src="benchmark-particles.js" defer></script>

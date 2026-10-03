@@ -50,4 +50,4 @@ RMinte（rminte.com）企业官网仓库：RM-01 便携式 AI 超级计算机的
 
 ## 验证入口
 
-按 AGENTS.md 第 5 节分范围验收：页面改动必须有实际浏览器验证，共享样式检查所有引用页面与 1440／768／390／320px、中英文；改动的 JavaScript 做语法检查。文案类改动更新 `translations.js`／`site-data.js` 时同步更新它们在各页面中的 `?v=` 缓存版本号。
+按 AGENTS.md 第 5 节分范围验收：页面改动必须有实际浏览器验证，共享样式检查所有引用页面与 1440／768／390／320px、中英文；改动的 JavaScript 做语法检查。文案类改动更新 `assets/translations/*.js`（由 `build-translations.mjs` 从 `locales/` 生成，日韩西法各一个文件）或 `site-data.js` 时，同步更新各页面中对应的缓存版本号：`site-data.js` 的 `?v=`，语言包的版本在页头片段的 `RM_CATALOG.v`（指南页由生成脚本统一写入）。

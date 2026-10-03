@@ -33,7 +33,9 @@
       'Close demo': 'Fermer la démonstration'
     }
   };
+  // Catalogs load per language: merge into the one already present, and let i18n.js merge the rest when it loads them.
+  window.RM_TRANSLATION_EXTRAS = translations;
   for (const [lang, entries] of Object.entries(translations)) {
-    Object.assign(window.RM_TRANSLATIONS[lang], entries);
+    if (window.RM_TRANSLATIONS?.[lang]) Object.assign(window.RM_TRANSLATIONS[lang], entries);
   }
 })();

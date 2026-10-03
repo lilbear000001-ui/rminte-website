@@ -18,10 +18,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&amp;family=Noto+Sans+SC:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
   <meta name="theme-color" content="#000000">
-  <script src="visitor-language.js" defer></script>
-  <script src="assets/translations.js?v=footer-portable-20261003" defer></script>
-  <script src="assets/demo-copy.js" defer></script>
-  <script src="assets/i18n.js" defer></script>
+  <script>
+    // ja/ko/es/fr carry their own catalog file; zh and en need none. Resolve the language the way i18n.js does and load only that file.
+    (function (up) {
+      var ok = /^(zh|en|ja|ko|es|fr)$/, c = window.RM_CATALOG = { base: up + 'assets/translations/', v: 'catalogs-20261003' };
+      c.load = function () {
+        var s; try { s = localStorage.getItem('rm-soft-lang'); } catch (e) {}
+        var l = [new URLSearchParams(location.search).get('lang'), (location.hash.match(/^#(zh|en|ja|ko|es|fr)-/) || [])[1], s, window.RM_DEFAULT_LANG].filter(function (x) { return ok.test(x); })[0];
+        if (l && l !== 'zh' && l !== 'en') document.write('<script src="' + c.base + l + '.js?v=' + c.v + '" defer><\/script>');
+        return l;
+      };
+      if (!c.load()) document.write('<script src="' + up + 'visitor-language.js"><\/script><script>RM_CATALOG.load()<\/script>');
+    })('');
+  </script>
+  <script src="assets/demo-copy.js?v=catalogs-20261003" defer></script>
+  <script src="assets/i18n.js?v=catalogs-20261003" defer></script>
   <script>
     (function () {
       if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -36,7 +47,7 @@
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/brand.css?v=product-black-1">
-  <link rel="stylesheet" href="assets/styles.css?v=craft-footer-1">
+  <link rel="stylesheet" href="assets/styles.css?v=tokens-1">
   <link rel="stylesheet" href="assets/tianshanos-demo-modal.css">
   <script src="assets/site-data.js?v=footer-portable-20261003" defer></script>
   <script src="assets/home-architecture.js?v=architecture-610b2b5" defer></script>
@@ -74,7 +85,7 @@
   <main id="main">
     <section class="hero-section" id="hero" aria-labelledby="heroTitle">
       <video class="hero-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
-        <source src="assets/images/hero-bg.mp4?v=20260907-trim" type="video/mp4">
+        <source src="assets/images/hero-bg.mp4?v=20261003-silent" type="video/mp4">
       </video>
       <div class="hero-shade" aria-hidden="true"></div>
       <div class="section-inner hero-grid reveal">
@@ -170,7 +181,7 @@
 
     <section class="thermal-section" id="thermal" aria-labelledby="thermalTitle">
       <video class="thermal-bg-video" autoplay muted loop playsinline preload="metadata" poster="assets/images/thermal-airflow-poster.jpg" aria-hidden="true">
-        <source src="assets/images/thermal-airflow-loop-hd.mp4?v=3" type="video/mp4">
+        <source src="assets/images/thermal-airflow-loop-hd.mp4?v=4" type="video/mp4">
       </video>
       <div class="thermal-shade" aria-hidden="true"></div>
       <div class="section-inner thermal-stage">
@@ -181,7 +192,7 @@
         </div>
         <figure class="thermal-detail">
           <div class="thermal-detail-photo">
-            <img src="assets/images/thermal-fan-blade.png" alt="EricLake 定制风扇叶片微距特写" width="1254" height="1254" loading="lazy" decoding="async" data-i18n-alt-zh="EricLake 定制风扇叶片微距特写" data-i18n-alt-en="Macro photograph of an EricLake custom fan blade">
+            <img src="assets/images/thermal-fan-blade.webp" alt="EricLake 定制风扇叶片微距特写" width="1254" height="1254" loading="lazy" decoding="async" data-i18n-alt-zh="EricLake 定制风扇叶片微距特写" data-i18n-alt-en="Macro photograph of an EricLake custom fan blade">
           </div>
           <figcaption><strong>0.13 <small>mm</small></strong><span data-ui="thermalDetailCaption">超高速射出成型叶片承担持续散热</span></figcaption>
         </figure>
@@ -294,7 +305,7 @@
             </article>
             <article class="craft-story-panel">
               <figure class="craft-story-photo">
-                <img src="assets/images/craft-card-slot-detail.png" alt="工艺公差工艺细节" loading="lazy" decoding="async" data-i18n-alt-zh="工艺公差工艺细节" data-i18n-alt-en="Manufacturing tolerance detail">
+                <img src="assets/images/craft-card-slot-detail.webp" alt="工艺公差工艺细节" loading="lazy" decoding="async" data-i18n-alt-zh="工艺公差工艺细节" data-i18n-alt-en="Manufacturing tolerance detail">
               </figure>
               <div class="craft-story-text">
                 <p class="craft-story-value">＜0.03 <small>mm</small></p>
