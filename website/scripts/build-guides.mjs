@@ -503,7 +503,7 @@ function pageTemplate(config, rendered) {
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&amp;family=Noto+Sans+SC:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/brand.css?v=slate-2">
-  <link rel="stylesheet" href="../assets/styles.css?v=tokens-1">
+  <link rel="stylesheet" href="../assets/styles.css?v=stage1-1">
   <link rel="stylesheet" href="../assets/guides.css?v=table-header-1">
   <script id="guidePageData" type="application/json">${pageData}</script>
   <script>

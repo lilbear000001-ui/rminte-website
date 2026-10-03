@@ -1,6 +1,6 @@
 # RMinte 官网设计系统 v2
 
-状态：**方向已确认（D1–D7），规范已并入根目录 `DESIGN.md`（2026-10-03）。阶段 0（令牌与性能）已在 `design/v2` 分支本地实现、待用户确认，视觉层（阶段 1–4）尚未实施。** 本目录是细节与实施依据；两者不一致时以 `DESIGN.md` 为准。
+状态：**方向已确认（D1–D7），规范已并入根目录 `DESIGN.md`（2026-10-03）。阶段 0（令牌与性能）已在 `design/v2` 分支本地提交（用户已确认）；阶段 1（首页首屏与硬件模块）也已本地提交（用户已确认）；阶段 2–4 尚未实施。均未推送、未上线。** 本目录是细节与实施依据；两者不一致时以 `DESIGN.md` 为准。
 
 ## 阅读顺序
 
@@ -19,7 +19,7 @@
 - `source/canvas/`：设计画布可编辑源文件（`*.dc.html`、`canvas.json`）。`.dc.html` 是设计画布的组件格式，需用设计画布工具打开和发布，不能当普通网页使用。
 - `source/tools/`：渲染截图与占位符替换脚本，是制作过程的记录，不是网站构建的一部分。
 - 在线画布「RMinte 官网设计方案」在作者的 claude.ai 账号里，私有；本目录是它的离线副本。
-- 字体文件不在本目录：Quantify RM 为付费授权字体；Geist、Geist Mono、Geist Pixel 为 OFL 开源，实施时再加入网站资源。
+- 字体文件不在本目录：Quantify RM 为付费授权字体；Geist、Geist Mono、Geist Pixel 为 OFL 开源。其中 Geist Mono（Regular）与 Geist Pixel（Circle）已在阶段 1 放进 `website/assets/fonts/`，许可文本在 `website/assets/licenses/geist-OFL.txt`；Geist 仍走 Google Fonts。
 
 ## 画板对照
 

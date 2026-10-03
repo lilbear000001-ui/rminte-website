@@ -186,21 +186,72 @@
       const item = document.createElement('div');
       item.className = 'metric';
       item.style.setProperty('--i', index);
-      item.append(textEl('strong', metric.value), textEl('span', t(metric.label)));
+      // "140W" shows its unit set apart; values such as 7x24 and 30B-200B stay whole.
+      const [, number, unit] = /^(\d+)([A-Za-z]+)$/.exec(metric.value) || [];
+      const value = textEl('strong', number || metric.value);
+      if (unit) value.append(textEl('span', unit, 'unit'));
+      item.append(value, textEl('span', t(metric.label)));
       return item;
     }));
+  }
+
+  // One spec cell: each number stays large and the unit right after it is set small, in the order the text gives them.
+  // "512GB–2TB NVMe" becomes 512 GB–2 TB with "NVMe" as a note beneath; text with no number (x86) stays whole.
+  function specCell(text) {
+    const cell = document.createElement('li');
+    cell.className = 'spec-cell';
+    const value = document.createElement('span');
+    value.className = 'spec-value';
+    const notes = [];
+    let seenNumber = false;
+    let unitDue = false;
+    let cursor = 0;
+    for (const match of text.matchAll(/\d+(?:[.,]\d+)?|\p{L}[\p{L}\d]*[,、・]?/gu)) {
+      const [token] = match;
+      const gap = text.slice(cursor, match.index);
+      cursor = match.index + token.length;
+      if (/^\d/.test(token)) {
+        value.append(gap, token);
+        seenNumber = unitDue = true;
+      } else if (unitDue) {
+        if (gap) value.append(textEl('span', gap, 'gap'));
+        value.append(textEl('i', token));
+        unitDue = false;
+      } else if (seenNumber) {
+        notes.push(token);
+      } else {
+        value.append(gap, token);
+      }
+    }
+    const rest = text.slice(cursor).trim(); // anything left after the last token (stray punctuation) is kept, never dropped
+    if (rest) {
+      if (seenNumber) notes.push(rest);
+      else value.append(rest);
+    }
+    cell.append(value);
+    if (notes.length) cell.append(textEl('span', notes.join(' '), 'spec-note'));
+    return cell;
+  }
+
+  function specGrid(spec) {
+    const grid = document.createElement('ul');
+    grid.className = 'spec-grid';
+    grid.append(...spec.split(/\s+[\/·]\s+/).map(specCell));
+    return grid;
   }
 
   function renderModules() {
     const root = $('#moduleBento');
     if (!root) return;
+    const featured = 2; // the first two modules are the large cards
     root.replaceChildren(...data.modules.map((module, index) => {
-      const spec = textEl('span', t(module.spec), 'module-spec');
+      const isFeature = index < featured;
+      const spec = t(module.spec);
       const card = cardShell([
         textEl('h3', t(module.name)),
         textEl('p', t(module.text)),
-        spec
-      ], 'module-card reveal');
+        isFeature ? specGrid(spec) : textEl('span', spec, 'module-spec')
+      ], `module-card${isFeature ? ' is-feature' : ''} reveal`);
       card.dataset.revealDelay = String(index * 60);
       return card;
     }));
