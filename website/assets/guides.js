@@ -91,7 +91,8 @@
 
     $$('[data-guide-text]').forEach((element) => {
       const value = RM_I18N.text(element.dataset, lang);
-      if (value !== undefined) element.textContent = value;
+      // Catalog titles may carry a line break meant for card headings; a breadcrumb is one line (ja joins the halves, the others use a space)
+      if (value !== undefined) element.textContent = element.closest('.guide-breadcrumb') ? value.replace(/\s*\n\s*/g, lang === 'ja' ? '' : ' ') : value;
       if (lang === 'ja' && element.matches('h1')) {
         const phrases = /((?:ユーザー|ページ操作|運用)ガイド|ネットワーク|セキュリティ)/g;
         element.replaceChildren(...value.split(phrases).filter(Boolean).map(part => {

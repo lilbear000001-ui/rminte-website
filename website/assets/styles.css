@@ -46,9 +46,11 @@
   /* Home chapter titles (DESIGN.md section 4): one size for every chapter */
   --chapter-title: clamp(36px, 3.89vw, 56px);
 
-  /* Figures: Geist Pixel from 28px up, Geist Mono below (the faces are declared further down this file) */
-  --font-pixel: "Geist Pixel", "Geist Mono", ui-monospace, monospace;
-  --font-mono: "Geist Mono", ui-monospace, monospace;
+  /* Figures: Geist Pixel from 28px up, Geist Mono below (the faces are declared further down this file).
+     Chinese, Japanese and Korean text set in these stacks must keep the page's own CJK face, so it follows the figures
+     before the generic monospace (Japanese and Korean override it with the --font-ui faces below). */
+  --font-pixel: "Geist Pixel", "Geist Mono", "Noto Sans SC", ui-monospace, monospace;
+  --font-mono: "Geist Mono", "Noto Sans SC", ui-monospace, monospace;
 
   /* Bridge tokens: pre-v2 values, 37 in use */
   /* Text */
@@ -2175,9 +2177,13 @@ main :is(h1,h2,h3) .rm-mark {
 /* Language-specific glyphs, scoped to the six-language main site. */
 html:lang(ja) :is(.home-body, .models-page, .guide-body, .gallery-body), .language-options :lang(ja) {
   --font-ui: "Geist", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --font-mono: "Geist Mono", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", ui-monospace, monospace;
+  --font-pixel: "Geist Pixel", "Geist Mono", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", ui-monospace, monospace;
 }
 html:lang(ko) :is(.home-body, .models-page, .guide-body, .gallery-body), .language-options :lang(ko) {
   --font-ui: "Geist", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-mono: "Geist Mono", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", ui-monospace, monospace;
+  --font-pixel: "Geist Pixel", "Geist Mono", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", ui-monospace, monospace;
   word-break: keep-all;
   overflow-wrap: break-word;
 }
