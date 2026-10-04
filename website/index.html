@@ -26,7 +26,7 @@
   <script>
     // ja/ko/es/fr carry their own catalog file; zh and en need none. Resolve the language the way i18n.js does and load only that file.
     (function (up) {
-      var ok = /^(zh|en|ja|ko|es|fr)$/, c = window.RM_CATALOG = { base: up + 'assets/translations/', v: 'catalogs-20261003' };
+      var ok = /^(zh|en|ja|ko|es|fr)$/, c = window.RM_CATALOG = { base: up + 'assets/translations/', v: 'catalogs-20261004' };
       c.load = function () {
         var s; try { s = localStorage.getItem('rm-soft-lang'); } catch (e) {}
         var l = [new URLSearchParams(location.search).get('lang'), (location.hash.match(/^#(zh|en|ja|ko|es|fr)-/) || [])[1], s, window.RM_DEFAULT_LANG].filter(function (x) { return ok.test(x); })[0];
@@ -36,8 +36,8 @@
       if (!c.load()) document.write('<script src="' + up + 'visitor-language.js"><\/script><script>RM_CATALOG.load()<\/script>');
     })('');
   </script>
-  <script src="assets/demo-copy.js?v=catalogs-20261003" defer></script>
-  <script src="assets/i18n.js?v=catalogs-20261003" defer></script>
+  <script src="assets/demo-copy.js?v=catalogs-20261004" defer></script>
+  <script src="assets/i18n.js?v=catalogs-20261004" defer></script>
   <script>
     (function () {
       if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -54,7 +54,7 @@
   <script src="assets/motion.js?v=stage2-2" defer></script>
   <link rel="preload" href="assets/fonts/GeistPixel-Circle.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/brand.css?v=product-black-1">
-  <link rel="stylesheet" href="assets/styles.css?v=stage2-2">
+  <link rel="stylesheet" href="assets/styles.css?v=stage3-1">
   <link rel="stylesheet" href="assets/tianshanos-demo-modal.css">
   <script src="assets/site-data.js?v=footer-portable-20261003" defer></script>
   <script src="assets/home-architecture.js?v=architecture-610b2b5" defer></script>

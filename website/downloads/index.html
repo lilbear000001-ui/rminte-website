@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="support-theme">
 <head>
   <meta charset="UTF-8">
   <script>
@@ -12,7 +12,7 @@
   <meta property="og:title" content="RM-01 下载中心 · RMinte" data-i18n-attr="content" data-zh="RM-01 下载中心 · RMinte" data-en="RM-01 Downloads · RMinte">
   <meta property="og:description" content="RM-01 下载中心，提供产品手册、技术资料、固件与软件发布包。" data-i18n-attr="content" data-zh="RM-01 下载中心，提供产品手册、技术资料、固件与软件发布包。" data-en="Download RM-01 product manuals, technical materials, firmware, and software releases.">
   <meta property="og:image" content="../assets/images/img4.png">
-  <meta name="theme-color" content="#141618">
+  <meta name="theme-color" content="#0d0f12">
   <title data-zh="RM-01 下载中心 · RMinte" data-en="RM-01 Downloads · RMinte">RM-01 下载中心 · RMinte</title>
   <link rel="icon" type="image/png" sizes="512x512" href="../assets/images/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,13 +21,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <script src="../assets/motion.js?v=stage2-2" defer></script>
   <link rel="stylesheet" href="../assets/brand.css?v=slate-2">
-  <link rel="stylesheet" href="../assets/styles.css?v=stage2-2">
+  <link rel="stylesheet" href="../assets/styles.css?v=stage3-1">
   <link rel="stylesheet" href="../assets/guides.css?v=clean-cards-1">
-  <link rel="stylesheet" href="../assets/downloads.css?v=clear-headings-1">
+  <link rel="stylesheet" href="../assets/downloads.css?v=stage3-1">
   <script>
     // ja/ko/es/fr carry their own catalog file; zh and en need none. Resolve the language the way i18n.js does and load only that file.
     (function (up) {
-      var ok = /^(zh|en|ja|ko|es|fr)$/, c = window.RM_CATALOG = { base: up + 'assets/translations/', v: 'catalogs-20261003' };
+      var ok = /^(zh|en|ja|ko|es|fr)$/, c = window.RM_CATALOG = { base: up + 'assets/translations/', v: 'catalogs-20261004' };
       c.load = function () {
         var s; try { s = localStorage.getItem('rm-soft-lang'); } catch (e) {}
         var l = [new URLSearchParams(location.search).get('lang'), (location.hash.match(/^#(zh|en|ja|ko|es|fr)-/) || [])[1], s, window.RM_DEFAULT_LANG].filter(function (x) { return ok.test(x); })[0];
@@ -37,8 +37,8 @@
       if (!c.load()) document.write('<script src="' + up + 'visitor-language.js"><\/script><script>RM_CATALOG.load()<\/script>');
     })('../');
   </script>
-  <script src="../assets/i18n.js?v=catalogs-20261003" defer></script>
-  <script src="../assets/downloads.js?v=models-launch-1" defer></script>
+  <script src="../assets/i18n.js?v=catalogs-20261004" defer></script>
+  <script src="../assets/downloads.js?v=stage3-1" defer></script>
   <script src="../assets/site-data.js?v=footer-portable-20261003" defer></script>
   <script src="../assets/footer.js?v=models-launch-1" defer></script>
 </head>
@@ -89,7 +89,8 @@
       <p class="download-lead" data-download-text data-zh="获取 RM-01 产品文档、技术资料、固件与软件发布包，并直接使用在线工具。" data-en="Get RM-01 product documentation, technical materials, firmware and software releases, plus browser-based online tools.">获取 RM-01 产品文档、技术资料、固件与软件发布包，并直接使用在线工具。</p>
     </section>
 
-    <section class="download-overview" aria-label="下载资源分类" data-i18n-aria-label-zh="下载资源分类" data-i18n-aria-label-en="Download categories">
+    <div class="download-layout">
+    <nav class="download-overview" aria-label="下载资源分类" data-i18n-aria-label-zh="下载资源分类" data-i18n-aria-label-en="Download categories">
       <a class="download-overview-item" href="#documents">
 
         <strong data-download-text data-zh="产品文档" data-en="Product documents">产品文档</strong>
@@ -106,7 +107,8 @@
 
         <strong data-download-text data-zh="在线工具" data-en="Online tools">在线工具</strong>
       </a>
-    </section>
+    </nav>
+    <div class="download-sections">
 
     <section class="download-section" id="documents" aria-labelledby="documentTitle">
       <div class="download-section-head">
@@ -452,6 +454,8 @@
         </article>
       </div>
     </section>
+    </div>
+  </div>
   </main>
 
   <footer class="footer">

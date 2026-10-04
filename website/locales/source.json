@@ -3755,5 +3755,13 @@
     "sources": [
       "assets/i18n-ui.json"
     ]
+  },
+  {
+    "zh": "示意",
+    "en": "Illustrative",
+    "sources": [
+      "models/index.html:91",
+      "models/index.html:103"
+    ]
   }
 ]

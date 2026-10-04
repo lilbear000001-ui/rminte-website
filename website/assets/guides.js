@@ -69,6 +69,19 @@
     $$('[data-toc-target]').forEach((link) => {
       link.classList.toggle('active', link.dataset.tocTarget === active.id);
     });
+
+    // The chapter being read: the nearest h2 at or before the active heading, without its number
+    const chapter = active.tagName === 'H2' ? active : headings.filter((heading) => heading.tagName === 'H2' && heading.offsetTop <= active.offsetTop).pop();
+    const chapterName = chapter ? chapter.textContent.replace(/^\s*\d+\.\s*/, '').trim() : '';
+    const crumb = $('[data-guide-crumb-chapter]');
+    if (crumb) {
+      crumb.textContent = chapterName;
+      crumb.hidden = !chapterName;
+      const separator = $('[data-guide-crumb-sep]');
+      if (separator) separator.hidden = !chapterName;
+    }
+    const current = $('[data-guide-toc-current]');
+    if (current) current.textContent = active.textContent.replace(/^\s*\d+\.\s*/, '').trim();
   }
 
   function applyLanguage(nextLang, headingKey = null) {
@@ -108,6 +121,7 @@
     RM_I18N.apply(lang);
 
     refreshSearch();
+    setupExamples();
     markBrandText();
 
     if (headingKey) {
@@ -270,6 +284,22 @@
         render();
       });
 
+    // The words the reader typed are underlined (sapphire) in the title and the snippet of each result
+    function highlight(text, currentQuery) {
+      const words = currentQuery.split(' ').filter(Boolean).map((word) => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+      const fragment = document.createDocumentFragment();
+      if (!words.length) { fragment.append(text); return fragment; }
+      text.split(new RegExp(`(${words.join('|')})`, 'gi')).forEach((part, index) => {
+        if (index % 2) {
+          const hit = document.createElement('span');
+          hit.className = 'guide-hit';
+          hit.textContent = part;
+          fragment.append(hit);
+        } else if (part) fragment.append(part);
+      });
+      return fragment;
+    }
+
     function createResult(entry, currentQuery) {
       const link = document.createElement('a');
       link.className = `guide-search-result guide-search-result-${entry.guide}`;
@@ -280,11 +310,12 @@
       meta.textContent = `${entry.guideLabel} · ${RM_I18N.names[entry.lang]}`;
 
       const title = document.createElement('strong');
-      title.textContent = entry.title;
+      title.append(highlight(entry.title, currentQuery));
 
       const snippet = document.createElement('span');
       snippet.className = 'guide-search-result-snippet';
-      snippet.textContent = resultSnippet(entry, currentQuery);
+      const snippetText = resultSnippet(entry, currentQuery);
+      snippet.append(highlight(snippetText, currentQuery));
 
       const arrow = document.createElement('span');
       arrow.className = 'guide-search-result-arrow';
@@ -292,7 +323,7 @@
       arrow.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;flex-shrink:0;pointer-events:none" aria-hidden="true" focusable="false"><path d="M7 17 17 7M7 7h10v10"/></svg>';
 
       link.append(meta, title);
-      if (snippet.textContent !== entry.title) link.append(snippet);
+      if (snippetText !== entry.title) link.append(snippet);
       link.append(arrow);
       return link;
     }
@@ -377,6 +408,45 @@
 
     refreshSearch = render;
     void indexPromise;
+
+    // Cmd/Ctrl + K moves to the search box; the hint shows the key for this platform
+    const mac = /Mac|iPhone|iPad/i.test(navigator.platform || navigator.userAgent);
+    $$('[data-guide-kbd]').forEach((hint) => { hint.textContent = mac ? '⌘ K' : 'Ctrl K'; });
+    document.addEventListener('keydown', (event) => {
+      if (!(event.metaKey || event.ctrlKey) || event.altKey || event.key.toLowerCase() !== 'k') return;
+      const input = $$('[data-guide-search-input]').find((field) => field.offsetParent !== null);
+      if (!input) return;
+      event.preventDefault();
+      input.focus();
+      input.select();
+    });
+  }
+
+  // "Try: A, B, C": each example becomes a button that fills the search box (the sentence itself is unchanged)
+  function setupExamples() {
+    $$('.guide-search-hint').forEach((hint) => {
+      const match = hint.textContent.match(/^(.*?[:：]\s*)(.+)$/);
+      if (!match) return;
+      const terms = match[2].split(/(?:、|，|,\s*)/).map((term) => term.trim()).filter(Boolean);
+      if (terms.length < 2) return;
+      const separators = match[2].match(/(?:、|，|,\s*)/g) || [];
+      hint.replaceChildren(match[1]);
+      terms.forEach((term, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'guide-search-term';
+        button.textContent = term;
+        button.addEventListener('click', () => {
+          const input = $$('[data-guide-search-input]').find((field) => field.offsetParent !== null);
+          if (!input) return;
+          input.value = term;
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          input.focus();
+        });
+        hint.append(button);
+        if (index < separators.length) hint.append(separators[index]);
+      });
+    });
   }
 
   document.addEventListener('DOMContentLoaded', () => {

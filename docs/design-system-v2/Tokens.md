@@ -1,6 +1,6 @@
 # 令牌与组件规范
 
-机器可读版本见 [tokens.json](tokens.json)。画板：`boards/Spec.png`。状态：方向已确认。色阶令牌与逐一承载旧值的 `--lg-*` 桥接令牌已定义在 `website/assets/styles.css` 开头（阶段 0，本地提交）。首页首屏与硬件模块已在阶段 1 改用色阶，对应的 10 个桥接令牌随之删除（剩 41 个）；其余组件改用色阶即视觉变化，随各阶段逐组件进行；所有旧值都有对应项，可无损迁移。
+机器可读版本见 [tokens.json](tokens.json)。画板：`boards/Spec.png`。状态：方向已确认。色阶令牌与逐一承载旧值的 `--lg-*` 桥接令牌已定义在 `website/assets/styles.css` 开头（阶段 0，本地提交）。首页首屏与硬件模块已在阶段 1 改用色阶，对应的 10 个桥接令牌随之删除；阶段 2 又删 2 个，阶段 3 随章节标签改用色阶再删 2 个（剩 37 个）；其余组件改用色阶即视觉变化，随各阶段逐组件进行；所有旧值都有对应项，可无损迁移。阶段 3 新增的令牌：`--chapter-title`、`--font-pixel`、`--font-mono`，以及把品牌变量指向色阶的页面主题 `support-theme`（下载与指南）。
 
 ## 色彩
 
@@ -35,6 +35,7 @@ Geist + Noto Sans SC 为界面字体；Geist Mono 用于数字（D2）；Geist P
 | --- | --- | --- |
 | display | clamp(64px, 11.7vw, 168px) | Quantify RM，行高 .95 |
 | h1 | clamp(40px, 4.4vw, 64px) | 500，字距 -0.04em，行高 1.05 |
+| chapter | clamp(36px, 3.89vw, 56px) | 首页章节标题（画板 05），500，字距 -0.04em，行高 1.1；令牌 `--chapter-title`，整机协同桌面例外 clamp(32px, 2.8vw, 43px) |
 | h2 | clamp(32px, 3.3vw, 48px) | 500，字距 -0.035em，行高 1.1 |
 | h3 | 24–28px | 500，行高 1.25 |
 | lead | 18–20px | 400，行高 1.7，text-2 |

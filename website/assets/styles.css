@@ -43,14 +43,20 @@
   /* Keyboard focus ring: sapphire, 2px */
   --focus-ring: var(--sapphire-300);
 
-  /* Bridge tokens: pre-v2 values, 39 in use */
+  /* Home chapter titles (DESIGN.md section 4): one size for every chapter */
+  --chapter-title: clamp(36px, 3.89vw, 56px);
+
+  /* Figures: Geist Pixel from 28px up, Geist Mono below (the faces are declared further down this file) */
+  --font-pixel: "Geist Pixel", "Geist Mono", ui-monospace, monospace;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+
+  /* Bridge tokens: pre-v2 values, 37 in use */
   /* Text */
   --lg-04100e:          #04100e; /* .skip-link:focus-visible */
   --lg-111111:          #111111; /* ::selection */
   --lg-121518:          #121518; /* .cta-button */
   --lg-243-248-246-a78: rgba(243, 248, 246, 0.78); /* .thermal-copy p +2 */
   --lg-244-247-242-a74: rgba(244, 247, 242, 0.74); /* .glass-touch-copy p */
-  --lg-9a9da1:          #9a9da1; /* .chapter-label +5 */
   --lg-a1a5a9:          #a1a5a9; /* .scroll-cue */
   --lg-b3b5b7:          #b3b5b7; /* .thermal-detail figcaption span */
   --lg-b9bcbe:          #b9bcbe; /* .thermal-copy>p:not(.eyebrow):not(.chapter-... +3 */
@@ -72,7 +78,6 @@
   --lg-235-238-240-a075: rgba(235, 238, 240, 0.075); /* .eyebrow */
   --lg-235-238-240-a08:  rgba(235, 238, 240, 0.08); /* .card-core, .product-core, .bezel-core +1 */
   --lg-25-28-31-a82:     rgba(25, 28, 31, 0.82); /* .nav-island +2 */
-  --lg-73777b:           #73777b; /* .chapter-label::before */
   --lg-8-10-9-a72:       rgba(8, 10, 9, 0.72); /* .language-toggle, .menu-button, .ghost-button */
   --lg-8-10-9-a74:       rgba(8, 10, 9, 0.74); /* .footer-contact, .footer-github */
   --lg-8-10-9-a9:        rgba(8, 10, 9, 0.9); /* body.teardown-active .brand-mark, body.tear... */
@@ -90,6 +95,22 @@
   --lg-00000066: #00000066; /* .language-options */
   --lg-k-a22:    rgba(0, 0, 0, 0.22); /* .footer-contact, .footer-github */
   --lg-k-a24:    rgba(0, 0, 0, 0.24); /* .language-toggle, .menu-button, .ghost-button */
+}
+
+/* Support pages (downloads, guides): lifted black ground and panels from the scale (D6, DESIGN.md section 3). brand.css, and with
+   it the OTA and LED-tool pages, is untouched: this only re-points the variables it defines, the same way product-theme does. */
+:root.support-theme {
+  --bg: var(--n-2);
+  --bg-2: var(--n-3);
+  --panel: var(--n-3);
+  --panel-strong: var(--n-4);
+  --ink: var(--text-1);
+  --ink-soft: var(--text-2);
+  --muted: var(--text-2);
+  --dim: var(--text-3);
+  --accent: var(--text-1);
+  --line: var(--line-2);
+  --line-strong: var(--line-3);
 }
 
 html.i18n-loading body { visibility: hidden; }
@@ -485,9 +506,6 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
 .section-heading h2 {
   margin: 0;
   color: var(--ink);
-  font-size: clamp(2.7rem, 5.1vw, 5.9rem);
-  line-height: 0.98;
-  font-weight: 860;
   text-wrap: balance;
 }
 
@@ -567,10 +585,6 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
 
 .agent-terminal-copy h2 {
   margin: 0;
-  font-size: clamp(2.8rem, 5vw, 5.8rem);
-  line-height: 0.98;
-  font-weight: 860;
-  letter-spacing: -0.04em;
   text-wrap: balance;
 }
 
@@ -688,9 +702,6 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
 
 .teardown-copy h2 {
   margin: 0;
-  font-size: clamp(2.6rem, 4.8vw, 5.4rem);
-  line-height: 0.98;
-  font-weight: 860;
   text-wrap: balance;
 }
 
@@ -776,10 +787,6 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
 .thermal-copy h2 {
   margin: 0;
   color: var(--ink);
-  font-size: clamp(3rem, 5.4vw, 6rem);
-  line-height: 0.96;
-  font-weight: 860;
-  letter-spacing: -0.045em;
   text-wrap: balance;
   white-space: pre-line;
 }
@@ -888,10 +895,6 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
   max-width: 700px;
   white-space: pre-line;
   margin: 0;
-  font-size: clamp(3rem, 4vw, 4.8rem);
-  line-height: 0.96;
-  font-weight: 860;
-  letter-spacing: -0.045em;
   text-wrap: balance;
 }
 
@@ -976,10 +979,6 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
   white-space: pre-line;
   max-width: 700px;
   margin: 0;
-  font-size: clamp(3rem, 4vw, 4.8rem);
-  line-height: 0.96;
-  font-weight: 860;
-  letter-spacing: -0.045em;
   text-wrap: balance;
 }
 
@@ -1073,10 +1072,6 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
   max-width: 8.5em;
   margin: 0;
   color: var(--lg-f7f8f5);
-  font-size: clamp(3.4rem, 6.2vw, 6.8rem);
-  font-weight: 780;
-  letter-spacing: -0.07em;
-  line-height: 0.96;
   text-wrap: balance;
 }
 
@@ -1121,10 +1116,6 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
 .craft-copy h2 {
   max-width: 850px;
   margin: 0;
-  font-size: clamp(3rem, 5.9vw, 6.6rem);
-  line-height: 0.98;
-  font-weight: 860;
-  letter-spacing: -0.052em;
   text-wrap: balance;
 }
 
@@ -1413,21 +1404,12 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
 }
 
 @media (max-width: 820px) {
-  .agent-terminal-copy h2 {
-    font-size: clamp(2.7rem, 12vw, 5rem);
-  }
 }
 
 @media (max-width: 820px) {
-  .cartridge-copy h2 {
-    font-size: clamp(2.7rem, 12vw, 5rem);
-  }
 }
 
 @media (max-width: 820px) {
-  .craft-copy h2 {
-    font-size: clamp(2.8rem, 13vw, 5.2rem);
-  }
 }
 
 @media (max-width: 820px) {
@@ -1519,7 +1501,6 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
 @media (max-width: 820px) {
   .glass-touch-copy h2 {
     max-width: 7em;
-    font-size: clamp(3.25rem, 15vw, 5rem);
   }
 }
 
@@ -1539,9 +1520,6 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
 }
 
 @media (max-width: 820px) {
-  .thermal-copy h2 {
-    font-size: clamp(3.2rem, 10vw, 5.4rem);
-  }
 }
 
 @media (max-width: 820px) {
@@ -1676,9 +1654,6 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
 }
 
 @media (max-width: 520px) {
-  .sapphire-copy h2 {
-    font-size: clamp(3rem, 13.5vw, 4.8rem);
-  }
 }
 
 @media (max-width: 520px) {
@@ -1794,14 +1769,18 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
 }
 
 .thermal-detail strong {
+  font-family: var(--font-pixel);
+  font-synthesis: none;
   line-height: 1;
-  letter-spacing: -.055em;
+  letter-spacing: -.02em;
 }
 
 .thermal-detail small {
-  font-size: 1rem;
+  margin-left: .2em;
+  color: var(--sapphire-300);
+  font-family: var(--font-mono);
+  font-size: clamp(14px, 1.1vw, 16px);
   letter-spacing: 0;
-  color: var(--muted);
 }
 
 .cartridge-detail {
@@ -1868,9 +1847,6 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
 }
 
 .craft-story-heading h2 {
-  font-size: clamp(2rem, 3.5vw, 3.4rem);
-  line-height: 1.18;
-  letter-spacing: -.04em;
   margin: 0;
   text-wrap: balance;
 }
@@ -1902,15 +1878,23 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
   transform-origin: 35% 40%;
 }
 
+/* Craft figures: LED digits, the unit in sapphire (DESIGN.md section 4) */
 .craft-story-value {
   margin: 0 0 22px;
+  font-family: var(--font-pixel);
+  font-size: clamp(48px, 5vw, 72px);
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: 0;
   line-height: 1.1;
   white-space: nowrap;
 }
 
 .craft-story-value small {
-  font-size: clamp(.9rem, 1.6vw, 1.25rem);
-  color: var(--muted);
+  margin-left: .35em;
+  color: var(--sapphire-300);
+  font-family: var(--font-mono);
+  font-size: clamp(14px, 1.3vw, 18px);
   letter-spacing: 0;
 }
 
@@ -1988,9 +1972,6 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
 }
 
 @media (max-width: 820px) {
-  .craft-story-heading h2 {
-    font-size: 1.7rem;
-  }
 }
 
 @media (max-width: 820px) {
@@ -2039,19 +2020,13 @@ main .teardown-layout {
   }
 }
 
-html main #heroTitle, html main section h2[data-ui] {
-  font-size: var(--title-small);
-}
-
-html main #heroTitle, html main section h2[data-title-size="large"] {
-  font-size: var(--title-large);
+/* Chapter titles: one size, 500, tight tracking (DESIGN.md section 4); the hero title has its own block below */
+html main section h2[data-ui] {
+  font-size: var(--chapter-title);
 }
 
 main h1[data-hero-title], main h2[data-ui] {
   font-family: var(--font-ui);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.14;
 }
 
 html[lang="zh-CN"] main :is(h1, h2, h3) {
@@ -2082,10 +2057,16 @@ body {
   color: var(--lg-111111);
 }
 
-main h1[data-hero-title],main h2[data-ui] {
+main h1[data-hero-title] {
   font-weight: 550;
   letter-spacing: -.035em;
   line-height: 1.23;
+}
+
+main h2[data-ui] {
+  font-weight: 500;
+  letter-spacing: -.04em;
+  line-height: 1.1;
 }
 
 main h3 {
@@ -2097,24 +2078,36 @@ main :is(h1,h2,h3) .rm-mark {
   letter-spacing: 0;
 }
 
+/* Chapter label: a 12px hollow prism in sapphire, then the name (DESIGN.md section 10). Only the home page uses it. */
 .chapter-label {
-  margin: 0 0 24px;
-  color: var(--lg-9a9da1);
   font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: 450;
-  line-height: 1.5;
-  letter-spacing: .14em;
   text-transform: uppercase;
+}
+
+.home-body main p.chapter-label {
+  margin: 0 0 24px;
+  color: var(--text-2);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: .16em;
+}
+
+/* Over the sapphire photograph the label sits in the brightest part of the glow; the brighter silver keeps it above 4.5:1 */
+.home-body main .sapphire-copy p.chapter-label {
+  color: var(--text-1);
 }
 
 .chapter-label::before {
   content: '';
   display: inline-block;
-  width: 18px;
-  height: 1px;
-  margin: 0 12px 4px 0;
-  background: var(--lg-73777b);
+  width: 12px;
+  height: 12px;
+  margin: -3px 12px -3px 0; /* the vertical margins keep the 12px prism from growing the label's line box */
+  vertical-align: -1px;
+  background: var(--sapphire-300);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2'%3E%3Cpath d='M2 3h20L12 21z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2'%3E%3Cpath d='M2 3h20L12 21z'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 .site-shell {
@@ -2312,13 +2305,6 @@ html:lang(ja) .home-body h2 { white-space: pre-line; }
   margin-top: 24px;
 }
 
-.teardown-copy>.chapter-label {
-  font-size: 11px;
-  line-height: 1.5;
-  margin: 0 0 24px;
-  color: var(--lg-9a9da1);
-}
-
 .teardown-film {
   padding: 0;
   border-radius: 0;
@@ -2345,8 +2331,8 @@ html:lang(ja) .home-body h2 { white-space: pre-line; }
 }
 
 .thermal-detail strong {
-  font-size: clamp(3rem,4.5vw,4.2rem);
-  font-weight: 450;
+  font-size: clamp(40px, 3.89vw, 56px);
+  font-weight: 400;
 }
 
 .thermal-detail figcaption {
@@ -2365,26 +2351,12 @@ html:lang(ja) .home-body h2 { white-space: pre-line; }
   color: var(--lg-b9bcbe);
 }
 
-.sapphire-copy>.chapter-label {
-  font-size: 11px;
-  line-height: 1.5;
-  margin: 0 0 24px;
-  color: var(--lg-9a9da1);
-}
-
 .glass-touch-copy>p:not(.chapter-label) {
   font-size: 15px;
   line-height: 1.95;
   color: var(--lg-b9bcbe);
   max-width: 430px;
   margin-top: 26px;
-}
-
-.glass-touch-copy>.chapter-label {
-  font-size: 11px;
-  line-height: 1.5;
-  margin: 0 0 24px;
-  color: var(--lg-9a9da1);
 }
 
 .agent-terminal-copy h2 {
@@ -2410,13 +2382,6 @@ html:lang(ja) .home-body h2 { white-space: pre-line; }
   margin-top: 26px;
 }
 
-.cartridge-copy>.chapter-label {
-  font-size: 11px;
-  line-height: 1.5;
-  margin: 0 0 24px;
-  color: var(--lg-9a9da1);
-}
-
 .craft-story {
   background: var(--bg);
 }
@@ -2440,12 +2405,6 @@ html:lang(ja) .home-body h2 { white-space: pre-line; }
 
 .craft-story-photo {
   height: clamp(300px,42vh,500px);
-}
-
-.craft-story-value {
-  font-size: clamp(4rem,7vw,7rem);
-  font-weight: 400;
-  letter-spacing: -.04em;
 }
 
 .craft-story-text h3 {
@@ -2532,8 +2491,6 @@ a:focus-visible,button:focus-visible {
     --section-x: 24px;
     --section-space: 80px;
     --content-space: 32px;
-    --title-large: clamp(2.125rem,5.5vw,3rem);
-    --title-small: clamp(2rem,5vw,2.7rem);
   }
 }
 
@@ -2637,7 +2594,6 @@ a:focus-visible,button:focus-visible {
 
 @media(max-width:820px) {
   .craft-story-value {
-    font-size: 3.6rem;
     margin-bottom: 10px;
   }
 }
@@ -2662,7 +2618,7 @@ a:focus-visible,button:focus-visible {
 }
 
 @media(max-width:520px) {
-  .chapter-label {
+  .home-body main p.chapter-label {
     font-size: 10px;
     margin-bottom: 22px;
     letter-spacing: .09em;
@@ -2678,13 +2634,6 @@ a:focus-visible,button:focus-visible {
 @media(max-width:520px) {
   .teardown-layout {
     gap: 24px;
-  }
-}
-
-@media(max-width:520px) {
-  .teardown-copy>.chapter-label,.sapphire-copy>.chapter-label,.glass-touch-copy>.chapter-label,.cartridge-copy>.chapter-label {
-    font-size: 10px;
-    margin-bottom: 22px;
   }
 }
 
@@ -2721,7 +2670,6 @@ a:focus-visible,button:focus-visible {
 
 @media(max-width:520px) {
   .craft-story-heading h2 {
-    font-size: var(--title-small);
     max-width: 11em;
   }
 }
@@ -2747,12 +2695,6 @@ a:focus-visible,button:focus-visible {
 @media(max-width:520px) {
   .craft-story-panel {
     gap: 20px;
-  }
-}
-
-@media(max-width:520px) {
-  .craft-story-value {
-    font-size: 3.3rem;
   }
 }
 
@@ -2785,23 +2727,6 @@ a:focus-visible,button:focus-visible {
 @media(max-width:520px) {
   .footer-brand > div > span {
     font-size: 9px;
-  }
-}
-
-.home-body main p.chapter-label {
-  margin: 0 0 24px;
-  font-size: 11px;
-  line-height: 1.5;
-  font-weight: 450;
-  letter-spacing: .14em;
-  color: var(--lg-9a9da1);
-}
-
-@media(max-width:520px) {
-  .home-body main p.chapter-label {
-    font-size: 10px;
-    margin-bottom: 22px;
-    letter-spacing: .09em;
   }
 }
 
@@ -2903,7 +2828,7 @@ html:lang(ja) .home-body .stack-plane>span{word-break:keep-all}
 .home-body .visual-heading>p:last-child{font-size:15px}
 }
 @media(max-width:520px){
-.home-body .visual-heading h2{font-size:34px;line-height:1.2;letter-spacing:-.025em}.home-body .visual-heading>p:last-child{margin-top:22px;line-height:1.85}
+.home-body .visual-heading h2{line-height:1.2}.home-body .visual-heading>p:last-child{margin-top:22px;line-height:1.85}
 .home-body .engine-visual-section{padding-top:76px;padding-bottom:36px}.home-body .engine-experience{margin-top:24px;gap:24px}
 .home-body .engine-art{aspect-ratio:1.1}.home-body .software-stack{width:56%;height:52%;left:24%;top:37%}.home-body .stack-plane>span{font-size:13px;left:15px;bottom:12px}
 html:is(:lang(ja),:lang(ko),:lang(es),:lang(fr)) .home-body .software-stack{--layer-step:30px;top:43%}
@@ -2917,7 +2842,7 @@ html:is(:lang(ja),:lang(ko),:lang(es),:lang(fr)) .home-body .memory-grid,html:is
 .home-body .system-experience{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1.8fr);grid-template-areas:"heading art" "reading art";column-gap:44px;row-gap:22px;align-items:start}
 .home-body .system-heading .chapter-label{margin-bottom:22px}
 .home-body .system-heading{grid-area:heading;max-width:100%;margin:0}
-.home-body .system-heading h2{font-size:clamp(32px,2.8vw,43px);line-height:1.18;letter-spacing:-.03em;text-wrap:balance}
+.home-body .system-heading h2{font-size:clamp(32px,2.8vw,43px);line-height:1.18;letter-spacing:-.04em;text-wrap:balance}
 .home-body #productTitle>.rm-mark{display:block;margin-bottom:10px}
 .home-body .system-heading>p[data-ui="productLead"]{font-size:14px;line-height:1.75;margin:20px 0 0;max-width:none;color:var(--muted)}
 .home-body .system-demo-action{margin-top:28px;border:0;cursor:pointer}
@@ -2989,7 +2914,7 @@ html:is(:lang(ja),:lang(ko),:lang(es),:lang(fr)) .home-body .memory-grid,html:is
 @media(max-width:820px){
   .home-body main>.system-visual-section{padding:64px 0 55px}
   .home-body .system-experience{grid-template-columns:1fr;grid-template-areas:"heading" "art" "reading";gap:30px}
-  .home-body .system-heading h2{max-width:600px;font-size:42px}
+  .home-body .system-heading h2{max-width:600px;font-size:var(--chapter-title)}
   .home-body .system-heading>p:last-child{font-size:15px;max-width:650px}
   .home-body .network-graph{width:100%;max-width:670px;justify-self:center;margin:0}
   .home-body .system-tabs{grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
@@ -2997,7 +2922,7 @@ html:is(:lang(ja),:lang(ko),:lang(es),:lang(fr)) .home-body .memory-grid,html:is
   .home-body .system-panel p{font-size:15px}
 }
 @media(max-width:520px){
-  .home-body .system-heading h2{font-size:34px;line-height:1.2}
+  .home-body .system-heading h2{line-height:1.2}
   .home-body .system-tabs{grid-template-columns:1fr 1fr;gap:0 20px}
   .home-body .network-desktop{display:none}.home-body .network-mobile{display:block}
   .home-body .network-graph{max-width:420px}
@@ -3195,10 +3120,6 @@ html:is(:lang(ja),:lang(ko),:lang(es),:lang(fr)) .home-body .memory-grid,html:is
 
 .hardware-section .section-heading h2 {
   max-width: none;
-  font-size: clamp(36px, 3.89vw, 56px);
-  font-weight: 500;
-  line-height: 1.08;
-  letter-spacing: -.04em;
 }
 
 .hardware-section .long-copy {
@@ -3622,4 +3543,25 @@ html.motion-js:not(.motion-ready) .hero-section [data-enter="line"] > .line-in {
     color: CanvasText;
     background: none;
   }
+}
+
+/* Static film grain, home page (DESIGN.md section 7, D4): one tiled image at about 3.5%, no blend mode, on the black ground only.
+   Photos and videos sit above it and are never covered. The models page applies the same tile in models.css. */
+.home-body,
+.home-body main > :is(.hardware-section, .teardown-section, .glass-touch-section, .agent-terminal-section, .cartridge-section, .craft-section),
+.home-body .footer {
+  background-image: url("images/grain.png");
+}
+
+/* The page you are on, in the navigation island of the sub-pages: a silver-white pill with dark text (boards 09 to 13).
+   The home page marks the chapter being read instead, with the quieter grey fill above. */
+.nav-island a[aria-current="page"] {
+  color: var(--n-2);
+  background: var(--text-1);
+  font-weight: 500;
+}
+
+.nav-island a[aria-current="page"]:hover {
+  color: var(--n-2);
+  background: var(--text-1);
 }

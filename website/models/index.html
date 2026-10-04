@@ -19,8 +19,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <script src="../assets/motion.js?v=stage2-2" defer></script>
   <link rel="stylesheet" href="../assets/brand.css">
-  <link rel="stylesheet" href="../assets/styles.css?v=stage2-2">
-  <link rel="stylesheet" href="models.css?v=benchmark-clean-1">
+  <link rel="stylesheet" href="../assets/styles.css?v=stage3-1">
+  <link rel="stylesheet" href="models.css?v=stage3-1">
 </head>
 <body class="models-page">
   <a class="skip-link" href="#main" data-zh="跳至主要内容" data-en="Skip to content" data-i18n-text data-zh="跳至主要内容" data-en="Skip to main content">跳至主要内容</a>
@@ -86,8 +86,9 @@
 
     <section class="mp-wrap mp-models" id="models" aria-label="模型介绍" data-i18n-aria-label-zh="模型介绍" data-i18n-aria-label-en="Model overview">
       <div class="mp-model-grid">
-        <article class="mp-model-card">
+        <article class="mp-model-card" data-bevel>
           <div class="mp-card-top"><h2 class="rm-mark">RMQ3x</h2><span class="mp-architecture-tag"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M1 1h4v4H1zm6 0h4v4H7zm6 0h4v4h-4zM1 7h4v4H1zm6 0h4v4H7zm6 0h4v4h-4zM1 13h4v4H1zm6 0h4v4H7zm6 0h4v4h-4z"/></svg>Dense</span></div>
+          <div class="mp-led" data-led="dense" aria-hidden="true"><div class="mp-led-grid"></div><p class="mp-led-note" data-zh="示意" data-en="Illustrative">示意</p></div>
           <p class="mp-model-tagline"><span data-zh="专业推理，" data-en="Expert reasoning.">专业推理，</span><span data-zh="驱动实际行动。" data-en="Driving action.">驱动实际行动。</span></p>
           <p class="mp-model-description" data-zh="针对法律、调查、安全治理、科研与社会研究打造的专业模型。连接方案设计、代码生成、工具调用与结果验证，让 Agent 将专业判断转化为行动，交付文书、代码与研究成果。" data-en="A specialist model for law, investigations, security and governance, and scientific and social research. It combines planning, code generation, tool use, and verification so agents can turn professional judgment into action and produce documents, code, and research findings.">针对法律、调查、安全治理、科研与社会研究打造的专业模型。连接方案设计、代码生成、工具调用与结果验证，让 Agent 将专业判断转化为行动，交付文书、代码与研究成果。</p>
           <ul class="mp-model-capabilities">
@@ -95,10 +96,11 @@
             <li><h3 data-zh="完成实际工作" data-en="Execute tasks">完成实际工作</h3><p data-zh="制定检索策略，生成数据查询与验证代码，调用专业工具执行任务、检验结果。" data-en="Develop search strategies, generate data queries and validation code, and use specialist tools to execute tasks and verify results.">制定检索策略，生成数据查询与验证代码，调用专业工具执行任务、检验结果。</p></li>
             <li><h3 data-zh="延续任务进程" data-en="Carry tasks forward">延续任务进程</h3><p data-zh="承接前序发现与执行反馈，修订方案、推进验证，完成调查、研究与业务工作。" data-en="Use prior findings and execution feedback to revise plans, verify results, and complete investigations, research, and business tasks.">承接前序发现与执行反馈，修订方案、推进验证，完成调查、研究与业务工作。</p></li>
           </ul>
-          <div class="mp-card-bottom"><button class="mp-pill hf-button" type="button" data-model="RMQ3x" disabled title="模型主页即将公布" data-i18n-title-zh="模型主页即将公布" data-i18n-title-en="Model page coming soon"><img class="hf-icon" src="huggingface.svg" alt="" aria-hidden="true"><img class="hf-wordmark" src="huggingface-text.svg" alt="Hugging Face"></button><div class="mp-model-glyph" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="mp-card-bottom"><button class="mp-pill hf-button" type="button" data-model="RMQ3x" disabled title="模型主页即将公布" data-i18n-title-zh="模型主页即将公布" data-i18n-title-en="Model page coming soon"><img class="hf-icon" src="huggingface.svg" alt="" aria-hidden="true"><img class="hf-wordmark" src="huggingface-text.svg" alt="Hugging Face"></button></div>
         </article>
-        <article class="mp-model-card">
+        <article class="mp-model-card" data-bevel>
           <div class="mp-card-top"><h2 class="rm-mark">RMQ4</h2><span class="mp-architecture-tag"><svg viewBox="0 0 18 18" aria-hidden="true"><path opacity=".25" d="M1 1h4v4H1zm12 0h4v4h-4zM7 7h4v4H7zM1 13h4v4H1zm12 0h4v4h-4z"/><path d="M7 1h4v4H7zM1 7h4v4H1zm12 0h4v4h-4zM7 13h4v4H7z"/></svg>MoE</span></div>
+          <div class="mp-led" data-led="moe" aria-hidden="true"><div class="mp-led-grid"></div><p class="mp-led-note" data-zh="示意" data-en="Illustrative">示意</p></div>
           <p class="mp-model-tagline"><span data-zh="深入复杂问题，" data-en="Explore complex problems.">深入复杂问题，</span><span data-zh="驾驭长程任务。" data-en="Manage long-horizon tasks.">驾驭长程任务。</span></p>
           <p class="mp-model-description" data-zh="为跨领域、多阶段、需要反复验证的专业工作打造，覆盖法律、调查、安全治理、科研与社会研究。衔接任务规划、代码计算、工具使用与研究迭代，保持目标、约束和阶段成果的连续性，让 Agent 推进复杂调查与研究项目，完成从问题到成果的交付。" data-en="Built for complex work in law, investigations, security and governance, and scientific and social research. It connects planning, code execution, tool use, and iterative research across disciplines and stages, retaining goals, constraints, and findings through repeated verification. Agents can carry investigations and research projects from the initial question to the final deliverable.">为跨领域、多阶段、需要反复验证的专业工作打造，覆盖法律、调查、安全治理、科研与社会研究。衔接任务规划、代码计算、工具使用与研究迭代，保持目标、约束和阶段成果的连续性，让 Agent 推进复杂调查与研究项目，完成从问题到成果的交付。</p>
           <ul class="mp-model-capabilities">
@@ -106,7 +108,7 @@
             <li><h3 data-zh="贯通复杂任务" data-en="Coordinate complex tasks">贯通复杂任务</h3><p data-zh="统筹调查规划、信息检索、代码计算与结果复核，将阶段性发现转化为后续行动。" data-en="Coordinate investigation planning, information retrieval, code execution, and result verification. Use findings at each stage to guide the next action.">统筹调查规划、信息检索、代码计算与结果复核，将阶段性发现转化为后续行动。</p></li>
             <li><h3 data-zh="推进研究迭代" data-en="Refine the research">推进研究迭代</h3><p data-zh="吸收新增证据、计算结果与实验反馈，修订假设、完善方案，产出可检验的研究成果。" data-en="Incorporate new evidence, computational results, and experimental feedback to revise hypotheses, refine plans, and produce testable research findings.">吸收新增证据、计算结果与实验反馈，修订假设、完善方案，产出可检验的研究成果。</p></li>
           </ul>
-          <div class="mp-card-bottom"><button class="mp-pill hf-button" type="button" data-model="RMQ4" disabled title="模型主页即将公布" data-i18n-title-zh="模型主页即将公布" data-i18n-title-en="Model page coming soon"><img class="hf-icon" src="huggingface.svg" alt="" aria-hidden="true"><img class="hf-wordmark" src="huggingface-text.svg" alt="Hugging Face"></button><div class="mp-model-glyph" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="mp-card-bottom"><button class="mp-pill hf-button" type="button" data-model="RMQ4" disabled title="模型主页即将公布" data-i18n-title-zh="模型主页即将公布" data-i18n-title-en="Model page coming soon"><img class="hf-icon" src="huggingface.svg" alt="" aria-hidden="true"><img class="hf-wordmark" src="huggingface-text.svg" alt="Hugging Face"></button></div>
         </article>
       </div>
     </section>
@@ -214,7 +216,7 @@
   <script>
     // ja/ko/es/fr carry their own catalog file; zh and en need none. Resolve the language the way i18n.js does and load only that file.
     (function (up) {
-      var ok = /^(zh|en|ja|ko|es|fr)$/, c = window.RM_CATALOG = { base: up + 'assets/translations/', v: 'catalogs-20261003' };
+      var ok = /^(zh|en|ja|ko|es|fr)$/, c = window.RM_CATALOG = { base: up + 'assets/translations/', v: 'catalogs-20261004' };
       c.load = function () {
         var s; try { s = localStorage.getItem('rm-soft-lang'); } catch (e) {}
         var l = [new URLSearchParams(location.search).get('lang'), (location.hash.match(/^#(zh|en|ja|ko|es|fr)-/) || [])[1], s, window.RM_DEFAULT_LANG].filter(function (x) { return ok.test(x); })[0];
@@ -224,10 +226,10 @@
       if (!c.load()) document.write('<script src="' + up + 'visitor-language.js"><\/script><script>RM_CATALOG.load()<\/script>');
     })('../');
   </script>
-  <script src="../assets/i18n.js?v=catalogs-20261003" defer></script>
+  <script src="../assets/i18n.js?v=catalogs-20261004" defer></script>
   <script src="../assets/site-data.js?v=footer-portable-20261003" defer></script>
   <script src="../assets/footer.js?v=models-launch-1" defer></script>
   <script src="benchmark-particles.js" defer></script>
-  <script src="models.js?v=models-inference-2" defer></script>
+  <script src="models.js?v=stage3-1" defer></script>
 </body>
 </html>

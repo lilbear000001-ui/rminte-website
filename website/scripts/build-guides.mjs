@@ -29,6 +29,7 @@ const guideConfig = {
     source: join(guidesDir, 'content', 'admin.md'),
     output: join(guidesDir, 'admin.html'),
     accent: 'admin',
+    crumb: 'admin',
     label: { zh: '日常管理', en: 'Daily administration' },
     title: { zh: 'TianshanOS admin 日常使用指南', en: 'TianshanOS Admin User Guide' },
     description: {
@@ -42,6 +43,7 @@ const guideConfig = {
     source: join(guidesDir, 'content', 'root.md'),
     output: join(guidesDir, 'root.html'),
     accent: 'root',
+    crumb: 'root',
     label: { zh: '系统运维', en: 'System operations' },
     title: { zh: 'TianshanOS root 运维指南', en: 'TianshanOS root Operations Guide' },
     description: {
@@ -58,6 +60,7 @@ const guideConfig = {
     },
     output: join(guidesDir, 'security.html'),
     accent: 'security',
+    crumb: { zh: '安全指南', en: 'Security guide' },
     label: { zh: '安全管理', en: 'Security operations' },
     title: { zh: 'TianshanOS 安全页面完整操作指南', en: 'TianshanOS Security Page Guide' },
     description: {
@@ -71,6 +74,7 @@ const guideConfig = {
     source: join(guidesDir, 'content', 'network.md'),
     output: join(guidesDir, 'network.html'),
     accent: 'network',
+    crumb: { zh: '网络配置', en: 'Network configuration' },
     label: { zh: '网络连接', en: 'Network connectivity' },
     title: { zh: 'RM-01 网络配置指南', en: 'RM-01 Network Configuration Guide' },
     description: {
@@ -416,11 +420,13 @@ ${sourceLinkTemplate(config, lang)}
 function searchTemplate() {
   return `
     <section class="guide-search" data-guide-search>
-      <form class="guide-search-form" role="search" data-guide-search-form>
+      <form class="guide-search-form" role="search" data-guide-search-form data-bevel>
         <label class="guide-search-field">
+          <svg class="guide-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
           <span class="guide-search-label" data-guide-text data-zh="搜索指南" data-en="Search guides">搜索指南</span>
           <input type="search" autocomplete="off" spellcheck="false" data-guide-search-input data-guide-placeholder data-zh="输入功能，例如：OTA、SSH 密钥、风扇" data-en="Search a feature, for example: OTA, SSH key, fan" placeholder="输入功能，例如：OTA、SSH 密钥、风扇">
         </label>
+        <kbd class="guide-search-kbd" data-guide-kbd aria-hidden="true">⌘ K</kbd>
         <button type="submit" data-guide-text data-zh="搜索" data-en="Search">搜索</button>
       </form>
       <p class="guide-search-hint" data-guide-text data-zh="试试：OTA 更新、远程主机、HTTPS 证书、自动化规则" data-en="Try: OTA update, remote host, HTTPS certificate, automation rule">试试：OTA 更新、远程主机、HTTPS 证书、自动化规则</p>
@@ -482,7 +488,7 @@ function pageTemplate(config, rendered) {
     copyDefault: { zh: '复制', en: 'Copy' }
   }).replaceAll('<', '\\u003c');
   return `<!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="support-theme">
 <head>
   <meta charset="UTF-8">
   <script>
@@ -495,7 +501,7 @@ function pageTemplate(config, rendered) {
   <meta property="og:title" content="${escapeHtml(config.title.zh)}" data-i18n-attr="content" data-zh="${escapeHtml(config.title.zh)}" data-en="${escapeHtml(config.title.en)}">
   <meta property="og:description" content="${escapeHtml(config.description.zh)}" data-i18n-attr="content" data-zh="${escapeHtml(config.description.zh)}" data-en="${escapeHtml(config.description.en)}">
   <meta property="og:image" content="../assets/images/img4.png">
-  <meta name="theme-color" content="#141618">
+  <meta name="theme-color" content="#0d0f12">
   <title data-zh="${escapeHtml(config.title.zh)}" data-en="${escapeHtml(config.title.en)}">${escapeHtml(config.title.zh)}</title>
   <link rel="icon" type="image/png" sizes="512x512" href="../assets/images/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -504,13 +510,13 @@ function pageTemplate(config, rendered) {
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <script src="../assets/motion.js?v=stage2-2" defer></script>
   <link rel="stylesheet" href="../assets/brand.css?v=slate-2">
-  <link rel="stylesheet" href="../assets/styles.css?v=stage2-2">
-  <link rel="stylesheet" href="../assets/guides.css?v=table-header-1">
+  <link rel="stylesheet" href="../assets/styles.css?v=stage3-1">
+  <link rel="stylesheet" href="../assets/guides.css?v=stage3-1">
   <script id="guidePageData" type="application/json">${pageData}</script>
   <script>
     // ja/ko/es/fr carry their own catalog file; zh and en need none. Resolve the language the way i18n.js does and load only that file.
     (function (up) {
-      var ok = /^(zh|en|ja|ko|es|fr)$/, c = window.RM_CATALOG = { base: up + 'assets/translations/', v: 'catalogs-20261003' };
+      var ok = /^(zh|en|ja|ko|es|fr)$/, c = window.RM_CATALOG = { base: up + 'assets/translations/', v: 'catalogs-20261004' };
       c.load = function () {
         var s; try { s = localStorage.getItem('rm-soft-lang'); } catch (e) {}
         var l = [new URLSearchParams(location.search).get('lang'), (location.hash.match(/^#(zh|en|ja|ko|es|fr)-/) || [])[1], s, window.RM_DEFAULT_LANG].filter(function (x) { return ok.test(x); })[0];
@@ -520,8 +526,8 @@ function pageTemplate(config, rendered) {
       if (!c.load()) document.write('<script src="' + up + 'visitor-language.js"><\\/script><script>RM_CATALOG.load()<\\/script>');
     })('../');
   </script>
-  <script src="../assets/i18n.js?v=catalogs-20261003" defer></script>
-  <script src="../assets/guides.js?v=docs-20260907" defer></script>
+  <script src="../assets/i18n.js?v=catalogs-20261004" defer></script>
+  <script src="../assets/guides.js?v=stage3-1" defer></script>
   <script src="../assets/site-data.js?v=footer-portable-20261003" defer></script>
   <script src="../assets/footer.js?v=models-launch-1" defer></script>
 </head>
@@ -531,7 +537,13 @@ ${siteNavigationTemplate()}
 
   <main id="guideContent" class="guide-doc-main">
     <section class="guide-doc-hero">
-      <a class="guide-breadcrumb" href="index.html"><span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;flex-shrink:0;pointer-events:none" aria-hidden="true" focusable="false"><path d="M19 12H5m5-5-5 5 5 5"/></svg></span><span data-guide-text data-zh="全部指南" data-en="All guides">全部指南</span></a>
+      <div class="guide-breadcrumb">
+        <a href="index.html" data-guide-text data-zh="全部指南" data-en="All guides">全部指南</a>
+        <span class="guide-breadcrumb-sep" aria-hidden="true">/</span>
+        ${typeof config.crumb === 'string' ? `<span>${escapeHtml(config.crumb)}</span>` : `<span data-guide-text data-zh="${escapeHtml(config.crumb.zh)}" data-en="${escapeHtml(config.crumb.en)}">${escapeHtml(config.crumb.zh)}</span>`}
+        <span class="guide-breadcrumb-sep" aria-hidden="true" data-guide-crumb-sep hidden>/</span>
+        <span class="guide-breadcrumb-chapter" data-guide-crumb-chapter hidden></span>
+      </div>
       <p class="eyebrow" data-guide-text data-zh="${escapeHtml(config.label.zh)}" data-en="${escapeHtml(config.label.en)}">${escapeHtml(config.label.zh)}</p>
       <h1 data-guide-text data-zh="${escapeHtml(config.title.zh)}" data-en="${escapeHtml(config.title.en)}">${escapeHtml(config.title.zh)}</h1>
       <p class="guide-doc-lead" data-guide-text data-zh="${escapeHtml(config.description.zh)}" data-en="${escapeHtml(config.description.en)}">${escapeHtml(config.description.zh)}</p>
@@ -544,7 +556,7 @@ ${siteNavigationTemplate()}
 ${searchTemplate()}
 
     <details class="guide-mobile-toc">
-      <summary data-guide-text data-zh="展开本页目录" data-en="Open page contents">展开本页目录</summary>
+      <summary><span data-guide-text data-zh="展开本页目录" data-en="Open page contents">展开本页目录</span><span class="guide-mobile-toc-current" data-guide-toc-current></span></summary>
 ${languages.map(lang => `<nav class="lang-pane" data-lang-pane="${lang}" aria-label="${escapeHtml(translated({zh:'本页目录',en:'On this page'},lang))}"${lang !== 'zh' ? ' hidden' : ''}>
 ${tocItems(rendered[lang].headings, lang)}
       </nav>`).join('\n')}

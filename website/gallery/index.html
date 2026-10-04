@@ -21,12 +21,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <script src="../assets/motion.js?v=stage2-2" defer></script>
   <link rel="stylesheet" href="../assets/brand.css?v=product-black-1">
-  <link rel="stylesheet" href="../assets/styles.css?v=stage2-2">
-  <link rel="stylesheet" href="../assets/gallery.css?v=hdr-note-3">
+  <link rel="stylesheet" href="../assets/styles.css?v=stage3-1">
+  <link rel="preload" href="../assets/fonts/GeistPixel-Circle.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/gallery.css?v=stage3-1">
   <script>
     // ja/ko/es/fr carry their own catalog file; zh and en need none. Resolve the language the way i18n.js does and load only that file.
     (function (up) {
-      var ok = /^(zh|en|ja|ko|es|fr)$/, c = window.RM_CATALOG = { base: up + 'assets/translations/', v: 'catalogs-20261003' };
+      var ok = /^(zh|en|ja|ko|es|fr)$/, c = window.RM_CATALOG = { base: up + 'assets/translations/', v: 'catalogs-20261004' };
       c.load = function () {
         var s; try { s = localStorage.getItem('rm-soft-lang'); } catch (e) {}
         var l = [new URLSearchParams(location.search).get('lang'), (location.hash.match(/^#(zh|en|ja|ko|es|fr)-/) || [])[1], s, window.RM_DEFAULT_LANG].filter(function (x) { return ok.test(x); })[0];
@@ -36,8 +37,9 @@
       if (!c.load()) document.write('<script src="' + up + 'visitor-language.js"><\/script><script>RM_CATALOG.load()<\/script>');
     })('../');
   </script>
-  <script src="../assets/i18n.js?v=catalogs-20261003" defer></script>
-  <script src="../assets/gallery.js?v=language-label-1" defer></script>
+  <script src="../assets/i18n.js?v=catalogs-20261004" defer></script>
+  <script src="../assets/gallery-exif.js?v=stage3-1" defer></script>
+  <script src="../assets/gallery.js?v=stage3-1" defer></script>
   <script src="../assets/site-data.js?v=footer-portable-20261003" defer></script>
   <script src="../assets/footer.js?v=models-launch-1" defer></script>
 </head>
@@ -104,6 +106,7 @@
             <div>
               <strong data-caption-product><span class="rm-mark">RM-01</span> 便携 AI 超算</strong>
               <span data-caption-label>整机实拍·3/4视角</span>
+              <p class="caption-exif" data-caption-exif></p>
             </div>
           </div>
         </div>

@@ -606,5 +606,33 @@
           if (target) { event.preventDefault(); selectEngine(target.dataset.engineTab,true); }
         });
       });
+      // LED illustration inside each model card: Dense lights every dot, MoE only a few "experts" that move on (not a parameter count)
+      (function setupLedIllustrations() {
+        const COLS = 26, ROWS = 3;
+        const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        document.querySelectorAll('.mp-led').forEach(led => {
+          const grid = led.querySelector('.mp-led-grid');
+          for (let row = 0; row < ROWS; row++) for (let col = 0; col < COLS; col++) {
+            const dot = document.createElement('i');
+            dot.style.setProperty('--c', col); dot.style.setProperty('--r', row);
+            grid.append(dot);
+          }
+          if (led.dataset.led !== 'moe') return;
+          const dots = Array.from(grid.children);
+          const pick = () => {
+            dots.forEach(dot => dot.classList.remove('is-lit'));
+            const lit = new Set();
+            while (lit.size < 5) lit.add(Math.floor(Math.random() * dots.length));
+            lit.forEach(index => dots[index].classList.add('is-lit'));
+          };
+          pick();
+          if (still) return;
+          let timer = 0;
+          new IntersectionObserver(entries => {
+            window.clearInterval(timer);
+            if (entries[0].isIntersecting) timer = window.setInterval(pick, 1100);
+          }).observe(led);
+        });
+      })();
       setLanguage(RM_I18N.initial());
     })();

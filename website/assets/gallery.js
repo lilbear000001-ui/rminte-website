@@ -63,6 +63,7 @@
   const productImage = $('.product-image');
   const captionProduct = $('[data-caption-product]');
   const captionLabel = $('[data-caption-label]');
+  const captionExif = $('[data-caption-exif]');
   const currentCount = $('.gallery-count strong');
   const previousButton = $('[data-gallery-previous]');
   const nextButton = $('[data-gallery-next]');
@@ -121,11 +122,25 @@
     preloadImage(index + 1);
   }
 
+  // Camera, lens, aperture, shutter and ISO come from the photograph itself (assets/gallery-exif.js, written by
+  // scripts/extract-gallery-exif.mjs); a photograph without them shows no line.
+  function renderExif(item) {
+    const data = (window.RM_GALLERY_EXIF || {})[item.src.split('/').pop()];
+    captionExif.replaceChildren();
+    if (!data) return;
+    [data.camera, data.lens, data.aperture, data.shutter, data.iso].filter(Boolean).forEach((text) => {
+      const field = document.createElement('span');
+      field.textContent = text;
+      captionExif.append(field);
+    });
+  }
+
   function updateImageCopy() {
     const item = galleryItems[currentIndex];
     productImage.alt = t(item.alt);
     writeMarkedText(captionProduct, RM_I18N.text({zh: 'RM-01 便携 AI 超算', en: 'RM-01 Portable AI Supercomputer'}, lang));
     captionLabel.textContent = t(item.label);
+    renderExif(item);
   }
 
   function applyLanguage(nextLang) {
@@ -151,18 +166,23 @@
     const item = galleryItems[currentIndex];
     stage.classList.add('is-changing');
 
+    // Fade out (240ms), swap while hidden, then fade the decoded photograph in (480ms, reveal easing)
     window.setTimeout(() => {
       stage.dataset.tone = item.tone;
       stage.dataset.layout = item.layout;
       productImage.src = item.src;
       updateImageCopy();
       currentCount.textContent = formatIndex(currentIndex);
-      stage.classList.remove('is-changing');
-      preloadNeighbors(currentIndex);
-      window.setTimeout(() => {
-        transitionLocked = false;
-      }, 420);
-    }, 180);
+      const show = () => {
+        stage.classList.remove('is-changing');
+        preloadNeighbors(currentIndex);
+        window.setTimeout(() => {
+          transitionLocked = false;
+        }, 420);
+      };
+      if (productImage.decode) productImage.decode().then(show, show);
+      else show();
+    }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 240);
   }
 
   overlay.inert = true;
