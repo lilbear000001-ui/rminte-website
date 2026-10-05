@@ -583,8 +583,8 @@
     ]
   },
   {
-    "zh": "让有限的算力，承载更多任务",
-    "en": "More work from the compute you have",
+    "zh": "让算力，承载更多任务",
+    "en": "Compute that takes on more tasks",
     "sources": [
       "assets/site-data.js.ui.engineTitle"
     ]
@@ -1750,8 +1750,8 @@
     ]
   },
   {
-    "zh": "复用前序计算，合并并发请求，让有限内存与带宽承接更多任务。",
-    "en": "Reuse prior computation and batch concurrent requests so finite memory and bandwidth can serve more tasks.",
+    "zh": "复用前序计算，合并并发请求，让内存与带宽承接更多任务。",
+    "en": "Reuse prior computation and batch concurrent requests so memory and bandwidth can serve more tasks.",
     "sources": [
       "models/models.js.optimizationItems.8.benefit"
     ]

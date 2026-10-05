@@ -382,8 +382,8 @@
           model:'RMQ3x · RMQ4',
           zh:'上下文与并发调度',
           en:'Context & concurrency scheduling',
-          benefitZh:'复用前序计算，合并并发请求，让有限内存与带宽承接更多任务。',
-          benefitEn:'Reuse prior computation and batch concurrent requests so finite memory and bandwidth can serve more tasks.',
+          benefitZh:'复用前序计算，合并并发请求，让内存与带宽承接更多任务。',
+          benefitEn:'Reuse prior computation and batch concurrent requests so memory and bandwidth can serve more tasks.',
           detailZh:[
             '分页 KV Cache 与递归状态管理保存各请求的计算进度，前缀缓存复用重复输入。长上下文采用分块预填充，并通过内存与 SSD 分层存储管理历史状态；流式注意力分批读取 SSD 中的键值块，合并各部分的注意力结果，扩展上下文容量。',
             '等长短输入可合并为一次批量 prefill，多个请求的输出投影也合并计算，减少权重重复读取和首字等待。连续批处理在生成阶段复用计算资源，各请求保留自己的上下文与状态，让文档处理、多轮交互和并发任务共用一套推理服务。'

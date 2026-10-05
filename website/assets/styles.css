@@ -2326,6 +2326,8 @@ body.teardown-active .brand-mark { background: none; }
 /* Homepage inference engine and system architecture. */
 .home-body .visual-heading{max-width:100%}
 .home-body .visual-heading h2{max-width:1050px;text-wrap:balance}
+/* The Chinese engine title is short enough to be broken inside a word ("承" / "载"); keep each phrase whole so it only wraps after the comma */
+html:lang(zh) .home-body #engineTitle{word-break:keep-all}
 .home-body .visual-heading>p:last-child{max-width:690px;margin-top:26px;font-size:var(--fs-body);line-height:1.9}
 .home-body .engine-visual-section{padding-bottom:70px;scroll-margin-top:90px}
 .home-body .engine-experience{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:70px;align-items:center;margin-top:54px}
