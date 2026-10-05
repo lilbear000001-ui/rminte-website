@@ -1783,6 +1783,12 @@ body.teardown-active .brand-mark, body.teardown-active .nav-island, body.teardow
   font-family: var(--font-mono);
   font-size: clamp(14px, 1.1vw, 16px);
   letter-spacing: 0;
+  /* the unit sits on the bright blue airflow at tablet widths (4.05:1 at 1024px); a soft dark halo, no change to the video or its mask */
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.95), 0 0 16px rgba(0, 0, 0, 0.8);
+}
+@media (max-width: 1100px) {
+  /* up to 1100px the unit gets a lighter tint of the same blue (sapphire-300 mixed 78% with white), 4.1-4.4:1 -> above 4.5:1 */
+  .thermal-detail small { color: #bbc8f3; }
 }
 
 .cartridge-detail {
@@ -2016,7 +2022,16 @@ main .teardown-layout {
 }
 
 @media (min-width: 761px) {
-  main > .thermal-section, main > .sapphire-section, main > .glass-touch-section, main > .agent-terminal-section, main > .cartridge-section {
+  main > .thermal-section, main > .sapphire-section, main > .glass-touch-section, main > .agent-terminal-section {
+    min-height: clamp(680px, calc(45vw + var(--section-space) * 2), 1080px);
+    padding-block: var(--section-space);
+  }
+}
+
+/* The cartridge chapter stacks its video above the copy up to 820px, so the desktop spacing starts at 821px
+   (from 761px it used to pull the copy up over the video, 1.4:1 behind the heading at 768px). */
+@media (min-width: 821px) {
+  main > .cartridge-section {
     min-height: clamp(680px, calc(45vw + var(--section-space) * 2), 1080px);
     padding-block: var(--section-space);
   }
@@ -2230,6 +2245,17 @@ html:lang(ja) .home-body h2 { white-space: pre-line; }
   background: linear-gradient(0deg,rgba(3,5,7,.5),rgba(3,5,7,0) 24%),linear-gradient(90deg,rgba(3,5,7,.68) 0,rgba(3,5,7,.58) max(36%,520px),rgba(3,5,7,.32) max(55%,800px),rgba(3,5,7,0) max(72%,1040px)),linear-gradient(90deg,rgba(3,5,7,.78) 0%,rgba(4,6,8,.53) 34%,rgba(4,6,8,.12) 67%,rgba(4,6,8,.05) 100%),linear-gradient(180deg,rgba(3,5,7,.15),transparent 32%,rgba(4,6,8,.1) 65%,var(--bg) 100%);
 }
 
+/* 821-1000px: the copy column is as wide as on a desktop but the frame is narrower, and bright video frames reached 4.05-4.34:1 behind the lead
+   paragraph (target 4.5:1). A little more shade on the left, in this band only. */
+@media (min-width: 821px) and (max-width: 1000px) {
+  .hero-shade::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(3, 5, 7, 0.14), rgba(3, 5, 7, 0.14) 62%, rgba(3, 5, 7, 0));
+  }
+}
+
 .cta-button {
   border-radius: var(--radius-button);
   min-height: 48px;
@@ -2253,8 +2279,9 @@ html:lang(ja) .home-body h2 { white-space: pre-line; }
 }
 
 .scroll-cue {
-  bottom: 24px;
-  font-size: 10px;
+  bottom: 16px;
+  padding: 8px 12px;
+  font-size: 11px;
   letter-spacing: .12em;
   color: var(--lg-a1a5a9);
 }
@@ -2357,6 +2384,14 @@ html:lang(ja) .home-body h2 { white-space: pre-line; }
   color: var(--lg-b9bcbe);
 }
 
+/* From 521 to 1100px the gem sits close to the copy: keep the paragraph to the left of it
+   (it ran onto the facet: 3.5:1 at 1024px, 1.9:1 at 768px). Phones keep the full column. */
+@media (min-width: 521px) and (max-width: 1100px) {
+  .sapphire-copy>p:not(.eyebrow):not(.chapter-label) {
+    max-width: clamp(260px, 44vw, 530px);
+  }
+}
+
 .glass-touch-copy>p:not(.chapter-label) {
   font-size: 15px;
   line-height: 1.95;
@@ -2445,7 +2480,7 @@ html:lang(ja) .home-body h2 { white-space: pre-line; }
 }
 
 .footer-brand > div > span {
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.8;
 }
 
@@ -2625,7 +2660,7 @@ a:focus-visible,button:focus-visible {
 
 @media(max-width:520px) {
   .home-body main p.chapter-label {
-    font-size: 10px;
+    font-size: 11px;
     margin-bottom: 22px;
     letter-spacing: .09em;
   }
@@ -2732,7 +2767,7 @@ a:focus-visible,button:focus-visible {
 
 @media(max-width:520px) {
   .footer-brand > div > span {
-    font-size: 9px;
+    font-size: 11px;
   }
 }
 
@@ -3378,7 +3413,7 @@ main .module-bento {
   }
 
   .home-body main p.chapter-label.hero-eyebrow {
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: .14em;
   }
 }

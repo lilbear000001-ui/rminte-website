@@ -84,6 +84,11 @@
     if (current) current.textContent = active.textContent.replace(/^\s*\d+\.\s*/, '').trim();
   }
 
+  const TITLE_PHRASES = {
+    ja: /((?:ユーザー|ページ操作|運用)ガイド|ネットワーク|セキュリティ)/g,
+    zh: /(日常使用指南|运维指南|安全页面|完整操作指南|网络配置指南)/g,
+  };
+
   function applyLanguage(nextLang, headingKey = null) {
     lang = nextLang;
 
@@ -93,10 +98,13 @@
       const value = RM_I18N.text(element.dataset, lang);
       // Catalog titles may carry a line break meant for card headings; a breadcrumb is one line (ja joins the halves, the others use a space)
       if (value !== undefined) element.textContent = element.closest('.guide-breadcrumb') ? value.replace(/\s*\n\s*/g, lang === 'ja' ? '' : ' ') : value;
-      if (lang === 'ja' && element.matches('h1')) {
-        const phrases = /((?:ユーザー|ページ操作|運用)ガイド|ネットワーク|セキュリティ)/g;
+      if (TITLE_PHRASES[lang] && element.matches('h1')) {
+        // Japanese and Chinese titles may break between any two characters: keep each phrase whole, so a narrow phone breaks between phrases
+        // ("日常使用指南" must not become "日" + "常使用指南").
+        const phrases = TITLE_PHRASES[lang];
+        const whole = new RegExp(`^${phrases.source}$`);
         element.replaceChildren(...value.split(phrases).filter(Boolean).map(part => {
-          if (!/^(?:(?:ユーザー|ページ操作|運用)ガイド|ネットワーク|セキュリティ)$/.test(part)) return document.createTextNode(part);
+          if (!whole.test(part)) return document.createTextNode(part);
           const phrase = document.createElement('span');
           phrase.className = 'guide-title-phrase';
           phrase.textContent = part;
@@ -124,6 +132,7 @@
     refreshSearch();
     setupExamples();
     markBrandText();
+    updateScrollableRegions();
 
     if (headingKey) {
       requestAnimationFrame(() => {
@@ -184,9 +193,12 @@
     if (!overlay || !button) return;
 
     overlay.inert = true;
+    // While the full-screen menu is open nothing behind it may be reached from the keyboard (the overlay covers the page and the menu button)
+    const pageParts = ['.skip-link', '.site-shell', 'main', 'body > .footer'].map((selector) => $(selector)).filter(Boolean);
     function setOpen(open) {
       const restoreFocus = !open && overlay.contains(document.activeElement);
       overlay.inert = !open;
+      pageParts.forEach((part) => { part.inert = open; });
       if (open) requestAnimationFrame(() => $('[data-menu-close]')?.focus({ preventScroll: true }));
       else if (restoreFocus) button.focus({ preventScroll: true });
       overlay.classList.toggle('active', open);
@@ -207,6 +219,7 @@
   function setupCopyButtons() {
     const data = pageData();
     $$('[data-copy-code]').forEach((button) => {
+      button.setAttribute('aria-live', 'polite'); // "Copied" / "Copy failed" replace the label: say so to a screen reader too
       button.addEventListener('click', async () => {
         const code = $('code', button.closest('.guide-code'));
         if (!code) return;
@@ -450,7 +463,27 @@
     });
   }
 
+  // A table or a code block wider than its column scrolls sideways inside its box. The box is reachable from the keyboard only while it really
+  // scrolls (hidden language panes have no width and stay out of the tab order).
+  function updateScrollableRegions() {
+    $$('.guide-table-wrap, .guide-code pre').forEach((box) => {
+      if (box.clientWidth > 0 && box.scrollWidth > box.clientWidth + 1) {
+        // a focusable region needs a name: use the heading that introduces it (no new wording)
+        let heading = (box.closest('.guide-code') || box).previousElementSibling;
+        while (heading && !/^H[2-4]$/.test(heading.tagName)) heading = heading.previousElementSibling;
+        box.setAttribute('tabindex', '0');
+        box.setAttribute('role', 'region');
+        if (heading && heading.id) box.setAttribute('aria-labelledby', heading.id);
+      } else {
+        ['tabindex', 'role', 'aria-labelledby'].forEach((name) => box.removeAttribute(name));
+      }
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('resize', updateScrollableRegions);
+    document.fonts?.addEventListener('loadingdone', updateScrollableRegions); // a late-arriving CJK face changes how wide the text is
+    document.fonts?.ready.then(updateScrollableRegions);
     setupLanguage();
     setupMenu();
     setupToc();

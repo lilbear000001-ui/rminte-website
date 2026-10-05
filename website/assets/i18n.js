@@ -58,6 +58,7 @@
   function apply(lang) {
     if (!valid(lang)) throw new Error(`Unsupported language: ${lang}`);
     current = lang;
+    window.RM_CATALOG?.fonts?.(lang, true); // the CJK face of the new language (the page head only asked for the one it opened in)
     synchronizeLinks();
     document.documentElement.lang = locales[lang];
     document.querySelectorAll('[data-i18n-attr]').forEach(element => {

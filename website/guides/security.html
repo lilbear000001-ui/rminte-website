@@ -17,8 +17,7 @@
   <link rel="icon" type="image/png" sizes="512x512" href="../assets/images/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&amp;family=Noto+Sans+SC:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
   <script src="../assets/motion.js?v=stage2-2" defer></script>
   <link rel="stylesheet" href="../assets/brand.css?v=slate-2">
   <link rel="stylesheet" href="../assets/styles.css?v=stage3-1">
@@ -32,7 +31,18 @@
         var s; try { s = localStorage.getItem('rm-soft-lang'); } catch (e) {}
         var l = [new URLSearchParams(location.search).get('lang'), (location.hash.match(/^#(zh|en|ja|ko|es|fr)-/) || [])[1], s, window.RM_DEFAULT_LANG].filter(function (x) { return ok.test(x); })[0];
         if (l && l !== 'zh' && l !== 'en') document.write('<script src="' + c.base + l + '.js?v=' + c.v + '" defer><\/script>');
+        if (l) c.fonts(l);
         return l;
+      };
+      // Each CJK face is requested only when its language is shown: every page used to ask for Noto Sans SC, JP and KR (about 0.9 MB of fonts and
+      // 210 KB of stylesheet that English, Spanish and French visitors never use). While the head is parsing, document.write keeps the link
+      // render-blocking like a static one; i18n.js calls this again (late) when the visitor switches language.
+      var cjk = { zh: 'Noto+Sans+SC:wght@300;400;500;600;700;800;900', ja: 'Noto+Sans+JP:wght@400;500;600;700', ko: 'Noto+Sans+KR:wght@400;500;600;700' };
+      c.fonts = function (l, late) {
+        if (!cjk[l] || document.querySelector('link[data-cjk="' + l + '"]')) return;
+        var h = 'https://fonts.googleapis.com/css2?family=' + cjk[l] + '&display=swap';
+        if (late || document.readyState !== 'loading') { var k = document.createElement('link'); k.rel = 'stylesheet'; k.href = h; k.setAttribute('data-cjk', l); document.head.appendChild(k); }
+        else document.write('<link rel="stylesheet" href="' + h + '" data-cjk="' + l + '">');
       };
       if (!c.load()) document.write('<script src="' + up + 'visitor-language.js"><\/script><script>RM_CATALOG.load()<\/script>');
     })('../');
@@ -1315,7 +1325,7 @@
     </div>
   </footer>
 
-  <aside class="contact-popover" id="contactPopover" role="dialog" aria-labelledby="contactTitle" aria-hidden="true" data-contact-popover>
+  <div class="contact-popover" id="contactPopover" role="dialog" aria-labelledby="contactTitle" aria-hidden="true" data-contact-popover>
     <div class="contact-card">
       <div class="contact-card-core">
         <div class="contact-top">
@@ -1345,6 +1355,6 @@
         </div>
       </div>
     </div>
-  </aside>
+  </div>
 </body>
 </html>

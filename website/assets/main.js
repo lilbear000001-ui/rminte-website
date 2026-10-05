@@ -617,10 +617,16 @@
     requestUpdate();
   }
 
+  // While the full-screen menu is open nothing behind it may be reached from the keyboard (the overlay covers the page and the menu button)
+  function setPageInert(inert) {
+    ['.skip-link', '.site-shell', 'main', 'body > .footer'].forEach((selector) => { const part = $(selector); if (part) part.inert = inert; });
+  }
+
   function openMenu() {
     const overlay = $('#mobileOverlay');
     const button = $('[data-menu-toggle]');
     if (!overlay || !button) return;
+    setPageInert(true);
     overlay.inert = false;
     overlay.classList.add('active');
     requestAnimationFrame(() => $('[data-menu-close]')?.focus({ preventScroll: true }));
@@ -636,6 +642,7 @@
     if (!overlay || !button) return;
     const restoreFocus = overlay.contains(document.activeElement);
     overlay.inert = true;
+    setPageInert(false);
     overlay.classList.remove('active');
     if (restoreFocus) button.focus({ preventScroll: true });
     overlay.setAttribute('aria-hidden', 'true');

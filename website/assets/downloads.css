@@ -65,16 +65,30 @@
   .download-overview-item::before { display: none; }
   .download-overview-item.is-current { border-color: var(--sapphire-300); }
 }
-@media (max-width: 820px) {
-  .download-main { padding-bottom: 16px; }
+/* The title stacks above the lead from 1100px: between 820 and 1100px its column was only 236-346px wide, too narrow for the longest word of the title
+   ("téléchargement", "ダウンロード"), which was cut in two. */
+@media (max-width: 1100px) {
   .download-hero { grid-template-columns: 1fr; row-gap: 24px; }
   .download-lead { margin: 0; }
-  .download-section-head { grid-template-columns: 1fr; gap: 20px; }
+}
+/* Rows put the fields and the button under the title from 960px: with the field columns beside it, the title column fell to 175-220px (katakana words cut in two) */
+@media (max-width: 960px) {
   .download-row { flex-wrap: wrap; align-items: flex-start; column-gap: 16px; row-gap: 14px; }
   .download-copy { flex: 1 1 calc(100% - 64px); }
   .download-fields { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-left: 64px; width: calc(100% - 64px); }
   .download-field.is-date { color: var(--text-3); }
   .download-action, .download-status { margin-left: 64px; }
+}
+/* French title: "téléchargement" needs about 6.9em; keep it whole between 1101 and 1280px, and on phones scale every title to the width */
+@media (min-width: 1101px) and (max-width: 1280px) {
+  html:lang(fr) .download-hero h1 { font-size: clamp(52px, 5.4vw, 88px); }
+}
+@media (max-width: 480px) {
+  .download-hero h1 { font-size: min(52px, 12vw); }
+}
+@media (max-width: 820px) {
+  .download-main { padding-bottom: 16px; }
+  .download-section-head { grid-template-columns: 1fr; gap: 20px; }
   .download-release-row { padding: 24px; grid-template-columns: 1fr; gap: 24px; }
   .download-release-link { justify-self: start; }
   .download-note { grid-template-columns: 1fr; gap: 10px; padding-left: 20px; }

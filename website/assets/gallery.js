@@ -186,9 +186,12 @@
   }
 
   overlay.inert = true;
+  // While the full-screen menu is open nothing behind it may be reached from the keyboard (the overlay covers the page and the menu button)
+  const pageParts = ['.skip-link', '.site-shell', 'main', 'body > .footer'].map((selector) => $(selector)).filter(Boolean);
   function setMenu(open) {
     const restoreFocus = !open && overlay.contains(document.activeElement);
     overlay.inert = !open;
+    pageParts.forEach((part) => { part.inert = open; });
     if (open) requestAnimationFrame(() => closeButton.focus({ preventScroll: true }));
     else if (restoreFocus) menuButton.focus({ preventScroll: true });
     overlay.classList.toggle('active', open);

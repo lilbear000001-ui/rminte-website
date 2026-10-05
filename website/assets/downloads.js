@@ -38,6 +38,18 @@
   const DATE = /^\d{4}-\d{2}-\d{2}$/;
   const FORMAT = /^[A-Z0-9]{2,5}$/;
 
+  // Every action is named after the file it belongs to ("Download" plus the file title): the bare word, repeated for every file,
+  // tells a screen reader's link list nothing. Both pieces already exist in all six languages, so there is no new wording.
+  function nameActions() {
+    $$('.download-row, .download-release-row').forEach((row, index) => {
+      const title = $('h3', row), action = $('.download-action, .download-release-link', row), label = action && $('[data-download-text]', action);
+      if (!title || !label) return;
+      title.id = title.id || `download-title-${index}`;
+      label.id = label.id || `download-action-${index}`;
+      action.setAttribute('aria-labelledby', `${label.id} ${title.id}`);
+    });
+  }
+
   function enhanceRows() {
     $$('.download-row').forEach((row) => {
       row.querySelector('.download-fields')?.remove();
@@ -121,9 +133,12 @@
     if (!overlay || !button) return;
 
     overlay.inert = true;
+    // While the full-screen menu is open nothing behind it may be reached from the keyboard (the overlay covers the page and the menu button)
+    const pageParts = ['.skip-link', '.site-shell', 'main', 'body > .footer'].map((selector) => $(selector)).filter(Boolean);
     function setOpen(open) {
       const restoreFocus = !open && overlay.contains(document.activeElement);
       overlay.inert = !open;
+      pageParts.forEach((part) => { part.inert = open; });
       if (open) requestAnimationFrame(() => $('[data-menu-close]')?.focus({ preventScroll: true }));
       else if (restoreFocus) button.focus({ preventScroll: true });
       overlay.classList.toggle('active', open);
@@ -141,6 +156,7 @@
     });
   }
 
+  nameActions();
   setupLanguage();
   setupMenu();
   setupIndex();
