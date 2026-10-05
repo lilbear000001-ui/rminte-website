@@ -40,6 +40,7 @@
 | 主站、OTA 与灯板工具统一配色 | `website/assets/brand.css`，集中复用语义变量；OTA 改后运行 `node scripts/build-service-brand.mjs`；其他独立服务按授权范围处理 |
 | 共享字体、圆角与组件基础 | `website/assets/brand.css`，注意独立服务也在复用 |
 | v2 令牌（色阶、动效、字阶、焦点环）与页面主题 | `website/assets/brand.css`（2026-10-05 起不再放在 `styles.css`）；改后运行 `node scripts/build-service-brand.mjs`，并同步各页面引用它时的 `?v=` |
+| 字体（Geist、Noto Sans SC 中文子集） | `website/assets/fonts/` 与 `brand.css` 里 `geist-faces` 一段由 `website/scripts/build-fonts.py` 生成，不手改；中文文案出现新字后重新运行，`--check` 核对缺字；日韩 Noto Sans 仍走 Google，由页头的语言加载片段处理 |
 | 灯板工具外观 | `website/tools/emoji2pixel/styles.css` 与 `ui.js`；`app.js` 里只有 `refreshWorkbench` 末尾的展示钩子，渲染与颜色处理不动；文案在 `locales/*.json`，改后重建 `locales/locales.js`（只有中文、英文两个语言包，没有生成脚本，按文件原有格式重写） |
 | 首页与共用基础 | `assets/styles.css`，修改实际生效规则 |
 | 专用页面布局 | 对应的 `gallery.css`、`downloads.css`、`guides.css` |
@@ -52,6 +53,7 @@
 - 清理被替代规则，避免持续追加覆盖文件、高优先级选择器与 `!important`。
 - 保留语义标题、替代文本、可访问名称、可见焦点、键盘操作及减少动效支持。
 - 文件链接与资源引用必须在实际部署目录下解析。不得依赖仓库外文件或本地预览服务特有路径。
+- **中文文案与字体子集（要记住）：** 页面上的中文字体 Noto Sans SC 是只含站内用到的字的子集，Geist 是 Google 提供的两个 Latin 切片原文件，都在 `website/assets/fonts/`（2026-10-06 起英文与中文页面不再请求 Google Fonts；日韩 Noto Sans 仍按需走 Google）。新增或改动中文文案后运行 `python3 website/scripts/build-fonts.py --check`；报缺字就运行 `python3 website/scripts/build-fonts.py` 重新生成，并把新的字体文件、`noto-sans-sc.css`、`noto-sans-sc.chars.txt` 一起提交。缺字不会空白、只会退回系统字体，不检查就发现不了。生成文件和 `brand.css` 的 `geist-faces` 一段不手改；需要 python3、fonttools、brotli。
 - 视觉任务不自动授权改文案、规格、售价、承诺、版权或下载材料。明确获准改文案时，同步检查中英文含义及其所有展示位置。
 
 ## 5. 按改动范围验收
@@ -69,6 +71,7 @@
 | 下载 | 分类跳转、链接目标、资源可访问性及至少一个实际文件下载 |
 | 指南 | 搜索、结果跳转、目录锚点、移动目录、复制结果、表格与代码滚动 |
 | 导航与弹层 | 桌面与手机、开启与关闭、Escape、语言切换、焦点可见性 |
+| 中文文案 | `python3 website/scripts/build-fonts.py --check` 无缺字；缺字则重新生成字体子集再验证 |
 
 检查正文和标题是否溢出、固定导航是否遮挡内容、资源是否失败，以及控制台错误是否与本次修改有关。涉及 CSS 时比较计算后的样式与截图，不能只核对源码数值。
 
@@ -82,4 +85,5 @@
 - 发布需有对应授权。用户已经明确要求部署或同步 GitHub 时，完成检查后继续执行，不额外增加确认环节。
 - 发布前重新核实仓库、分支与部署配置，不沿用记忆中的远端状态。GitHub 权限通过实际 `gh api`、push 等结果判断，不单凭 `gh auth status`。
 - 生产包来自确定的提交或快照，部署根为 `website/`；核对本地资源完整性以及部署平台当时的限制。
+- **发布顺序（要记住）：主站先于或同时与 OTA（`services/tianshanos-ota`）部署。** OTA 页的字体（Geist、中文字体子集、点阵数字、Quantify RM）从 `https://rminte.com/assets/fonts/` 取；只部署 OTA 的话，这些字体取不到，页面会退回系统字体（能用，但外观不对）。OTA 或 `brand.css` 改动后运行 `node scripts/build-service-brand.mjs`，Wrangler 构建也会执行。
 - 发布完成必须检查正式地址上的页面、关键资源和核心交互，并核实 GitHub 提交与部署版本对应。只看到上传成功不能直接宣称上线验证完成。

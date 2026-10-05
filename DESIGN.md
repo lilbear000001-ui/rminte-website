@@ -83,7 +83,7 @@ RM-01 是高价值的本地 AI 推理硬件。用户描述的价格定位接近 
 - 深色页面使用 `assets/images/logo-white.svg`，保留原始矢量路径、比例和留白。不得拉伸、描边、加光晕或换成普通文字拼写。
 - 首页左上角 Logo 在向下滚动的前 240px 内逐渐淡出，回到顶部恢复；完全隐藏后不接收点击和键盘焦点。其他菜单保持现有行为，图册与支持页 Logo 不变；减少动效模式下 Logo 保持可见。
 - 界面字体使用 Geist / Noto Sans SC；产品字标通过现有 `.rm-mark` 使用 Quantify RM。品牌名称 `RMinte AI` 整体使用该专属字体，包含其中的 `AI`；普通正文中的 AI 沿用界面字体。不要将品牌字体扩展到普通正文。
-- 字体加载：Geist 全站静态加载；中日韩字体（Noto Sans SC／JP／KR）只在对应语言显示时才请求，页头先判断语言（与 `i18n.js` 相同的顺序），运行时切换语言再补载，页头不再静态链接这三个样式表（英、西、法访客不再下载约 1 MB 的中文字体，手机慢速 4G 下首屏提前约 2.4 s）。字重沿用现有：标题一般采用 500–550 的中等字重，正文一般采用 400；产品字标保留其 700 字重。
+- 字体加载（2026-10-06 起英文与中文页面不再请求 Google Fonts）：界面字体 Geist 和中文字体 Noto Sans SC 由本站自己提供（`assets/fonts/`，由 `website/scripts/build-fonts.py` 生成；大陆访客不再受 Google 字体域名连不上的影响）。Geist 直接使用 Google Fonts 提供的两个 Latin 切片原文件（latin、latin-ext，字重 300–800 每档一条 `@font-face`，与原来的 Google 样式表一致，所以字重落点和渲染都不变），声明在 `assets/brand.css`，页头预加载 latin 切片。Noto Sans SC 裁成 ASCII 加站内用到的汉字与标点（约 1,400 字，约 525 KB，字重 300–900），只在页面以中文显示时才请求 `assets/fonts/noto-sans-sc.css`：页头先判断语言（与 `i18n.js` 相同的顺序），运行时切换语言再补载，英、西、法访客不下载它。日文、韩文仍在对应语言显示时才从 Google 加载 Noto Sans JP／KR（这两种访客在大陆之外），页头不静态链接。中文文案出现子集里没有的字时运行 `python3 website/scripts/build-fonts.py` 重新生成，`--check` 核对是否缺字（缺字会退到系统字体，不会空白）。字重沿用现有：标题一般采用 500–550 的中等字重，正文一般采用 400；产品字标保留其 700 字重。
 - 数字使用 Geist Mono；28px 及以上的大数字与单位可使用 Geist Pixel（Circle 变体，与 Geist 同一家族，OFL 开源，随站点附许可文件），只用于数字与单位，不用于标题与正文，小于 28px 回到 Geist Mono。新增字体文件按现有字体加载方式引入。已使用的位置：首屏指标、图册计数（桌面 56px、手机 40px）、制造精度的四个数值（6063、260 目、R0.2 mm、＜0.03 mm，48–72px）、散热的 0.13 mm（40–56px）；单位一律 Geist Mono、蓝宝石 sapphire-300。字体栈令牌为 `--font-pixel` 与 `--font-mono`。
 - 六种语言分别检查换行、字形与标点。日语、韩语使用对应字形的字体回退，不沿用中文字体显示其正文；中日韩文字即使排在 Geist Mono／Geist Pixel 的位置（令牌 `--font-mono`、`--font-pixel`），也回退到页面自己的 Noto Sans（中 SC、日 JP、韩 KR），不落到系统等宽字体；拉丁语文字保留重音字符。标题可为语义节奏换行，但不能依靠固定高度、裁切或过小字号塞入布局。
 
@@ -253,7 +253,7 @@ OTA 与灯板工具的语言、菜单控件沿用主站的胶囊样式（桌面 
 
 统一配色、字体、圆角和服务组件基础位于 `assets/brand.css`；主站共用布局与首页样式位于 `assets/styles.css`；图册、下载、指南布局分别位于 `gallery.css`、`downloads.css`、`guides.css`。页面先加载品牌基础，再加载共用与专用样式。
 
-v2 令牌集中在 `assets/brand.css`：色阶（`--n-*`、`--text-*`、`--line-*`）、蓝宝石与信号色、动效时长与缓动、字阶 `--fs-*`、焦点环 `--focus-ring`、字体栈 `--font-pixel`／`--font-mono` 和 Geist Mono／Geist Pixel 的字体声明，页面主题 `product-theme`／`support-theme`，以及 OTA 与灯板工具共用的服务外壳（`.brand-*`、`.link-underline`、`.link-reveal`）；`assets/styles.css` 开头只留 `--chapter-title` 与 `--text-media`。迁移期的 `--lg-*` 桥接令牌已全部退役（2026-10-05），新增颜色一律取色阶令牌，不再写近似的灰。影像遮罩、遮罩渐变、照片文字阴影与推理／整机示意图的配色是调好的参数，保留字面量；滚动叙事、蓝宝石点亮、整机协同连线与推理引擎示意图的切换、模型页玻璃层与 LED 波动循环的时长和曲线同样是调好的参数，保留原值（见第 10 节）。`brand.css` 会被 OTA 构建内嵌，改完后从仓库根运行 `node scripts/build-service-brand.mjs`，并同步各页面引用它时的 `?v=`（首页、图册、模型、下载、指南入口与四篇指南、灯板工具）。
+v2 令牌集中在 `assets/brand.css`：色阶（`--n-*`、`--text-*`、`--line-*`）、蓝宝石与信号色、动效时长与缓动、字阶 `--fs-*`、焦点环 `--focus-ring`、字体栈 `--font-pixel`／`--font-mono` 和 Geist、Geist Mono、Geist Pixel 的字体声明，页面主题 `product-theme`／`support-theme`，以及 OTA 与灯板工具共用的服务外壳（`.brand-*`、`.link-underline`、`.link-reveal`）；`assets/styles.css` 开头只留 `--chapter-title` 与 `--text-media`。迁移期的 `--lg-*` 桥接令牌已全部退役（2026-10-05），新增颜色一律取色阶令牌，不再写近似的灰。影像遮罩、遮罩渐变、照片文字阴影与推理／整机示意图的配色是调好的参数，保留字面量；滚动叙事、蓝宝石点亮、整机协同连线与推理引擎示意图的切换、模型页玻璃层与 LED 波动循环的时长和曲线同样是调好的参数，保留原值（见第 10 节）。`brand.css` 会被 OTA 构建内嵌，改完后从仓库根运行 `node scripts/build-service-brand.mjs`，并同步各页面引用它时的 `?v=`（首页、图册、模型、下载、指南入口与四篇指南、灯板工具）。
 
 新增组件先复用现有规则。修复样式应找到实际生效的声明，不反复添加覆盖层、页面专用近似变量或 `!important`。原 `detail-refinements.css` 已合并，不重新引入。
 

@@ -26,4 +26,16 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
   else start();
+
+  // Chinese is set in Noto Sans SC, cut down to the characters the site uses (assets/fonts, scripts/build-fonts.py). The page requests it
+  // when it opens in Chinese; this covers a switch to Chinese afterwards.
+  function chinese() {
+    if (!/^zh/i.test(document.documentElement.lang) || document.querySelector('link[data-sc]')) return;
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '../../assets/fonts/noto-sans-sc.css';
+    link.setAttribute('data-sc', '');
+    document.head.appendChild(link);
+  }
+  new MutationObserver(chinese).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 })();

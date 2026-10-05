@@ -8,7 +8,10 @@ export function homePage(origin, defaultLang, RELEASE) {
  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0d0f12">
  <title>TianshanOS OTA · RMinte</title>
  <link rel="icon" href="https://rminte.com/assets/images/favicon.png">
- <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600&display=swap" rel="stylesheet">
+ <link rel="preload" href="https://rminte.com/assets/fonts/Geist-latin-v1800.woff2" as="font" type="font/woff2" crossorigin>
+ <script>/* Chinese text is set in Noto Sans SC, served by rminte.com; request it only when the page is shown in Chinese */
+ function loadChinese(){if(document.querySelector("link[data-sc]"))return;var l=document.createElement("link");l.rel="stylesheet";l.href="https://rminte.com/assets/fonts/noto-sans-sc.css";l.setAttribute("data-sc","");document.head.appendChild(l)}
+ try{var saved=localStorage.getItem("rm-ota-lang");if(saved==="zh"||(saved!=="en"&&${JSON.stringify(defaultLang)}==="zh"))loadChinese()}catch(e){}</script>
  <style>${brandCSS}
  .ota-main{width:calc(100% - var(--section-x)*2);max-width:var(--section-w);margin:84px auto 0}
  .ota-hero{max-width:900px}.ota-hero h1{margin:28px 0 0;font-size:clamp(44px,6.1vw,88px);font-weight:500;letter-spacing:-.05em;line-height:1}
@@ -65,7 +68,7 @@ export function homePage(origin, defaultLang, RELEASE) {
  Object.assign(translations.en,{version:'Version',contact:'Contact us',pageTitle:'OTA update service',address:'OTA SERVER ADDRESS',setup:'Connect to the service',release:'Current release',readGuide:'Read the guides',health:'Service API information',gallery:'Gallery',models:'Models',product:'Product',architecture:'Architecture',guides:'Guides',downloads:'Downloads',home:'Back to <span class="brand-name">RMinte</span>',menu:'Menu',copyFailed:'Could not copy. Select the address above and copy it manually.'});
  let currentLang=localStorage.getItem('rm-ota-lang')==='zh'?'zh':localStorage.getItem('rm-ota-lang')==='en'?'en':${JSON.stringify(defaultLang)};
  const langToggle=document.getElementById('langToggle'),copyButton=document.getElementById('copyButton'),feedback=document.getElementById('copyFeedback');
- function applyLanguage(lang,remember=true){currentLang=lang;if(remember)localStorage.setItem('rm-ota-lang',lang);document.documentElement.lang=lang==='zh'?'zh-CN':'en';document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=translations[lang][el.dataset.i18n]);document.querySelectorAll('[data-i18n-html]').forEach(el=>el.innerHTML=translations[lang][el.dataset.i18nHtml]);document.querySelectorAll('[data-i18n-aria]').forEach(el=>el.setAttribute('aria-label',translations[lang][el.dataset.i18nAria]));langToggle.textContent=lang==='zh'?'EN':'中文';langToggle.setAttribute('aria-label',lang==='zh'?'切换到英文':'Switch to Chinese');feedback.textContent='';}
+ function applyLanguage(lang,remember=true){currentLang=lang;if(lang==='zh')loadChinese();if(remember)localStorage.setItem('rm-ota-lang',lang);document.documentElement.lang=lang==='zh'?'zh-CN':'en';document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=translations[lang][el.dataset.i18n]);document.querySelectorAll('[data-i18n-html]').forEach(el=>el.innerHTML=translations[lang][el.dataset.i18nHtml]);document.querySelectorAll('[data-i18n-aria]').forEach(el=>el.setAttribute('aria-label',translations[lang][el.dataset.i18nAria]));langToggle.textContent=lang==='zh'?'EN':'中文';langToggle.setAttribute('aria-label',lang==='zh'?'切换到英文':'Switch to Chinese');feedback.textContent='';}
  langToggle.addEventListener('click',()=>applyLanguage(currentLang==='zh'?'en':'zh'));
  copyButton.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(document.getElementById('serviceUrl').textContent);feedback.textContent=translations[currentLang].copied;}catch{feedback.textContent=translations[currentLang].copyFailed;}});
  const menu=document.getElementById('brandMenu'),nav=document.getElementById('brandNav');

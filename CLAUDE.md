@@ -15,6 +15,7 @@ RMinte（rminte.com）企业官网仓库：RM-01 便携式 AI 超级计算机的
 - 目标、动机或范围存在关键歧义（删除数据、改接口、改依赖、改色彩方向或主要布局）先问；常规细节自行判断，不重复确认。
 - 完成后先跑相关最小验证再交付；跑不了要说明原因；没验证过的结论要明说。
 - **未经用户明确同意，不得 `git commit`、`git push` 或发布。** 用户已明确要求时才执行；发布前重新核实仓库、分支与部署配置。
+- **发布顺序（要记住）：主站先于或同时与 OTA（`services/tianshanos-ota`）部署。** OTA 页的字体（Geist、中文字体子集、点阵数字、Quantify RM）从 `https://rminte.com/assets/fonts/` 取；只部署 OTA 的话，这些字体取不到，页面会退回系统字体（能用，但外观不对）。OTA 或 `brand.css` 改动后运行 `node scripts/build-service-brand.mjs`。
 - 保留工作区已有修改。不得擅自 `checkout`、`reset`、`stash` 或清理；先看 `git status`，区分已有工作与本次修改。其中 `services/case-access/` 等未跟踪内容不是你的，不要碰。
 - 审美重构若改变色彩方向、主要布局、关键影像入口或叙事方式，先出设计示范让用户确认，再改生产页面。
 
@@ -26,6 +27,7 @@ RMinte（rminte.com）企业官网仓库：RM-01 便携式 AI 超级计算机的
 - 章节标签只写名称，不带 01–10 序号；下载与指南入口不显示分组数量或卡片序号、不加英文装饰小标题。
 - 品牌名 `RMinte AI`、产品字标 RM-01 使用 Quantify RM（`.rm-mark`），不扩展到正文；正文中的 AI 沿用界面字体。
 - 六语言（中文、EN、日本語、한국어、Español、Français）同步：新增或改动文案必须检查所有语言的含义与展示位置；日韩用对应字形字体。
+- **中文文案与字体子集（要记住）：** 页面上的中文字体 Noto Sans SC 是只含站内用到的字的子集（`website/assets/fonts/`，2026-10-06 起英文与中文页面不再请求 Google Fonts）。新增或改动中文文案后，运行 `python3 website/scripts/build-fonts.py --check`；报缺字就运行 `python3 website/scripts/build-fonts.py` 重新生成，并把新的字体文件、`noto-sans-sc.css`、`noto-sans-sc.chars.txt` 一起提交。缺字不会空白、只会退回系统字体，不检查就发现不了。`assets/fonts/` 里的生成文件和 `brand.css` 的 `geist-faces` 一段不手改。需要 python3、fonttools、brotli。
 - 灯板工具 `website/tools/emoji2pixel/` 的界面语言只保留中文和英文（用户 2026-10-05 决定，其余语言包已删除）；OTA 页本来就是中英切换。主站仍是六语言。
 - 设计文档用中文，结论在前；评分与判断要写明是主观判断，未验证的项要单列；不把讨论中的方案写成强制标准，也不把本地实现写成已上线。
 - 已确认的设计规则变化，同步更新根目录 `DESIGN.md` 与 `website/DESIGN.md`，并改写或删除被取代的规则；归入对应章节，不在末尾追加重复条款。
@@ -33,7 +35,7 @@ RMinte（rminte.com）企业官网仓库：RM-01 便携式 AI 超级计算机的
 ## 设计硬约束（摘要，细则见 DESIGN.md）
 
 - 首页、图册、模型：纯黑 `#000000`；下载、指南：`#0D0F12`（面板 `#14171B`，阶段 3 已实施为 `support-theme`）；OTA 与灯板工具（D8，2026-10-05）同为 `#0D0F12`，只改视觉、不动功能与署名（灯板预览舞台纯黑）。
-- 白色矢量 Logo，不描边不发光；界面字体 Geist／Noto Sans SC；数字 Geist Mono；大数字 Geist Pixel（仅数字与单位）。
+- 白色矢量 Logo，不描边不发光；界面字体 Geist／Noto Sans SC（由本站自己提供，日韩 Noto Sans 仍走 Google）；数字 Geist Mono；大数字 Geist Pixel（仅数字与单位）。
 - 胶囊文字按钮（999px），面板 8px，控件 4px，大卡片 16px；图标 SVG、24 坐标系、1.6 线宽、圆角端点。
 - 点缀色：蓝宝石信号色，只用于细线、焦点、选中、数值单位；不渐变、不发光、不做按钮底色；图册不使用。减少蓝紫渐变与装饰发光。
 - 页面切换不做转场动画（用户 2026-10-04 看过光圈展开后决定舍弃）；动效以克制为准，新增醒目的动效先出原型给用户看。
@@ -52,4 +54,4 @@ RMinte（rminte.com）企业官网仓库：RM-01 便携式 AI 超级计算机的
 
 ## 验证入口
 
-按 AGENTS.md 第 5 节分范围验收：页面改动必须有实际浏览器验证，共享样式检查所有引用页面与 1440／768／390／320px、中英文；改动的 JavaScript 做语法检查。文案类改动更新 `assets/translations/*.js`（由 `build-translations.mjs` 从 `locales/` 生成，日韩西法各一个文件）或 `site-data.js` 时，同步更新各页面中对应的缓存版本号：`site-data.js` 的 `?v=`，语言包的版本在页头片段的 `RM_CATALOG.v`（指南页由生成脚本统一写入）。
+按 AGENTS.md 第 5 节分范围验收：页面改动必须有实际浏览器验证，共享样式检查所有引用页面与 1440／768／390／320px、中英文；改动的 JavaScript 做语法检查；中文文案改动后运行 `python3 website/scripts/build-fonts.py --check`（见上文“中文文案与字体子集”）。文案类改动更新 `assets/translations/*.js`（由 `build-translations.mjs` 从 `locales/` 生成，日韩西法各一个文件）或 `site-data.js` 时，同步更新各页面中对应的缓存版本号：`site-data.js` 的 `?v=`，语言包的版本在页头片段的 `RM_CATALOG.v`（指南页由生成脚本统一写入）。

@@ -19,7 +19,7 @@
 - `source/canvas/`：设计画布可编辑源文件（`*.dc.html`、`canvas.json`）。`.dc.html` 是设计画布的组件格式，需用设计画布工具打开和发布，不能当普通网页使用。
 - `source/tools/`：渲染截图与占位符替换脚本，是制作过程的记录，不是网站构建的一部分。
 - 在线画布「RMinte 官网设计方案」在作者的 claude.ai 账号里，私有；本目录是它的离线副本。
-- 字体文件不在本目录：Quantify RM 为付费授权字体；Geist、Geist Mono、Geist Pixel 为 OFL 开源。其中 Geist Mono（Regular）与 Geist Pixel（Circle）已在阶段 1 放进 `website/assets/fonts/`，许可文本在 `website/assets/licenses/geist-OFL.txt`；Geist 仍走 Google Fonts。
+- 字体文件不在本目录：Quantify RM 为付费授权字体；Geist、Geist Mono、Geist Pixel 为 OFL 开源。其中 Geist Mono（Regular）与 Geist Pixel（Circle）已在阶段 1 放进 `website/assets/fonts/`，许可文本在 `website/assets/licenses/geist-OFL.txt`。2026-10-06 起 Geist（Google 提供的 Latin 切片原文件）和 Noto Sans SC（裁成站内用到的汉字，许可文本 `notosanssc-OFL.txt`）也由本站提供，生成脚本 `website/scripts/build-fonts.py`；只有日文、韩文的 Noto Sans 还走 Google Fonts。
 
 ## 画板对照
 

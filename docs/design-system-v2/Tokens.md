@@ -29,7 +29,7 @@
 
 ## 字体与字阶
 
-Geist + Noto Sans SC 为界面字体；Geist Mono 用于数字（D2）；Geist Pixel Circle 用于 28px 及以上的大数字与单位（D7）；Quantify RM 只用于品牌字标。
+Geist + Noto Sans SC 为界面字体（二者由本站自己提供，见 DESIGN.md 第 4 节“字体加载”）；Geist Mono 用于数字（D2）；Geist Pixel Circle 用于 28px 及以上的大数字与单位（D7）；Quantify RM 只用于品牌字标。
 
 | 层级 | 尺寸 | 令牌 | 备注 |
 | --- | --- | --- | --- |

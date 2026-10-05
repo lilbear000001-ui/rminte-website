@@ -15,9 +15,7 @@
   <meta name="theme-color" content="#0d0f12">
   <title data-zh="TianshanOS 安全页面完整操作指南" data-en="TianshanOS Security Page Guide">TianshanOS 安全页面完整操作指南</title>
   <link rel="icon" type="image/png" sizes="512x512" href="../assets/images/favicon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="preload" href="../assets/fonts/Geist-latin-v1800.woff2" as="font" type="font/woff2" crossorigin>
   <script src="../assets/motion.js?v=stage2-2" defer></script>
   <link rel="stylesheet" href="../assets/brand.css?v=v2-core-1">
   <link rel="stylesheet" href="../assets/styles.css?v=stage3-1">
@@ -37,10 +35,10 @@
       // Each CJK face is requested only when its language is shown: every page used to ask for Noto Sans SC, JP and KR (about 0.9 MB of fonts and
       // 210 KB of stylesheet that English, Spanish and French visitors never use). While the head is parsing, document.write keeps the link
       // render-blocking like a static one; i18n.js calls this again (late) when the visitor switches language.
-      var cjk = { zh: 'Noto+Sans+SC:wght@300;400;500;600;700;800;900', ja: 'Noto+Sans+JP:wght@400;500;600;700', ko: 'Noto+Sans+KR:wght@400;500;600;700' };
+      var cjk = { zh: 'assets/fonts/noto-sans-sc.css', ja: 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap', ko: 'https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap' };
       c.fonts = function (l, late) {
         if (!cjk[l] || document.querySelector('link[data-cjk="' + l + '"]')) return;
-        var h = 'https://fonts.googleapis.com/css2?family=' + cjk[l] + '&display=swap';
+        var h = /^https:/.test(cjk[l]) ? cjk[l] : up + cjk[l];
         if (late || document.readyState !== 'loading') { var k = document.createElement('link'); k.rel = 'stylesheet'; k.href = h; k.setAttribute('data-cjk', l); document.head.appendChild(k); }
         else document.write('<link rel="stylesheet" href="' + h + '" data-cjk="' + l + '">');
       };
