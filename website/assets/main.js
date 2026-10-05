@@ -195,7 +195,11 @@
       item.style.setProperty('--i', index);
       // "140W" shows its unit set apart; values such as 7x24 and 30B-200B stay whole.
       // Every character gets its own span (.ch) and a running index, so the row can light up left to right.
-      const [, number, unit] = /^(\d+)([A-Za-z]+)$/.exec(metric.value) || [];
+      let [, number, unit] = /^(\d+)([A-Za-z]+)$/.exec(metric.value) || [];
+      let label = t(metric.label);
+      // A Chinese measure word that opens the caption ("路峰值并发") belongs to the figure before it: "64路" is the value, "峰值并发" the caption.
+      const counter = !unit && /^\d+$/.test(metric.value) ? /^[路个条台次]/.exec(label)?.[0] : undefined;
+      if (counter) { number = metric.value; unit = counter; label = label.slice(1); }
       const value = document.createElement('strong');
       const glyph = (character, className) => {
         const el = document.createElement('span');
@@ -211,7 +215,7 @@
         wrap.append(...[...unit].map((character) => glyph(character, 'is-unit')));
         value.append(wrap);
       }
-      item.append(value, textEl('span', t(metric.label)));
+      item.append(value, textEl('span', label));
       return item;
     }));
     // After the first draw (a language switch), the figures stay lit instead of sweeping again.

@@ -1,11 +1,12 @@
 :root {
-  --page-title: clamp(2.5rem, 4.3vw, 4rem);
+  --page-title: var(--fs-h1);
   --page-section-title: clamp(1.75rem, 2.5vw, 2.25rem);
   --page-top: 164px;
-  --body-size: 16px;
+  --body-size: var(--fs-body);
   --radius-control: 4px;
   --radius-button: 999px;
   --radius-panel: 8px;
+  --radius-card: 16px;
   --bg: #141618;
   --bg-2: #191c1f;
   --ink: #e5e7e8;
@@ -21,6 +22,7 @@
   --accent: #e8eaed;
   --shadow: 0 32px 120px rgba(0, 0, 0, 0.34);
   --soft-shadow: 0 20px 80px rgba(0, 0, 0, 0.22);
+  --shadow-pop: 0 12px 36px rgba(0, 0, 0, 0.4);
   --motion: cubic-bezier(0.32, 0.72, 0, 1);
   --section-x: clamp(24px,5.55vw,88px);
   --section-w: 1280px;
@@ -30,14 +32,106 @@
   --font-brand: "Quantify RM", "Geist", "Noto Sans SC", sans-serif;
   --section-space: clamp(88px,8vw,128px);
   --content-space: 48px;
-  --title-large: clamp(2.5rem,4.3vw,4rem);
+  --title-large: var(--fs-h1);
   --title-small: clamp(2.3rem,3.7vw,3.5rem);
 }
 
-/* Product presentation uses black; support pages retain the graphite defaults. */
+/* Page themes. The two main-site grounds, black for the product pages and lifted black for support pages, share one mapping of the
+   semantic names onto the scale (the support-theme block below); the OTA page and the LED tool use the lifted ground too. */
 :root.product-theme {
-  --bg: #000000;
-  --bg-2: #000000;
+  --bg: var(--n-0);
+  --bg-2: var(--n-0);
+}
+
+/* Design tokens (v2, DESIGN.md sections 3, 4 and 10): one source for the main site, the OTA page and the LED tool. The scale, the
+   signal colours, the motion tokens, the focus ring and the figure faces are defined here; styles.css and the page sheets load
+   after this file and add what is theirs. */
+:root {
+  /* Scale */
+  --n-0: #000000;
+  --n-1: #07080a;
+  --n-2: #0d0f12;
+  --n-3: #14171b;
+  --n-4: #1c2026;
+  --n-5: #2a3037;
+  --n-6: #585f69;
+  --n-7: #858c95;
+  --n-8: #b6bcc4;
+  --n-9: #f2f4f6;
+  --text-1: var(--n-9);
+  --text-2: var(--n-8);
+  --text-3: var(--n-7);
+  --text-4: var(--n-6);
+  --line-1: rgba(255, 255, 255, 0.08);
+  --line-2: rgba(255, 255, 255, 0.14);
+  --line-3: rgba(255, 255, 255, 0.24);
+  --sapphire-300: #a8b8f0;
+  --sapphire-500: #6e86e0;
+  --sapphire-wash: color-mix(in srgb, var(--sapphire-300) 12%, transparent);
+  --thermal-warm: #e58b5a;
+  --status-amber: #e5b15a;
+
+  /* Glass: the translucent chip behind header controls and pills (n-3 at 85%) */
+  --glass-bg: color-mix(in srgb, var(--n-3) 85%, transparent);
+
+  /* Text links: a sapphire underline that draws in from the left on hover (480ms, reveal easing) */
+  --link-line: linear-gradient(var(--sapphire-300), var(--sapphire-300));
+
+  /* The 12px hollow prism that opens every section label (DESIGN.md section 10); used as a mask over a sapphire fill */
+  --prism-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2'%3E%3Cpath d='M2 3h20L12 21z'/%3E%3C/svg%3E");
+
+  /* Motion (DESIGN.md section 10): five durations, three easings, one stagger step */
+  --dur-press: 120ms;
+  --dur-hover: 240ms;
+  --dur-panel: 480ms;
+  --dur-enter: 800ms;
+  --dur-count: 1200ms;
+  --stagger: 70ms;
+  --ease-settle: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+  /* Type scale (Tokens.md). Text steps are fixed; the page title is fluid. A component that needs another size says so in its own rule. */
+  --fs-label: 11px;      /* labels, kickers, fine print */
+  --fs-note: 12px;       /* meta lines, captions in dense interfaces */
+  --fs-caption: 13px;    /* captions, secondary interface text */
+  --fs-small: 14px;      /* small body, list copy */
+  --fs-compact: 15px;    /* body on phones, compact lead */
+  --fs-body: 16px;       /* body */
+  --fs-lead: 18px;       /* lead paragraphs, names in lists */
+  --fs-lead-l: 20px;     /* large lead, panel headings */
+  --fs-h4: 22px;         /* small headings */
+  --fs-h3: 24px;         /* headings inside content */
+  --fs-h1: clamp(40px, 4.4vw, 64px); /* page title */
+
+  /* Keyboard focus ring: sapphire, 2px */
+  --focus-ring: var(--sapphire-300);
+
+  /* Figures: Geist Pixel from 28px up, Geist Mono below (the faces are declared below).
+     Chinese, Japanese and Korean text set in these stacks must keep the page's own CJK face, so it follows the figures
+     before the generic monospace (Japanese and Korean override it with the --font-ui faces in the page sheets). */
+  --font-pixel: "Geist Pixel", "Geist Mono", "Noto Sans SC", ui-monospace, monospace;
+  --font-mono: "Geist Mono", "Noto Sans SC", ui-monospace, monospace;
+}
+
+/* Product and support pages: ground and panels from the scale (D6, DESIGN.md section 3). This only re-points the variables defined above. */
+:root.product-theme,
+:root.support-theme {
+  --panel: var(--n-3);
+  --panel-strong: var(--n-4);
+  --ink: var(--text-1);
+  --ink-soft: var(--text-2);
+  --muted: var(--text-2);
+  --dim: var(--text-3);
+  --accent: var(--text-1);
+  --line: var(--line-2);
+  --line-strong: var(--line-3);
+}
+
+/* Support pages (downloads, guides) and, since D8, the OTA page and the LED tool: lifted black ground. */
+:root.support-theme {
+  --bg: var(--n-2);
+  --bg-2: var(--n-3);
 }
 
 @font-face {
@@ -46,6 +140,22 @@
     font-weight: 700;
     font-style: normal;
     font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("fonts/GeistMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Pixel";
+  src: url("fonts/GeistPixel-Circle.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
 }
 
 /* Service pages share this compact brand shell; homepage layout remains independent. */
