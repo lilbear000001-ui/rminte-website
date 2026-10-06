@@ -44,5 +44,13 @@
 | 17 | OTA 更新服务（D8） | boards/Ota.png |
 | 18 | 灯板工具 · 已载入（D8） | boards/Lamp.png |
 | 19 | 灯板工具 · 起始状态（D8） | boards/LampEmpty.png |
+| 20 | 推理引擎玻璃动效 · 交接（D9） | boards/Engine.png |
+| 21 | 整机协同 TianshanOS 动效 · 交接（D9） | boards/TianshanFlat.png |
+| 22 | 模型页 · 专用引擎动效 · 交接（D9） | boards/ModelsEngine.png |
+| 23 | 模型页 · 稠密稀疏动效 · 交接（D9） | boards/ModelsDense.png |
+| 24 | 导航、语言与联系弹层 · 优化稿（D9） | boards/NavOverlays.png |
+| 25 | 场景卡片光段分级 · 已确认（D9） | boards/CaseLight.png |
 
 截图用 Chromium 加真实 Geist 字体渲染；Quantify RM 和 Geist Pixel 取自本地字体文件。
+
+20–25 号画板是给 Claude Code 的落地交接稿；对应的可运行原型在仓库的 `design-preview/`（`engine-glass/`、`tianshanos-flat/`、`models-motion/`、`nav-overlays/`、`case-card-light/`），落地指令是 `design-preview/IMPLEMENT-MOTION.md`、`IMPLEMENT-NAV.md`、`IMPLEMENT-CASELIGHT.md`。这些板里内嵌了截图（base64），所以源文件比前 19 块大。
