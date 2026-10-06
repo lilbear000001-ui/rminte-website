@@ -2,6 +2,30 @@
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   let lang = RM_I18N.initial();
+  let currentRelease;
+
+  function applyRelease() {
+    if (!currentRelease) return;
+    $("[data-tianshan-release-notes]").href = currentRelease.release_url;
+    $$("[data-tianshan-file]").forEach(link => {
+      const kind = link.dataset.tianshanFile;
+      link.href = `https://ota.rminte.com/${kind}?release=${currentRelease.snapshot}`;
+      const line = $("p[data-download-text]", link.closest(".download-row"));
+      line.textContent = `${RM_I18N.text(line.dataset, lang)} · ${currentRelease.tag} · ${(currentRelease[kind].size / 1024 / 1024).toFixed(1)} MB`;
+    });
+  }
+
+  async function loadRelease() {
+    try {
+      const response = await fetch("https://ota.rminte.com/release", { cache: "no-store" });
+      if (!response.ok) throw new Error(`Release lookup: ${response.status}`);
+      currentRelease = await response.json();
+      applyRelease();
+      applyBrandFonts();
+    } catch (error) {
+      console.warn("TianShanOS release metadata unavailable", error);
+    }
+  }
 
   function applyBrandFonts(root = document.body) {
     const textNodes = [];
@@ -109,6 +133,7 @@
       if (value !== undefined) element.textContent = value;
     });
     enhanceRows();
+    applyRelease();
     applyBrandFonts();
 
 
@@ -160,4 +185,5 @@
   setupLanguage();
   setupMenu();
   setupIndex();
+  loadRelease();
 })();
