@@ -4,7 +4,7 @@
 
 ## 目标
 
-把首页“让有限的算力，承载更多任务”（`#engine`）左侧三层玻璃板，用 three.js 重做成高质感的 WebGL 玻璃。先做**独立试点页**（`design-preview/engine-glass/index.html`），用户确认后再接入首页，用户在这一步之前不要改 `website/`。
+把首页“让算力，承载更多任务”（`#engine`）左侧三层玻璃板，用 three.js 重做成高质感的 WebGL 玻璃。先做**独立试点页**（`design-preview/engine-glass/index.html`），用户确认后再接入首页，用户在这一步之前不要改 `website/`。
 
 ## 设计约束（来自 DESIGN.md，违反即返工）
 
