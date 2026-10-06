@@ -29,7 +29,7 @@
 .download-row { position: relative; isolation: isolate; padding: 24px 0; display: flex; align-items: center; gap: 20px; }
 .download-row + .download-row, .download-row + .download-release-row, .download-release-row + .download-row { border-top: 1px solid var(--line-1); }
 .download-list > :last-child { border-bottom: 1px solid var(--line-2); }
-.download-row::before { content: ""; position: absolute; inset: 0 -16px; z-index: -1; background: var(--panel); opacity: 0; transition: opacity var(--dur-hover) var(--ease-settle); }
+.download-row::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--panel); opacity: 0; transition: opacity var(--dur-hover) var(--ease-settle); }
 @media (hover: hover) { .download-row:hover::before { opacity: 1; } }
 .download-filetype { display: grid; flex: none; width: 48px; height: 60px; place-items: center; border: 1px solid var(--line-2); border-radius: var(--radius-control); color: var(--text-3); background: var(--panel); font-family: var(--font-mono); font-size: 10px; font-weight: 400; letter-spacing: .06em; }
 .download-copy { flex: 1 1 auto; min-width: 0; }
