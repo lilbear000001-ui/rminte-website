@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>指南正文 优化稿</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+body{margin:0;background:#0D0F12}
+.d{position:relative;width:390px;box-sizing:border-box;background:#0D0F12;color:#F2F4F6;font-family:"Geist","Noto Sans SC",sans-serif;-webkit-font-smoothing:antialiased;padding:84px 24px 48px}
+.d h1,.d h2,.d h3,.d p{margin:0}
+.pl{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:44px;min-width:56px;padding:0 14px;border-radius:999px;background:rgba(20,23,27,.85);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);font-size:11px}
+.bar{position:sticky;display:flex;align-items:center;justify-content:space-between;height:48px;padding:0 16px;border-radius:999px;background:rgba(20,23,27,.85);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);font-size:13px;margin:28px 0 8px}
+.step{display:grid;grid-template-columns:28px 1fr;padding:14px 0;border-top:1px solid rgba(255,255,255,.08)}
+.step i{font-style:normal;font-family:"Geist Mono",monospace;font-size:12px;color:#A8B8F0;padding-top:3px}
+.step p{font-size:16px;line-height:1.8;color:#B6BCC4}
+.step code,.d code{font-family:"Geist Mono",monospace;font-size:13px;color:#F2F4F6;padding:2px 6px;border-radius:4px;background:#14171B;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+</style>
+</helmet>
+<div class="d">
+<div style="position:absolute;left:24px;right:24px;top:16px;display:flex;align-items:center;justify-content:space-between"><img src="/_blob/b39ee964399b456ff83dd9c90077a777" alt="RMinte" style="width:118px;height:auto;display:block"><span class="pl">中文 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></div>
+<div style="font-size:12px;color:#858C95">指南 / admin / <span style="color:#F2F4F6">开始使用</span></div>
+<h1 style="margin-top:16px;font-size:36px;font-weight:500;letter-spacing:-.04em;line-height:1.15">TianshanOS admin<br>日常使用指南</h1>
+<p style="margin-top:16px;font-size:15px;line-height:1.85;color:#B6BCC4">本指南面向使用 admin 账户管理 TianshanOS 的用户，介绍 WebUI 中的日常查看和操作功能。</p>
+<div style="margin-top:16px;font-family:'Geist Mono',monospace;font-size:11px;color:#858C95">9 个章节 · 六种语言 · 阅读约 25 分钟</div>
+<div class="bar"><span>本页目录</span><span style="color:#858C95;display:inline-flex;gap:8px;align-items:center">进入 WebUI <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></div>
+<h2 style="margin:36px 0 16px;font-size:26px;font-weight:500;letter-spacing:-.03em">开始使用</h2>
+<h3 style="margin:0 0 12px;font-size:20px;font-weight:500">进入 WebUI</h3>
+<div style="border-bottom:1px solid rgba(255,255,255,.08)"><div class="step"><i>1</i><p>在浏览器中打开管理员提供的设备网页地址（WebUI）。</p></div><div class="step"><i>2</i><p>点击页面右上角的“登录”。</p></div><div class="step"><i>3</i><p>用户名保持为 <code>admin</code>，输入设备提供的 admin 密码。</p></div><div class="step"><i>4</i><p>点击“登录”。登录成功后，右上角会显示当前用户名。</p></div></div>
+<div style="display:grid;grid-template-columns:14px 1fr;column-gap:10px;padding:16px 18px;border-radius:12px;background:#14171B;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);margin:24px 0"><span style="width:6px;height:6px;border-radius:50%;background:#E5B15A;margin-top:8px"></span><p style="font-size:14px;line-height:1.8;color:#B6BCC4">首次使用默认密码登录时，页面会显示“安全提醒”。可以在弹窗中输入当前密码和新密码，随后点击“立即修改”。</p></div>
+<p style="font-size:16px;line-height:1.85;color:#B6BCC4">使用完毕后，点击右上角的“退出登录”。再次操作设备时需要重新登录。</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

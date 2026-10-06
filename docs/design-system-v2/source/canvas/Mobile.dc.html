@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>手机首屏 优化稿</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+@font-face{font-family:"Geist Pixel";src:url("/_blob/ef2f0a0417c71c384aa2a7deedce473f") format("woff2")}
+@font-face{font-family:"Quantify RM";src:url("/_blob/bd9447c74671299c084a3a03488fedc6") format("truetype");font-weight:700}
+body{margin:0;background:#000}
+.m{position:relative;width:390px;height:844px;overflow:hidden;background:#000;color:#F2F4F6;font-family:"Geist","Noto Sans SC",sans-serif;-webkit-font-smoothing:antialiased}
+.m h1,.m p{margin:0}
+.pl{display:inline-flex;align-items:center;justify-content:center;height:44px;min-width:56px;padding:0 14px;border-radius:999px;background:rgba(13,15,18,.72);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);font-size:11px}
+.s{display:flex;flex-direction:column;gap:8px;padding-top:16px;border-top:1px solid rgba(255,255,255,.14);position:relative}
+.s:before{content:"";position:absolute;left:0;top:-1px;width:24px;height:1px;background:#A8B8F0}
+.s b{font-family:"Geist Pixel","Geist Mono",monospace;font-weight:400;font-size:32px;letter-spacing:-.02em;line-height:1}
+.s b i{font-style:normal;font-size:12px;color:#A8B8F0;margin-left:4px;letter-spacing:0}
+.s span{font-size:12px;color:#858C95}
+</style>
+</helmet>
+<div class="m">
+<img src="/_blob/b01e1334f1f482fe813d5db697bbbdf0" alt="" style="position:absolute;right:-110px;top:-10px;width:420px;height:420px;object-fit:cover;-webkit-mask-image:radial-gradient(closest-side at 50% 50%,#000 35%,rgba(0,0,0,0) 100%);mask-image:radial-gradient(closest-side at 50% 50%,#000 35%,rgba(0,0,0,0) 100%)">
+<div style="position:absolute;left:24px;right:24px;top:16px;display:flex;align-items:center;justify-content:space-between">
+<img src="/_blob/b39ee964399b456ff83dd9c90077a777" alt="RMinte" style="width:118px;height:auto;display:block">
+<div style="display:flex;gap:8px"><span class="pl">中文 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;display:block"><path d="M6 9l6 6 6-6"/></svg></span><span class="pl" style="width:56px;padding:0;position:relative"><span style="position:absolute;left:18px;right:18px;top:19px;height:1px;background:#F2F4F6"></span><span style="position:absolute;left:18px;right:18px;top:25px;height:1px;background:#F2F4F6"></span></span></div>
+</div>
+<div style="position:absolute;left:24px;right:24px;top:272px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;gap:12px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#A8B8F0" stroke-width="2" stroke-linejoin="round"><path d="M2 3h20L12 21z"/></svg><span style="font-size:10px;letter-spacing:.14em;color:#B6BCC4">专为模型推理与 AI 应用而生</span></div>
+<h1 style="font-family:'Quantify RM','Geist',sans-serif;font-weight:700;font-size:80px;letter-spacing:.03em;line-height:.95;margin-left:-3px">RM-01</h1>
+<p style="font-size:32px;font-weight:500;letter-spacing:-.04em;line-height:1.15">让 AI 在本地，<br>为你工作</p>
+<p style="font-size:15px;line-height:1.8;color:#B6BCC4">为模型推理与 AI 智能体应用提供各自独立的计算资源，让智能体可以在现场持续工作、交付成果。</p>
+<span style="display:inline-flex;align-self:flex-start;align-items:center;gap:10px;height:48px;padding:0 24px;border-radius:999px;background:#F2F4F6;color:#000;font-size:13px;font-weight:500">继续探索 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;display:block"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+</div>
+<div style="position:absolute;left:24px;right:24px;bottom:36px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:20px;row-gap:20px">
+<div class="s"><b>140<i>W</i></b><span>整机功耗</span></div>
+<div class="s"><b>64</b><span>峰值会话</span></div>
+<div class="s"><b>7×24</b><span>工业级运行</span></div>
+<div class="s"><b style="font-size:24px;padding-top:3px">30–200<i>B</i></b><span>模型规模</span></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

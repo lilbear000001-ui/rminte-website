@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Engine Stack Motion</title>
+<style>
+:root{--bg:#0a0c0e;--ink:#eef1f3;--muted:#9aa3aa;--dim:#737c84;--line:#ffffff1f;--panel-strong:#ffffff1c;--radius-button:999px;--motion:cubic-bezier(.22,.8,.2,1);--font-brand:"Quantify RM","Arial Black",system-ui,sans-serif;--fs-h3:30px;--fs-body:16px;--fs-caption:14px;--fs-h4:20px;--font-pixel:"Geist Pixel","Geist Mono",ui-monospace,Menlo,monospace;--sap:#A8B8F0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"PingFang SC",system-ui,sans-serif}
+.mp-wrap{max-width:1280px;margin:0 auto;padding:60px 40px}
+.mp-engine-layout{display:grid;grid-template-columns:minmax(0,1.32fr) minmax(0,1fr);gap:64px;align-items:center}
+.mp-engine-visual{min-width:0}
+.mp-engine-art{position:relative;aspect-ratio:1.5;margin:0;min-width:0}
+.mp-engine-stack{position:absolute;width:80%;height:52%;left:10%;top:34%;transform:rotateX(48deg) rotateZ(-30deg);transform-style:preserve-3d}
+.mp-engine-plane{position:absolute;inset:0;border:1px solid #727c83;border-radius:8px;background:linear-gradient(140deg,#353d43,#151b20 70%);box-shadow:2px 5px 0 #0b0e10,3px 6px 0 #58616a,12px 24px 28px #0009;transform-style:preserve-3d}
+.mp-engine-plane>span{position:absolute;bottom:16px;left:20px;font-size:17px;font-weight:500;white-space:nowrap;color:var(--ink)}
+.mp-engine-plane.base{transform:translateZ(-45px);border-color:#737b80;background:linear-gradient(140deg,#373c40,#101315 55%,#23282c);box-shadow:2px 5px 0 #0b0d0f,3px 6px 0 #43494d,10px 22px 30px #0009}
+.mp-engine-plane.runtime{transform:translate3d(0,-30px,30px);background:linear-gradient(145deg,#6d7985e6,#26333ee8 70%);border-color:#a6b2bc;transition:transform .45s var(--motion)}
+.mp-engine-plane.model{transform:translate3d(0,-60px,85px);background:linear-gradient(140deg,#83909b80,#263440be 60%,#1b2732df);border-color:#afb9c1;backdrop-filter:blur(2.5px)}
+.mp-engine-plane.model span{font-family:var(--font-brand);font-weight:700;font-size:var(--fs-h4)}
+.mp-engine-art[data-engine="vllm"] .runtime{transform:translate3d(0,-36px,46px)}
+.mp-engine-traces{position:absolute;top:27px;left:22px;right:22px;display:grid;gap:13px}
+.mp-engine-traces i{display:block;width:100%;height:2px;background:linear-gradient(90deg,#dce1e5,#5a697766);box-shadow:0 5px 0 #6778894d}
+.mp-engine-traces i:nth-child(2){width:72%}.mp-engine-traces i:nth-child(3){width:88%}
+.mp-engine-core{position:absolute;inset:22px 20px 53px;display:grid;grid-template-columns:repeat(6,1fr);gap:6px;transition:gap .6s var(--motion),transform .6s var(--motion)}
+.mp-engine-core i{background:linear-gradient(135deg,#9aa7b2,#556471);border:1px solid #c3cbd15e}
+.mp-engine-compute{position:absolute;inset:24px 22px 60px;display:grid;grid-template-columns:repeat(12,1fr);gap:5px}
+.mp-engine-compute i{background:#454c52;border:1px solid #747e86;box-shadow:1px 2px 0 #07090b}
+.mp-engine-reading{display:grid;min-width:0}
+.mp-engine-panel{grid-area:1/1;align-self:start;min-width:0}
+.mp-engine-panel[hidden]{display:block;visibility:hidden}
+.mp-engine-tabs{display:flex;width:max-content;max-width:100%;border-radius:var(--radius-button);padding:4px;gap:4px;border:1px solid var(--line);margin:24px auto 0}
+.mp-engine-tabs button{background:transparent;color:var(--dim);border:0;border-radius:var(--radius-button);padding:11px 19px;min-height:44px;cursor:pointer;font-size:var(--fs-caption);white-space:nowrap;transition:background .3s,color .3s}
+.mp-engine-tabs button[aria-selected="true"]{color:var(--ink);background:var(--panel-strong)}
+.mp-engine-panel h3{margin:0;font-size:var(--fs-h3);line-height:1.4;font-weight:500}
+.mp-engine-panel h4{margin:24px 0 0;font-size:17px;font-weight:500}
+.mp-engine-panel p{margin:10px 0 0;font-size:15px;line-height:1.85;color:var(--muted)}
+
+/* ===== 新增动效层（仅叠加，不改原结构） ===== */
+.mp-token{position:absolute;width:14px;height:14px;border-radius:3px;background:linear-gradient(135deg,#fff,#c9d4ff);box-shadow:0 0 10px #a8b8f0aa;opacity:0;transform-style:preserve-3d;animation:tok 2.8s var(--d,0s) infinite cubic-bezier(.45,.05,.4,1)}
+@keyframes tok{
+ 0%{opacity:0;transform:translate3d(0,-60px,100px)}
+ 12%{opacity:1}
+ 40%{transform:translate3d(0,-60px,92px)}
+ 55%{transform:translate3d(0,-30px,38px);opacity:1}
+ 85%{transform:translate3d(0,0,-38px);opacity:.9}
+ 100%{transform:translate3d(0,0,-44px);opacity:0}}
+.mp-engine-traces i{position:relative;overflow:hidden}
+.mp-engine-traces i::after{content:"";position:absolute;top:-1px;left:0;width:30%;height:4px;background:linear-gradient(90deg,transparent,#fff,transparent);animation:tpulse 2.8s var(--d,0s) infinite linear;opacity:.9}
+.mp-engine-traces i:nth-child(2){--d:.4s}.mp-engine-traces i:nth-child(3){--d:.8s}
+@keyframes tpulse{from{transform:translateX(-120%)}to{transform:translateX(420%)}}
+.mp-engine-core i{animation:cpulse 2.8s calc(var(--k)*.07s) infinite ease-in-out}
+@keyframes cpulse{0%,50%,100%{filter:none}65%{filter:brightness(1.55);box-shadow:0 0 8px #cfd9ff88}}
+.mp-engine-compute i{animation:bpulse 2.8s calc((var(--k) % 12)*.06s + 1.2s) infinite ease-in-out}
+@keyframes bpulse{0%,60%,100%{background:#454c52}75%{background:#7a8794}}
+/* C++：融合——单元合拢成整体，亮核 */
+.mp-engine-art[data-engine="cpp"] .mp-engine-core{gap:0;transform:translateZ(14px) scale(.44)}
+.mp-engine-art[data-engine="cpp"] .mp-engine-core i{border-color:#e6ecf455}
+.mp-engine-core::after{content:"";position:absolute;inset:36% 36%;border-radius:4px;background:radial-gradient(circle,#fff,#a8b8f0 55%,transparent 75%);opacity:0;transition:opacity .5s;animation:core 2.8s infinite ease-in-out}
+.mp-engine-art[data-engine="cpp"] .mp-engine-core::after{opacity:1}
+@keyframes core{0%,100%{filter:brightness(.9)}55%{filter:brightness(1.5)}}
+/* vLLM：展开，算子可替换 */
+.mp-engine-art[data-engine="vllm"] .mp-engine-core i:nth-child(8){animation:cpulse 2.8s infinite,swap 5.2s infinite ease-in-out}
+.mp-engine-art[data-engine="vllm"] .mp-engine-core i:nth-child(15){animation:cpulse 2.8s infinite,swap 5.2s 2.6s infinite ease-in-out}
+.mp-engine-core i{transition:transform .5s}
+@keyframes swap{0%,100%{transform:translateZ(0)}30%,50%{transform:translateZ(18px);background:#c9d4ff}}
+.mp-engine-plane>span.mp-engine-tag-v{left:auto;right:20px;bottom:16px;font-size:12px;font-size:11px;color:#dfe6ff;opacity:0;transition:opacity .4s;white-space:nowrap}
+.mp-engine-art[data-engine="vllm"] .mp-engine-tag-v{opacity:.9}
+/* 2 MB 数字 */
+.mp-engine-mb{position:absolute;right:1%;bottom:4%;text-align:right;opacity:0;transition:opacity .5s;pointer-events:none}
+.mp-engine-art[data-engine="cpp"] .mp-engine-mb{opacity:1}
+.mp-engine-mb b{display:block;font:500 clamp(36px,5vw,64px)/1 var(--font-pixel);color:var(--ink);letter-spacing:-.02em}
+.mp-engine-mb b em{font-style:normal;color:var(--sap);font-size:.5em;margin-left:.2em}
+.mp-engine-mb small{display:block;margin-top:10px;font-size:12px;color:var(--dim);line-height:1.6}
+@media(prefers-reduced-motion:reduce){.mp-token,.mp-engine-traces i::after,.mp-engine-core i,.mp-engine-compute i,.mp-engine-core::after{animation:none!important}.mp-token{display:none}}
+@media(max-width:900px){.mp-engine-layout{grid-template-columns:1fr;gap:32px}}
+</style></head><body>
+<div class="mp-wrap">
+<div class="mp-engine-layout">
+ <div class="mp-engine-visual">
+  <figure class="mp-engine-art" id="engineArt" data-engine="cpp" aria-label="自研 C++ 推理实现示意">
+   <div class="mp-engine-stack" aria-hidden="true">
+    <div class="mp-engine-plane base"><div class="mp-engine-compute" data-cells="96"></div><span>NVIDIA CUDA</span></div>
+    <div class="mp-engine-plane runtime"><div class="mp-engine-core" data-cells="18"></div><span id="runtimeLabel">RMinte C++ Runtime</span></div>
+    <div class="mp-engine-plane model"><div class="mp-engine-traces"><i></i><i></i><i></i></div><span>RMQ3x · RMQ4</span><span class="mp-engine-tag-v" >FlashInfer · 融合 MoE</span>
+      <div id="toks"></div></div>
+   </div>
+   <div class="mp-engine-mb"><b><span id="mbn">0</span><em>MB</em></b><small>Runner 常驻内存<br>不含权重、KV 缓存与上下文</small></div>
+  </figure>
+  <div class="mp-engine-tabs" role="tablist">
+   <button role="tab" type="button" aria-selected="true" data-engine-tab="cpp">自研 C++</button>
+   <button role="tab" type="button" aria-selected="false" tabindex="-1" data-engine-tab="vllm">vLLM 定制</button>
+  </div>
+ </div>
+ <div class="mp-engine-reading">
+  <div class="mp-engine-panel" id="panelCpp">
+   <h3>自研 C++ 推理引擎</h3>
+   <h4>更低的运行开销，更高的执行效率。</h4>
+   <p>RMinte 自研 C++ 引擎的 Runner 自身内存开销约为 2 MB，不含模型权重、KV Cache 与上下文等占用。在相同模型、精度与量化配置下，prefill 与 decode 性能均优于我们已优化的 vLLM 实现。</p>
+   <h4>匹配硬件，减少数据搬运。</h4>
+   <p>针对 RM-01 的 GPU、统一内存与缓存结构，我们设计 CUDA 算子，合并投影与相邻运算，并按矩阵规模选择计算路径。</p>
+  </div>
+  <div class="mp-engine-panel" id="panelVllm" hidden>
+   <h3>深度定制 vLLM</h3>
+   <h4>从算子到工具链，深入优化推理实现。</h4>
+   <p>RMinte 围绕模型执行与硬件特性，完成 GPU 算子的移植与重写，处理 PTX 与编译工具链的兼容问题，并推进 FlashInfer 推理内核库、Transformers 5 模型库的适配与集成。</p>
+   <h4>支撑 RMQ，保留开放的模型选择。</h4>
+   <p>定制 vLLM 已支持 RMQ3x 与 RMQ4，也为 RM-01 运行其他适配的开源模型提供推理基础。</p>
+  </div>
+ </div>
+</div></div>
+<script>
+const art=document.getElementById('engineArt');
+document.querySelectorAll('[data-cells]').forEach(g=>{const n=+g.dataset.cells;for(let k=0;k<n;k++){const i=document.createElement('i');i.style.setProperty('--k',k);g.appendChild(i)}});
+// 光块：沿 模型层 → 运行时 → CUDA 穿行
+const toks=document.getElementById('toks');
+for(let k=0;k<5;k++){const t=document.createElement('span');t.className='mp-token';t.style.left=(14+k*17)+'%';t.style.top=(40+((k*37)%30))+'%';t.style.setProperty('--d',(k*.55)+'s');toks.appendChild(t)}
+toks.style.cssText='position:absolute;inset:0;transform-style:preserve-3d';
+// 2 MB 计数
+let mbT=0;function count(){const el=document.getElementById('mbn');const t0=performance.now();(function f(n){const p=Math.min(1,(n-t0)/1400);el.textContent=(2*(1-Math.pow(1-p,3))).toFixed(p<1?1:0);if(p<1)requestAnimationFrame(f)})(t0)}
+count();
+document.querySelectorAll('[data-engine-tab]').forEach(b=>b.addEventListener('click',()=>{
+ const e=b.dataset.engineTab;art.dataset.engine=e;
+ document.querySelectorAll('[data-engine-tab]').forEach(x=>{const s=x===b;x.setAttribute('aria-selected',s);x.tabIndex=s?0:-1});
+ document.getElementById('panelCpp').hidden=e!=='cpp';document.getElementById('panelVllm').hidden=e!=='vllm';
+ document.getElementById('runtimeLabel').textContent=e==='cpp'?'RMinte C++ Runtime':'RMinte vLLM Runtime';
+ if(e==='cpp')count();
+}));
+if(location.hash==='#vllm')document.querySelector('[data-engine-tab=vllm]').click();
+</script></body></html>

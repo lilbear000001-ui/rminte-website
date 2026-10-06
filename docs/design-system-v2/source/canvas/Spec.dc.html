@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>设计规范 v2</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+@font-face{font-family:"Quantify RM";src:url("/_blob/bd9447c74671299c084a3a03488fedc6") format("truetype");font-weight:700}
+body{margin:0;background:#000}
+.r{width:1440px;box-sizing:border-box;background:#000;color:#F2F4F6;font-family:"Geist","Noto Sans SC",sans-serif;-webkit-font-smoothing:antialiased;padding:96px;display:flex;flex-direction:column;gap:80px}
+.r h1,.r h2,.r h3,.r p{margin:0}
+.k{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#858C95}
+.sec{display:flex;flex-direction:column;gap:28px}
+.hd{display:flex;align-items:baseline;gap:20px;border-top:1px solid rgba(255,255,255,.14);padding-top:24px}
+.hd h2{font-size:28px;font-weight:500;letter-spacing:-.02em}
+.m{font-size:13px;line-height:1.7;color:#B6BCC4}
+.rm{display:flex;flex-wrap:wrap;gap:0}
+.s{width:124px;height:112px;box-sizing:border-box;padding:12px;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;font-size:12px}
+.s b{font-weight:500;font-size:13px}
+.s span{opacity:.7;font-variant-numeric:tabular-nums}
+.t{display:grid;grid-template-columns:150px 1fr 220px;column-gap:32px;align-items:baseline;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.t .n{font-size:12px;color:#858C95;font-family:"Geist Mono",monospace}
+.t .u{font-size:12px;color:#858C95;font-family:"Geist Mono",monospace;line-height:1.5}
+.tk{display:grid;grid-template-columns:150px 1fr 1fr;column-gap:32px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.08);align-items:center;font-size:13px}
+.tk code{font-family:"Geist Mono",monospace;font-size:12px;color:#A8B8F0}
+.tk span{color:#B6BCC4}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:64px;row-gap:56px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:40px}
+.box{display:flex;flex-direction:column;gap:20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 26px;border-radius:999px;font-size:13px;font-weight:500;font-family:inherit}
+.card{position:relative;padding:28px;border-radius:16px;background:#0D0F12;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);display:flex;flex-direction:column;gap:14px;overflow:hidden}
+.card:before{content:"";position:absolute;left:16px;right:16px;top:0;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.32),rgba(255,255,255,0))}
+.chip{display:inline-flex;align-items:center;gap:8px;height:30px;padding:0 14px;border-radius:999px;font-size:12px;color:#B6BCC4;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.chip i{width:6px;height:6px;border-radius:50%;background:#A8B8F0;display:block}
+.mo{display:grid;grid-template-columns:150px 140px 1fr;column-gap:32px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:13px;align-items:center}
+.mo code{font-family:"Geist Mono",monospace;font-size:12px;color:#A8B8F0}
+</style>
+</helmet>
+<div class="r">
+
+<div style="display:flex;flex-direction:column;gap:24px">
+<span class="k">Design Tokens · v2 · 提案</span>
+<h1 style="font-size:72px;font-weight:500;letter-spacing:-.04em;line-height:1.02">设计规范 v2</h1>
+<p style="font-size:20px;line-height:1.6;color:#B6BCC4;max-width:860px">在不改变「黑 · 银白 · 影像」方向的前提下，把散落的数值收成一套可复用的阶梯。所有旧值都有对应项，可无损迁移。带蓝色标记的项目依赖决定 D1 / D2。</p>
+</div>
+
+<div class="sec">
+<div class="hd"><h2>色彩</h2><span class="k">Color</span></div>
+<div class="box">
+<span class="k">中性色阶 · 冷石墨（色相约 220°，色度极低）</span>
+<div class="rm">
+<div class="s" style="background:#000;color:#F2F4F6;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)"><b>n-0</b><span>#000000 画布</span></div>
+<div class="s" style="background:#07080A;color:#F2F4F6"><b>n-1</b><span>#07080A</span></div>
+<div class="s" style="background:#0D0F12;color:#F2F4F6"><b>n-2</b><span>#0D0F12 卡片</span></div>
+<div class="s" style="background:#14171B;color:#F2F4F6"><b>n-3</b><span>#14171B 支持页面板</span></div>
+<div class="s" style="background:#1C2026;color:#F2F4F6"><b>n-4</b><span>#1C2026 悬停</span></div>
+<div class="s" style="background:#2A3037;color:#F2F4F6"><b>n-5</b><span>#2A3037</span></div>
+<div class="s" style="background:#585F69;color:#fff"><b>n-6</b><span>#585F69</span></div>
+<div class="s" style="background:#858C95;color:#000"><b>n-7</b><span>#858C95</span></div>
+<div class="s" style="background:#B6BCC4;color:#000"><b>n-8</b><span>#B6BCC4</span></div>
+<div class="s" style="background:#F2F4F6;color:#000"><b>n-9</b><span>#F2F4F6</span></div>
+</div>
+<p class="m">支持页（下载 / 指南）建议改用抬升黑：背景取 n-2（#0D0F12），面板取 n-3（D6 已确认），不再借用其他页面的十六进制。产品页与图册取 n-0。</p>
+</div>
+
+<div class="g2">
+<div class="box">
+<span class="k">文字（在 #000 上的对比度）</span>
+<div class="tk"><span style="color:#F2F4F6">主文字</span><code>--text-1 #F2F4F6</code><span>19.0 : 1</span></div>
+<div class="tk"><span style="color:#B6BCC4">次级文字</span><code>--text-2 #B6BCC4</code><span>11.0 : 1</span></div>
+<div class="tk"><span style="color:#858C95">说明 / 元信息</span><code>--text-3 #858C95</code><span>6.2 : 1 · 通过 AA</span></div>
+<div class="tk"><span style="color:#585F69">仅装饰 / 禁用</span><code>--text-4 #585F69</code><span>3.3 : 1 · 不得承载信息</span></div>
+</div>
+<div class="box">
+<span class="k">线条</span>
+<div class="tk"><span style="padding:10px 0;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)">细分隔</span><code>--line-1 rgba(255,255,255,.08)</code><span>列表、表格</span></div>
+<div class="tk"><span style="padding:10px 0;box-shadow:inset 0 1px 0 rgba(255,255,255,.14)">标准边框</span><code>--line-2 rgba(255,255,255,.14)</code><span>卡片、按钮</span></div>
+<div class="tk"><span style="padding:10px 0;box-shadow:inset 0 1px 0 rgba(255,255,255,.24)">强调边界</span><code>--line-3 rgba(255,255,255,.24)</code><span>悬停、章节线</span></div>
+<div class="tk"><span style="padding:10px 0;box-shadow:inset 0 1px 0 rgba(168,184,240,.8)">焦点 / 选中</span><code>--signal-line #A8B8F0</code><span>仅此一处用彩色线</span></div>
+</div>
+</div>
+
+<div class="box">
+<span class="k">蓝宝石信号色 · 取自产品实拍的冰蓝紫（决定 D1）</span>
+<div class="rm">
+<div class="s" style="background:#A8B8F0;color:#000"><b>sapphire-300</b><span>#A8B8F0 文字 / 线</span></div>
+<div class="s" style="background:#6E86E0;color:#000"><b>sapphire-500</b><span>#6E86E0 图表</span></div>
+<div class="s" style="background:rgba(168,184,240,.12);color:#F2F4F6;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)"><b>sapphire-wash</b><span>12% 填充</span></div>
+<div class="s" style="background:#E58B5A;color:#000"><b>thermal-warm</b><span>#E58B5A 仅温度数据</span></div>
+</div>
+<p class="m">用途白名单：键盘焦点环、当前选中指示、滚动进度、规格数值的单位、链接悬停下划线。禁止：渐变、发光、大面积底色、按钮底色。主行动按钮仍是银白底。</p>
+</div>
+</div>
+
+<div class="sec">
+<div class="hd"><h2>字阶</h2><span class="k">Type · Geist / Noto Sans SC</span></div>
+<div>
+<div class="t"><span class="n">display</span><span style="font-family:'Quantify RM','Geist',sans-serif;font-weight:700;font-size:96px;letter-spacing:.03em;line-height:1">RM-01</span><span class="u">clamp(64px, 11.7vw, 168px)<br>Quantify RM · lh 0.95</span></div>
+<div class="t"><span class="n">h1</span><span style="font-size:64px;font-weight:500;letter-spacing:-.04em;line-height:1.05">让 AI 在本地</span><span class="u">clamp(40px, 4.4vw, 64px)<br>500 · -0.04em · lh 1.05</span></div>
+<div class="t"><span class="n">h2</span><span style="font-size:48px;font-weight:500;letter-spacing:-.035em;line-height:1.1">各司其职，整机交付</span><span class="u">clamp(32px, 3.3vw, 48px)<br>500 · -0.035em · lh 1.1</span></div>
+<div class="t"><span class="n">h3</span><span style="font-size:28px;font-weight:500;letter-spacing:-.02em;line-height:1.25">Agent 与应用模块</span><span class="u">24–28px · 500 · lh 1.25</span></div>
+<div class="t"><span class="n">lead</span><span style="font-size:20px;line-height:1.7;color:#B6BCC4">为模型推理与 AI 智能体应用提供各自独立的计算资源。</span><span class="u">18–20px · 400 · lh 1.7 · text-2</span></div>
+<div class="t"><span class="n">body</span><span style="font-size:16px;line-height:1.8;color:#B6BCC4">自研推理引擎与高速互联提升推理效率，算力集中于模型推理与 KV Cache。</span><span class="u">16px · 400 · lh 1.8（中）/ 1.7（拉丁）</span></div>
+<div class="t"><span class="n">caption</span><span style="font-size:13px;line-height:1.6;color:#858C95">整机功耗 · 峰值会话 · 工业级运行</span><span class="u">13px · 400 · lh 1.6 · text-3</span></div>
+<div class="t"><span class="n">label</span><span class="k">Purpose-built for inference</span><span class="u">11px · 500 · +0.16em · 大写</span></div>
+<div class="t" style="border-bottom:0"><span class="n">figure <span style="color:#A8B8F0">D2</span></span><span style="font-family:'Geist Mono',monospace;font-size:44px;font-weight:400;letter-spacing:-.02em;font-variant-numeric:tabular-nums">2070<span style="font-size:16px;color:#A8B8F0;margin-left:6px">TFLOPS</span></span><span class="u">Geist Mono · 数字 32–56px<br>单位 12–16px · sapphire-300</span></div>
+</div>
+</div>
+
+<div class="g2">
+<div class="sec">
+<div class="hd"><h2>间距与圆角</h2><span class="k">Space · Radius</span></div>
+<div class="box" style="gap:12px">
+<div style="display:flex;align-items:flex-end;gap:14px;height:96px">
+<div style="width:4px;height:4px;background:#B6BCC4"></div><div style="width:8px;height:8px;background:#B6BCC4"></div><div style="width:12px;height:12px;background:#B6BCC4"></div><div style="width:16px;height:16px;background:#B6BCC4"></div><div style="width:24px;height:24px;background:#B6BCC4"></div><div style="width:32px;height:32px;background:#B6BCC4"></div><div style="width:48px;height:48px;background:#B6BCC4"></div><div style="width:64px;height:64px;background:#B6BCC4"></div><div style="width:96px;height:96px;background:#B6BCC4"></div>
+</div>
+<p class="m" style="font-family:'Geist Mono',monospace;font-size:12px">4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 · 96 · 128 · 192（4pt 基准）</p>
+<div style="display:flex;gap:16px;align-items:center;margin-top:8px">
+<div style="width:72px;height:72px;border-radius:4px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.24)"></div>
+<div style="width:72px;height:72px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.24)"></div>
+<div style="width:72px;height:72px;border-radius:16px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.24)"></div>
+<div style="width:72px;height:72px;border-radius:999px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.24)"></div>
+</div>
+<p class="m" style="font-family:'Geist Mono',monospace;font-size:12px">4 控件 · 8 小面板 · 16 大卡片与影像（新增）· 999 胶囊</p>
+</div>
+</div>
+<div class="sec">
+<div class="hd"><h2>动效</h2><span class="k">Motion</span></div>
+<div>
+<div class="mo"><span>时长</span><code>120 / 240 / 480 / 800 / 1200ms</code><span style="color:#B6BCC4">按压 / 悬停 / 面板 / 入场 / 数字计数</span></div>
+<div class="mo"><span>settle（已有）</span><code>.32, .72, 0, 1</code><span style="color:#B6BCC4">菜单、面板，保持不变</span></div>
+<div class="mo"><span>reveal（新增）</span><code>.16, 1, .3, 1</code><span style="color:#B6BCC4">文字行遮罩上移，指数缓出</span></div>
+<div class="mo"><span>exit（新增）</span><code>.4, 0, 1, 1</code><span style="color:#B6BCC4">离场更快：时长取 60%</span></div>
+<div class="mo" style="border-bottom:0"><span>编排</span><code>stagger 70ms</code><span style="color:#B6BCC4">标题逐行 → 正文 → 行动，总长不超过 1.2s</span></div>
+</div>
+<p class="m">prefers-reduced-motion：关闭位移与计数，仅保留 120ms 透明度变化；内容始终完整可见。</p>
+</div>
+</div>
+
+<div class="sec">
+<div class="hd"><h2>组件</h2><span class="k">Components</span></div>
+<div class="g3">
+<div class="box">
+<span class="k">按钮 · 48px 胶囊</span>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+<span class="btn" style="background:#F2F4F6;color:#000">继续探索 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;display:block"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+<span class="btn" style="background:#0D0F12;color:#F2F4F6;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)">下载中心</span>
+</div>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+<span class="btn" style="background:transparent;color:#B6BCC4;padding:0 8px">了解更多 ↗</span>
+<span class="btn" style="background:#F2F4F6;color:#000;box-shadow:0 0 0 2px #000,0 0 0 4px #A8B8F0">焦点态</span>
+</div>
+<p class="m">悬停：银白底提亮到 #FFFFFF，位移 -1px，240ms；按压：缩放 .98，120ms。焦点环 2px 蓝宝石 + 2px 黑隔离，对比度 ≥ 3:1。</p>
+</div>
+<div class="box">
+<span class="k">卡片 · 倒角高光</span>
+<div class="card"><span class="k">推理模块</span><span style="font-family:'Geist Mono',monospace;font-size:36px;letter-spacing:-.02em">275<span style="font-size:14px;color:#A8B8F0;margin-left:6px">TOPS INT8</span></span><p class="m">16px 圆角，n-2 底，1px 内描边，顶边 1px 高光线（渐隐两端），模拟机身倒角。无阴影、无发光。</p></div>
+</div>
+<div class="box">
+<span class="k">标签与状态</span>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><span class="chip"><i></i>当前</span><span class="chip">中文 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;display:block"><path d="M6 9l6 6 6-6"/></svg></span><span class="chip">模型</span><span class="chip">图册</span></div>
+<span class="k" style="margin-top:6px">链接</span>
+<p style="font-size:16px;color:#F2F4F6;text-decoration:underline;text-decoration-color:#A8B8F0;text-underline-offset:6px;text-decoration-thickness:1px">产品与技术交流 ↗</p>
+<p class="m">悬停时下划线从左向右展开，480ms，reveal 缓动。</p>
+</div>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3290}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

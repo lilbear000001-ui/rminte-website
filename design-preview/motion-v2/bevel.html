@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>倒角边光 · 动效原型</title>
+<link rel="stylesheet" href="motion.css">
+<style>
+  .stage { padding: 8px 0 8px; }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  /* Bevel edge light: a 1px highlight segment on the top edge that follows the pointer sideways.
+     One pseudo-element, one gradient, no blur, no shadow. --bx / --bw / --ba are set from the controls and the pointer. */
+  .bevel { position: relative; --bx: 50%; }
+  .bevel::before { content: ""; position: absolute; left: var(--bi, 16px); right: var(--bi, 16px); top: 0; height: 1px; pointer-events: none;
+    background: linear-gradient(90deg, transparent calc(var(--bx) - var(--bw, 30%)), rgba(255, 255, 255, var(--ba, .5)) var(--bx), transparent calc(var(--bx) + var(--bw, 30%))); }
+  .card { background: var(--n-2); border: 1px solid var(--line-1); border-radius: 16px; padding: 28px 28px 26px; min-height: 190px; display: flex; flex-direction: column; }
+  .card h3 { margin: 0 0 12px; font: 500 22px/1.4 var(--font-ui); letter-spacing: -.01em; }
+  .card p { margin: 0; color: var(--n-8); font-size: 14px; line-height: 1.9; }
+  .card .spec { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--line-1); color: var(--n-7); font: 400 12px/1.8 var(--font-mono); }
+  .row { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-top: 8px; }
+  .pill { --bi: 22px; display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 24px; border-radius: 999px; font: 500 13px/1 var(--font-ui); cursor: pointer; border: 1px solid transparent; transition: transform 240ms var(--ease-settle), background 240ms var(--ease-settle); }
+  .pill:active { transform: scale(.98); transition-duration: 120ms; }
+  .pill.primary { background: var(--n-9); color: #0d0f12; }
+  .pill.primary:hover { background: #fff; transform: translateY(-1px); }
+  .pill.secondary { background: var(--n-2); color: var(--n-9); border-color: var(--line-2); }
+  .pill.secondary:hover { border-color: var(--line-3); }
+  .pill svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .search { --bi: 30px; display: flex; align-items: center; gap: 12px; width: min(100%, 620px); height: 64px; padding: 0 10px 0 24px; border-radius: 32px; background: var(--n-2); border: 1px solid var(--line-2); }
+  .search input { flex: 1; min-width: 0; background: none; border: 0; outline: 0; color: var(--n-9); font: 400 15px/1 var(--font-ui); }
+  .search input::placeholder { color: var(--n-7); }
+  .search kbd { font: 400 11px/1 var(--font-mono); color: var(--n-7); border: 1px solid var(--line-2); border-radius: 4px; padding: 4px 6px; }
+  .search:focus-within { border-color: var(--line-3); outline: 2px solid var(--sapphire-300); outline-offset: 2px; }
+  .search .go { height: 44px; padding: 0 22px; border-radius: 999px; border: 0; background: var(--n-9); color: #0d0f12; font: 500 13px/1 var(--font-ui); cursor: pointer; }
+  .fixed .bevel { --bx: 50% !important; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body class="motion-demo">
+<div class="wrap">
+  <div class="topbar"><a href="index.html">← 动效原型</a><span>倒角边光</span><span class="tag">PROTOTYPE · 未进入生产</span></div>
+  <span class="label"><i class="prism"><svg viewBox="0 0 12 11"><path d="M1.2 1.2h9.6L6 9.8z"/></svg></i>卡片 · 按钮 · 搜索框</span>
+  <h1>倒角边光</h1>
+  <p>阳极氧化铝机身倒角上的一线反光：指针经过时，元素<b>顶边</b>那一段 1px 高光跟着指针横向移动，两端渐隐。只有一条 1px 线，无模糊、无阴影。把鼠标在下面的元素上左右滑动，用控制条调长度、亮度和跟随的“拖尾”。</p>
+
+  <div class="controls">
+    <label>高光亮度 <input id="a" type="range" min="15" max="90" value="50"><output id="aO">0.50</output></label>
+    <label>高光长度 <input id="w" type="range" min="10" max="50" value="30"><output id="wO">±30%</output></label>
+    <label>跟随惯性 <input id="e" type="range" min="4" max="40" value="14"><output id="eO">0.14</output></label>
+    <label><input id="fix" type="checkbox"> 模拟触屏／减少动效（固定在中间）</label>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="grid">
+      <article class="card bevel"><h3>推理模组</h3><p>自研推理引擎与高速互联线路提高推理效率。资源集中用于模型推理与 KV Cache。</p><div class="spec">64GB / 128GB+128GB VRAM · 275 TOPS INT8</div></article>
+      <article class="card bevel"><h3>加密模组</h3><p>独立安全模组隔离私钥，硬件级非对称密钥保护降低私钥导出与复制风险。</p><div class="spec">TPM 2.0 / RSA / ECC</div></article>
+      <article class="card bevel"><h3>网络模组</h3><p>内部交换、路由与统一 API 连接各个模组，减少系统扩展与维护成本。</p><div class="spec">内部交换 / 路由 / 统一 API</div></article>
+    </div>
+    <div class="row" style="margin-top:36px">
+      <a class="pill primary bevel" href="#" onclick="return false">继续探索 <svg viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+      <a class="pill secondary bevel" href="#" onclick="return false">查看界面演示 <svg viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+    </div>
+    <div class="row" style="margin-top:28px">
+      <label class="search bevel"><input type="search" placeholder="输入功能，例如：OTA、SSH 密钥、风扇" aria-label="搜索指南"><kbd>⌘K</kbd><button class="go" type="button">搜索</button></label>
+    </div>
+  </div>
+
+  <h2>边界（来自 Signature.md）</h2>
+  <ul class="notes">
+    <li>只有 1px 线：无模糊、无阴影、不描边整圈；高光只在顶边，两端渐隐。</li>
+    <li>触屏（<code>hover: none</code>）与 <code>prefers-reduced-motion</code> 时固定在中间，不跟随。</li>
+    <li>实现是一个伪元素加一条渐变，指针位置只更新 <code>--bx</code> 一个自定义属性；主按钮的高光用纯白，其余用 50% 白。</li>
+  </ul>
+</div>
+
+<script>
+const root = document.documentElement;
+const els = [...document.querySelectorAll('.bevel')];
+const cfg = { ba: .5, bw: 30, ease: .14, fixed: matchMedia('(hover: none)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches };
+document.getElementById('fix').checked = cfg.fixed;
+const st = new Map(els.map((el) => [el, { cur: 50, target: 50, raf: 0 }]));
+function apply() { els.forEach((el) => { el.style.setProperty('--ba', el.classList.contains('primary') ? 1 : cfg.ba); el.style.setProperty('--bw', cfg.bw + '%'); }); document.getElementById('stage').classList.toggle('fixed', cfg.fixed); if (cfg.fixed) els.forEach((el) => { st.get(el).cur = st.get(el).target = 50; el.style.setProperty('--bx', '50%'); }); }
+function tick(el) {
+  const s = st.get(el);
+  s.cur += (s.target - s.cur) * cfg.ease;
+  el.style.setProperty('--bx', s.cur.toFixed(2) + '%');
+  s.raf = Math.abs(s.target - s.cur) > .05 ? requestAnimationFrame(() => tick(el)) : 0;
+}
+els.forEach((el) => {
+  el.addEventListener('pointermove', (e) => { if (cfg.fixed || e.pointerType === 'touch') return; const r = el.getBoundingClientRect(); st.get(el).target = Math.max(0, Math.min(100, (e.clientX - r.left) / r.width * 100)); if (!st.get(el).raf) tick(el); });
+  el.addEventListener('pointerleave', () => { if (cfg.fixed) return; st.get(el).target = 50; if (!st.get(el).raf) tick(el); });
+});
+document.getElementById('a').oninput = (e) => { cfg.ba = e.target.value / 100; document.getElementById('aO').textContent = cfg.ba.toFixed(2); apply(); };
+document.getElementById('w').oninput = (e) => { cfg.bw = +e.target.value; document.getElementById('wO').textContent = '±' + cfg.bw + '%'; apply(); };
+document.getElementById('e').oninput = (e) => { cfg.ease = e.target.value / 100; document.getElementById('eO').textContent = cfg.ease.toFixed(2); };
+document.getElementById('fix').onchange = (e) => { cfg.fixed = e.target.checked; apply(); };
+apply();
+</script>
+</body>
+</html>

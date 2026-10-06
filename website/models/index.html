@@ -13,19 +13,17 @@
   <meta name="description" content="RMQ3x 与 RMQ4，RMinte 专业模型系列。针对性训练、专用推理引擎与架构优化。" data-i18n-attr="content" data-zh="RMQ3x 与 RMQ4，RMinte 专业模型系列。针对性训练、专用推理引擎与架构优化。" data-en="RMQ3x and RMQ4: RMinte’s specialist models with targeted training, dedicated inference engines, and architecture optimization.">
   <title data-zh="模型 · RMinte" data-en="Models · RMinte">模型 · RMinte</title>
   <link rel="icon" href="../assets/images/favicon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/brand.css">
-  <link rel="stylesheet" href="../assets/styles.css">
-  <link rel="stylesheet" href="models.css?v=benchmark-clean-1">
+  <link rel="preload" href="../assets/fonts/Geist-latin-v1800.woff2" as="font" type="font/woff2" crossorigin>
+  <script src="../assets/motion.js?v=stage2-2" defer></script>
+  <link rel="stylesheet" href="../assets/brand.css?v=v2-core-2">
+  <link rel="stylesheet" href="../assets/styles.css?v=stage3-1">
+  <link rel="stylesheet" href="models.css?v=stage3-1">
 </head>
 <body class="models-page">
   <a class="skip-link" href="#main" data-zh="跳至主要内容" data-en="Skip to content" data-i18n-text data-zh="跳至主要内容" data-en="Skip to main content">跳至主要内容</a>
   <header class="site-shell" aria-label="主导航" data-i18n-aria-label-zh="主导航" data-i18n-aria-label-en="Main navigation">
     <a class="brand-mark" href="../index.html" aria-label="RMinte"><img src="../assets/images/logo-white.svg" alt="RMinte"></a>
-    <nav class="nav-island" aria-label="页面导航" data-i18n-aria-label-zh="页面导航" data-i18n-aria-label-en="Page navigation">
+    <nav class="nav-island" data-bevel aria-label="页面导航" data-i18n-aria-label-zh="页面导航" data-i18n-aria-label-en="Page navigation">
       <a href="../gallery/index.html" data-zh="图册" data-en="Gallery">图册</a>
       <a class="active" href="#main" aria-current="page" data-zh="模型" data-en="Models">模型</a>
       <a href="../index.html#engine" data-zh="产品" data-en="Product">产品</a>
@@ -59,10 +57,13 @@
               <clipPath id="glass-dense-upper"><path d="M50 110H760V433H712C712 444 700 448 683 448H134C121 448 112 444 112 433H50Z"/></clipPath>
               <clipPath id="glass-dense-feature"><path d="M50 433H112C112 444 121 448 134 448H683C700 448 712 444 712 433H760V591H50Z"/></clipPath>
               <clipPath id="glass-dense-lower"><polygon points="50,591 760,591 760,930 50,930"/></clipPath>
+              <linearGradient id="glass-dense-sweep" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+              <filter id="glass-dense-boost"><feComponentTransfer><feFuncR type="linear" slope="2.4"/><feFuncG type="linear" slope="2.4"/><feFuncB type="linear" slope="2.4"/></feComponentTransfer></filter>
+              <mask id="glass-dense-mask" maskUnits="userSpaceOnUse" x="50" y="110" width="710" height="820"><use href="#glass-dense" filter="url(#glass-dense-boost)"/></mask>
             </defs>
-            <g class="mp-glass-layer lower"><use href="#glass-dense" clip-path="url(#glass-dense-lower)"/></g>
-            <g class="mp-glass-layer upper"><use href="#glass-dense" clip-path="url(#glass-dense-upper)"/></g>
-            <g class="mp-glass-layer feature"><use href="#glass-dense" clip-path="url(#glass-dense-feature)"/></g>
+            <g class="mp-glass-layer lower"><g class="mp-glass-float"><g clip-path="url(#glass-dense-lower)"><use href="#glass-dense"/><g class="mp-glass-overlay" mask="url(#glass-dense-mask)"><rect class="mp-glass-sweep" x="-170" y="595" width="200" height="270" fill="url(#glass-dense-sweep)" style="--tx:970px;animation-duration:9s;animation-delay:3s"/></g></g></g></g>
+            <g class="mp-glass-layer upper"><g class="mp-glass-float"><g clip-path="url(#glass-dense-upper)"><use href="#glass-dense"/><g class="mp-glass-overlay" mask="url(#glass-dense-mask)"><rect class="mp-glass-sweep" x="-170" y="175" width="200" height="270" fill="url(#glass-dense-sweep)" style="--tx:970px;animation-duration:9s;animation-delay:.5s"/></g></g></g></g>
+            <g class="mp-glass-layer feature"><g class="mp-glass-float"><g clip-path="url(#glass-dense-feature)"><use href="#glass-dense"/><g class="mp-glass-overlay" mask="url(#glass-dense-mask)"><rect class="mp-glass-sweep" x="-120" y="455" width="150" height="26" fill="url(#glass-dense-sweep)" style="--tx:920px;animation-duration:5.5s;animation-delay:0s"/><rect class="mp-glass-sweep" x="-120" y="480" width="150" height="26" fill="url(#glass-dense-sweep)" style="--tx:920px;animation-duration:5.5s;animation-delay:1.1s"/><rect class="mp-glass-sweep" x="-120" y="512" width="150" height="26" fill="url(#glass-dense-sweep)" style="--tx:920px;animation-duration:5.5s;animation-delay:2.2s"/><rect class="mp-glass-sweep" x="-120" y="540" width="150" height="26" fill="url(#glass-dense-sweep)" style="--tx:920px;animation-duration:5.5s;animation-delay:3.3s"/></g></g></g></g>
           </svg>
           <span class="mp-sculpture-name"><span class="rm-mark">RMQ3x</span><span class="mp-architecture-tag"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M1 1h4v4H1zm6 0h4v4H7zm6 0h4v4h-4zM1 7h4v4H1zm6 0h4v4H7zm6 0h4v4h-4zM1 13h4v4H1zm6 0h4v4H7zm6 0h4v4h-4z"/></svg>Dense</span></span>
         </button>
@@ -73,10 +74,13 @@
               <clipPath id="glass-moe-upper"><path d="M770 110H1480V433H1430C1430 442 1417 448 1400 448H854C839 448 826 444 826 433H770Z"/></clipPath>
               <clipPath id="glass-moe-feature"><path d="M770 433H826C826 444 839 448 854 448H1400C1417 448 1430 442 1430 433H1480V591H770Z"/></clipPath>
               <clipPath id="glass-moe-lower"><polygon points="770,591 1480,591 1480,930 770,930"/></clipPath>
+              <linearGradient id="glass-moe-sweep" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+              <filter id="glass-moe-boost"><feComponentTransfer><feFuncR type="linear" slope="2.4"/><feFuncG type="linear" slope="2.4"/><feFuncB type="linear" slope="2.4"/></feComponentTransfer></filter>
+              <mask id="glass-moe-mask" maskUnits="userSpaceOnUse" x="770" y="110" width="710" height="820"><use href="#glass-moe" filter="url(#glass-moe-boost)"/></mask>
             </defs>
-            <g class="mp-glass-layer lower"><use href="#glass-moe" clip-path="url(#glass-moe-lower)"/></g>
-            <g class="mp-glass-layer upper"><use href="#glass-moe" clip-path="url(#glass-moe-upper)"/></g>
-            <g class="mp-glass-layer feature"><use href="#glass-moe" clip-path="url(#glass-moe-feature)"/></g>
+            <g class="mp-glass-layer lower"><g class="mp-glass-float"><g clip-path="url(#glass-moe-lower)"><use href="#glass-moe"/><g class="mp-glass-overlay" mask="url(#glass-moe-mask)"><rect class="mp-glass-sweep" x="550" y="595" width="200" height="270" fill="url(#glass-moe-sweep)" style="--tx:970px;animation-duration:9s;animation-delay:5.5s"/></g></g></g></g>
+            <g class="mp-glass-layer upper"><g class="mp-glass-float"><g clip-path="url(#glass-moe-upper)"><use href="#glass-moe"/><g class="mp-glass-overlay" mask="url(#glass-moe-mask)"><rect class="mp-glass-sweep" x="550" y="175" width="200" height="270" fill="url(#glass-moe-sweep)" style="--tx:970px;animation-duration:9s;animation-delay:2.5s"/></g></g></g></g>
+            <g class="mp-glass-layer feature"><g class="mp-glass-float"><g clip-path="url(#glass-moe-feature)"><use href="#glass-moe"/><g class="mp-glass-overlay" mask="url(#glass-moe-mask)"><rect class="mp-glass-tile" x="846" y="497" width="44" height="28" rx="5"/><rect class="mp-glass-tile" x="965" y="495" width="44" height="28" rx="5"/><rect class="mp-glass-tile" x="978" y="536" width="44" height="28" rx="5"/><rect class="mp-glass-tile" x="1078" y="499" width="44" height="28" rx="5"/><rect class="mp-glass-tile" x="1096" y="533" width="44" height="28" rx="5"/><rect class="mp-glass-tile" x="1191" y="491" width="44" height="28" rx="5"/><rect class="mp-glass-tile" x="1203" y="464" width="44" height="28" rx="5"/><rect class="mp-glass-tile" x="1298" y="458" width="44" height="28" rx="5"/><rect class="mp-glass-tile" x="1318" y="496" width="44" height="28" rx="5"/><rect class="mp-glass-tile" x="1343" y="536" width="44" height="28" rx="5"/><rect class="mp-glass-tile" x="1213" y="536" width="44" height="28" rx="5"/><rect class="mp-glass-tile" x="1093" y="466" width="44" height="28" rx="5"/><rect class="mp-glass-tile" x="878" y="531" width="44" height="28" rx="5"/><rect class="mp-glass-tile" x="1038" y="456" width="44" height="28" rx="5"/></g></g></g></g>
           </svg>
           <span class="mp-sculpture-name"><span class="rm-mark">RMQ4</span><span class="mp-architecture-tag"><svg viewBox="0 0 18 18" aria-hidden="true"><path opacity=".25" d="M1 1h4v4H1zm12 0h4v4h-4zM7 7h4v4H7zM1 13h4v4H1zm12 0h4v4h-4z"/><path d="M7 1h4v4H7zM1 7h4v4H1zm12 0h4v4h-4zM7 13h4v4H7z"/></svg>MoE</span></span>
         </button>
@@ -85,8 +89,9 @@
 
     <section class="mp-wrap mp-models" id="models" aria-label="模型介绍" data-i18n-aria-label-zh="模型介绍" data-i18n-aria-label-en="Model overview">
       <div class="mp-model-grid">
-        <article class="mp-model-card">
+        <article class="mp-model-card" data-bevel>
           <div class="mp-card-top"><h2 class="rm-mark">RMQ3x</h2><span class="mp-architecture-tag"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M1 1h4v4H1zm6 0h4v4H7zm6 0h4v4h-4zM1 7h4v4H1zm6 0h4v4H7zm6 0h4v4h-4zM1 13h4v4H1zm6 0h4v4H7zm6 0h4v4h-4z"/></svg>Dense</span></div>
+          <div class="mp-led" data-led="dense" aria-hidden="true"><div class="mp-led-grid"></div><p class="mp-led-note" data-zh="示意" data-en="Illustrative">示意</p></div>
           <p class="mp-model-tagline"><span data-zh="专业推理，" data-en="Expert reasoning.">专业推理，</span><span data-zh="驱动实际行动。" data-en="Driving action.">驱动实际行动。</span></p>
           <p class="mp-model-description" data-zh="针对法律、调查、安全治理、科研与社会研究打造的专业模型。连接方案设计、代码生成、工具调用与结果验证，让 Agent 将专业判断转化为行动，交付文书、代码与研究成果。" data-en="A specialist model for law, investigations, security and governance, and scientific and social research. It combines planning, code generation, tool use, and verification so agents can turn professional judgment into action and produce documents, code, and research findings.">针对法律、调查、安全治理、科研与社会研究打造的专业模型。连接方案设计、代码生成、工具调用与结果验证，让 Agent 将专业判断转化为行动，交付文书、代码与研究成果。</p>
           <ul class="mp-model-capabilities">
@@ -94,10 +99,11 @@
             <li><h3 data-zh="完成实际工作" data-en="Execute tasks">完成实际工作</h3><p data-zh="制定检索策略，生成数据查询与验证代码，调用专业工具执行任务、检验结果。" data-en="Develop search strategies, generate data queries and validation code, and use specialist tools to execute tasks and verify results.">制定检索策略，生成数据查询与验证代码，调用专业工具执行任务、检验结果。</p></li>
             <li><h3 data-zh="延续任务进程" data-en="Carry tasks forward">延续任务进程</h3><p data-zh="承接前序发现与执行反馈，修订方案、推进验证，完成调查、研究与业务工作。" data-en="Use prior findings and execution feedback to revise plans, verify results, and complete investigations, research, and business tasks.">承接前序发现与执行反馈，修订方案、推进验证，完成调查、研究与业务工作。</p></li>
           </ul>
-          <div class="mp-card-bottom"><button class="mp-pill hf-button" type="button" data-model="RMQ3x" disabled title="模型主页即将公布" data-i18n-title-zh="模型主页即将公布" data-i18n-title-en="Model page coming soon"><img class="hf-icon" src="huggingface.svg" alt="" aria-hidden="true"><img class="hf-wordmark" src="huggingface-text.svg" alt="Hugging Face"></button><div class="mp-model-glyph" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="mp-card-bottom"><button class="mp-pill hf-button" type="button" data-model="RMQ3x" disabled title="模型主页即将公布" data-i18n-title-zh="模型主页即将公布" data-i18n-title-en="Model page coming soon"><img class="hf-icon" src="huggingface.svg" alt="" aria-hidden="true"><img class="hf-wordmark" src="huggingface-text.svg" alt="Hugging Face"></button></div>
         </article>
-        <article class="mp-model-card">
+        <article class="mp-model-card" data-bevel>
           <div class="mp-card-top"><h2 class="rm-mark">RMQ4</h2><span class="mp-architecture-tag"><svg viewBox="0 0 18 18" aria-hidden="true"><path opacity=".25" d="M1 1h4v4H1zm12 0h4v4h-4zM7 7h4v4H7zM1 13h4v4H1zm12 0h4v4h-4z"/><path d="M7 1h4v4H7zM1 7h4v4H1zm12 0h4v4h-4zM7 13h4v4H7z"/></svg>MoE</span></div>
+          <div class="mp-led" data-led="moe" aria-hidden="true"><div class="mp-led-grid"></div><p class="mp-led-note" data-zh="示意" data-en="Illustrative">示意</p></div>
           <p class="mp-model-tagline"><span data-zh="深入复杂问题，" data-en="Explore complex problems.">深入复杂问题，</span><span data-zh="驾驭长程任务。" data-en="Manage long-horizon tasks.">驾驭长程任务。</span></p>
           <p class="mp-model-description" data-zh="为跨领域、多阶段、需要反复验证的专业工作打造，覆盖法律、调查、安全治理、科研与社会研究。衔接任务规划、代码计算、工具使用与研究迭代，保持目标、约束和阶段成果的连续性，让 Agent 推进复杂调查与研究项目，完成从问题到成果的交付。" data-en="Built for complex work in law, investigations, security and governance, and scientific and social research. It connects planning, code execution, tool use, and iterative research across disciplines and stages, retaining goals, constraints, and findings through repeated verification. Agents can carry investigations and research projects from the initial question to the final deliverable.">为跨领域、多阶段、需要反复验证的专业工作打造，覆盖法律、调查、安全治理、科研与社会研究。衔接任务规划、代码计算、工具使用与研究迭代，保持目标、约束和阶段成果的连续性，让 Agent 推进复杂调查与研究项目，完成从问题到成果的交付。</p>
           <ul class="mp-model-capabilities">
@@ -105,7 +111,7 @@
             <li><h3 data-zh="贯通复杂任务" data-en="Coordinate complex tasks">贯通复杂任务</h3><p data-zh="统筹调查规划、信息检索、代码计算与结果复核，将阶段性发现转化为后续行动。" data-en="Coordinate investigation planning, information retrieval, code execution, and result verification. Use findings at each stage to guide the next action.">统筹调查规划、信息检索、代码计算与结果复核，将阶段性发现转化为后续行动。</p></li>
             <li><h3 data-zh="推进研究迭代" data-en="Refine the research">推进研究迭代</h3><p data-zh="吸收新增证据、计算结果与实验反馈，修订假设、完善方案，产出可检验的研究成果。" data-en="Incorporate new evidence, computational results, and experimental feedback to revise hypotheses, refine plans, and produce testable research findings.">吸收新增证据、计算结果与实验反馈，修订假设、完善方案，产出可检验的研究成果。</p></li>
           </ul>
-          <div class="mp-card-bottom"><button class="mp-pill hf-button" type="button" data-model="RMQ4" disabled title="模型主页即将公布" data-i18n-title-zh="模型主页即将公布" data-i18n-title-en="Model page coming soon"><img class="hf-icon" src="huggingface.svg" alt="" aria-hidden="true"><img class="hf-wordmark" src="huggingface-text.svg" alt="Hugging Face"></button><div class="mp-model-glyph" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="mp-card-bottom"><button class="mp-pill hf-button" type="button" data-model="RMQ4" disabled title="模型主页即将公布" data-i18n-title-zh="模型主页即将公布" data-i18n-title-en="Model page coming soon"><img class="hf-icon" src="huggingface.svg" alt="" aria-hidden="true"><img class="hf-wordmark" src="huggingface-text.svg" alt="Hugging Face"></button></div>
         </article>
       </div>
     </section>
@@ -134,8 +140,9 @@
             <div class="mp-engine-stack" aria-hidden="true">
               <div class="mp-engine-plane base"><div class="mp-engine-compute" data-cells="96"></div><span>NVIDIA CUDA</span></div>
               <div class="mp-engine-plane runtime"><div class="mp-engine-core" data-cells="18"></div><span id="runtimeLabel"><span class="rm-mark">RMinte</span> C++ Runtime</span></div>
-              <div class="mp-engine-plane model"><div class="mp-engine-traces"><i></i><i></i><i></i></div><span>RMQ3x · RMQ4</span></div>
+              <div class="mp-engine-plane model"><div class="mp-engine-traces"><i></i><i></i><i></i></div><span>RMQ3x · RMQ4</span><span class="mp-engine-tag-v" data-zh="FlashInfer · 融合 MoE" data-en="FlashInfer · Fused MoE">FlashInfer · 融合 MoE</span><div class="mp-engine-tokens"></div></div>
             </div>
+            <div class="mp-engine-mb" aria-hidden="true"><b><span class="mp-engine-mb-num">2</span><em>MB</em></b><small><span data-zh="Runner 常驻内存" data-en="Runner resident memory">Runner 常驻内存</span><span data-zh="不含权重、KV 缓存与上下文" data-en="Excludes weights, KV cache and context">不含权重、KV 缓存与上下文</span></small></div>
           </figure>
           <div class="mp-engine-tabs" role="tablist" aria-label="推理实现" data-i18n-aria-label-zh="推理实现" data-i18n-aria-label-en="Inference engines">
             <button role="tab" type="button" id="tabCpp" aria-controls="panelCpp" aria-selected="true" data-engine-tab="cpp" data-zh="自研 C++" data-en="Our C++ engine">自研 C++</button>
@@ -176,8 +183,8 @@
 
   <footer class="footer"><div class="footer-inner"><div class="footer-brand"><img src="../assets/images/logo-white.svg" alt="RMinte"><div><p data-zh="泛灵（成都）人工智能科技有限公司" data-en="RMinte AI">泛灵（成都）人工智能科技有限公司</p><span data-zh="© 2026 RMinte (Chengdu) Artificial Intelligence Technology Co., Ltd. · RM-01 Portable AI Supercomputer" data-en="© 2026 RMinte (Chengdu) Artificial Intelligence Technology Co., Ltd. · RM-01 Portable AI Supercomputer">© 2026 <span class="rm-mark">RMinte</span> (Chengdu) Artificial Intelligence Technology Co., Ltd. · <span class="rm-mark">RM-01</span> Portable AI Supercomputer</span></div></div><div class="footer-actions"><button class="footer-contact" type="button" id="contactToggle" aria-expanded="false" aria-controls="contactPopover" data-contact-toggle><span data-footer-text="contactButton">联系我们</span></button><a class="footer-github" href="https://github.com/RMinte-AI" target="_blank" rel="noreferrer" aria-label="GitHub"><svg class="github" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" aria-hidden="true" focusable="false" style="display:inline-block;width:18px;height:18px;flex:none;vertical-align:middle"><path d="M12 0c6.63 0 12 5.276 12 11.79-.001 5.067-3.29 9.567-8.175 11.187-.6.118-.825-.25-.825-.56 0-.398.015-1.665.015-3.242 0-1.105-.375-1.813-.81-2.181 2.67-.295 5.475-1.297 5.475-5.822 0-1.297-.465-2.344-1.23-3.169.12-.295.54-1.503-.12-3.125 0 0-1.005-.324-3.3 1.209a11.32 11.32 0 00-3-.398c-1.02 0-2.04.133-3 .398-2.295-1.518-3.3-1.209-3.3-1.209-.66 1.622-.24 2.83-.12 3.125-.765.825-1.23 1.887-1.23 3.169 0 4.51 2.79 5.527 5.46 5.822-.345.294-.66.81-.765 1.577-.69.31-2.415.81-3.495-.973-.225-.354-.9-1.223-1.845-1.209-1.005.015-.405.56.015.781.51.28 1.095 1.327 1.23 1.666.24.663 1.02 1.93 4.035 1.385 0 .988.015 1.916.015 2.196 0 .31-.225.664-.825.56C3.303 21.374-.003 16.867 0 11.791 0 5.276 5.37 0 12 0z"/></svg><span><svg class="github-text" viewBox="0 0 78 24" fill="currentColor" fill-rule="evenodd" aria-hidden="true" focusable="false" style="display:inline-block;width:42.25px;height:13px;flex:none;vertical-align:middle"><path d="M16.598 10.836v9.48c0 .066-.017.181-.1.214 0 0-2.07 1.47-5.484 1.47C6.888 22 2 20.712 2 12.223 2 3.734 6.275 1.983 10.45 2c3.613 0 5.07.81 5.303.958.066.083.1.149.1.231l-.697 2.94c0 .149-.149.33-.331.28-.597-.18-1.491-.544-3.596-.544-2.435 0-5.053.693-5.053 6.16 0 5.466 2.485 6.11 4.275 6.11 1.524 0 2.07-.181 2.07-.181v-3.799h-2.435c-.182 0-.315-.132-.315-.28v-3.04c0-.148.133-.28.315-.28h6.197c.182 0 .315.132.315.28zM76 14.684c0 5.664-1.84 7.283-5.054 7.283-2.717 0-4.175-1.37-4.175-1.37s-.067.759-.15.858c-.05.1-.132.132-.231.132h-2.453c-.165 0-.315-.132-.315-.28l.034-18.349a.29.29 0 01.281-.28h3.53a.29.29 0 01.281.28v6.226s1.359-.875 3.347-.875l-.016-.033c1.988 0 4.921.743 4.921 6.408zM47.865 2.71a.29.29 0 01.281.281V21.34a.29.29 0 01-.281.281h-3.53a.29.29 0 01-.281-.28l.033-7.845h-5.485v7.844a.29.29 0 01-.281.281h-3.53c-.132 0-.281-.132-.281-.28V2.99a.29.29 0 01.281-.28h3.53a.29.29 0 01.281.28v6.755h5.485V2.99a.29.29 0 01.282-.28h3.496zM61.55 8.722c.183 0 .315.132.315.28l-.033 12.337c0 .149-.1.281-.282.281h-2.22c-.116 0-.232-.066-.265-.148-.05-.1-.133-.744-.133-.744S57.061 22 54.758 22c-2.8 0-4.839-.908-4.839-4.542V9.02a.29.29 0 01.282-.28h3.546a.29.29 0 01.282.28v7.845c0 1.238.364 1.8 1.607 1.8 1.243 0 2.154-.644 2.154-.644V9.036c0-.182.1-.314.282-.314h3.48zm-28.84 9.861h.007c.14.029.239.154.234.296v2.477c0 .116-.05.231-.149.264-.166.083-1.226.363-2.104.363-1.922 0-4.74-.412-4.74-4.442v-5.417H24.12c-.149 0-.281-.132-.281-.314V9.564c0-.132.083-.248.215-.28.116-.017 1.922-.463 1.922-.463V5.237c0-.132.083-.215.232-.215h3.58c.148 0 .231.083.231.215v3.485h2.635c.132 0 .265.132.265.28v2.808c0 .182-.116.314-.265.314h-2.635v5.17c0 .777.448 1.372 1.74 1.372.41 0 .797-.081.951-.083zM22.28 8.705a.29.29 0 01.282.281v12.172c0 .297-.083.446-.414.446h-3.182c-.281 0-.497-.116-.497-.446V9.036c0-.182.133-.33.282-.33h3.53zm49.693 6.243c0-2.99-1.21-3.386-2.486-3.253-.994.066-1.79.561-1.79.561v5.813s.813.562 2.022.595c1.707.05 2.254-.562 2.254-3.716zM20.54 3.123a2.26 2.26 0 012.254 2.28A2.26 2.26 0 0120.54 7.68a2.266 2.266 0 01-2.286-2.279c0-1.271 1.01-2.279 2.286-2.279z"/></svg></span></a></div></div></footer>
 
-  <aside class="contact-popover" id="contactPopover" role="dialog" aria-labelledby="contactTitle" aria-hidden="true" data-contact-popover inert>
-    <div class="contact-card">
+  <div class="contact-popover" id="contactPopover" role="dialog" aria-labelledby="contactTitle" aria-hidden="true" data-contact-popover inert>
+    <div class="contact-card" data-bevel>
       <div class="contact-card-core">
         <div class="contact-top">
           <div>
@@ -206,16 +213,38 @@
         </div>
       </div>
     </div>
-  </aside>
+  </div>
 
-  <dialog class="mp-dialog mp-menu-dialog" id="mobileMenu" aria-label="导航菜单" data-i18n-aria-label-zh="导航菜单" data-i18n-aria-label-en="Navigation menu"><div class="mp-dialog-top"><img src="../assets/images/logo-white.svg" alt="RMinte"><button class="mp-close" type="button" data-close-dialog aria-label="关闭" data-i18n-aria-label-zh="关闭" data-i18n-aria-label-en="Close"><svg class="mp-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div><nav class="mp-mobile-links" aria-label="移动导航" data-i18n-aria-label-zh="移动导航" data-i18n-aria-label-en="Mobile navigation"><a href="../gallery/index.html" data-zh="图册" data-en="Gallery">图册</a><a href="#main" aria-current="page" data-zh="模型" data-en="Models">模型</a><a href="../index.html#engine" data-zh="产品" data-en="Product">产品</a><a href="../index.html#teardown" data-zh="架构" data-en="Architecture">架构</a><a href="../guides/index.html" data-zh="指南" data-en="Guides">指南</a><a href="../downloads/index.html" data-zh="下载" data-en="Downloads">下载</a></nav></dialog>
+  <dialog class="mp-dialog mp-menu-dialog" id="mobileMenu" aria-label="导航菜单" data-i18n-aria-label-zh="导航菜单" data-i18n-aria-label-en="Navigation menu"><div class="mp-dialog-top"><img src="../assets/images/logo-white.svg" alt="RMinte"><button class="mp-close" type="button" data-close-dialog aria-label="关闭" data-i18n-aria-label-zh="关闭" data-i18n-aria-label-en="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div><nav class="mp-mobile-links" aria-label="移动导航" data-i18n-aria-label-zh="移动导航" data-i18n-aria-label-en="Mobile navigation"><a href="../gallery/index.html" data-zh="图册" data-en="Gallery">图册</a><a href="#main" aria-current="page" data-zh="模型" data-en="Models">模型</a><a href="../index.html#engine" data-zh="产品" data-en="Product">产品</a><a href="../index.html#teardown" data-zh="架构" data-en="Architecture">架构</a><a href="../guides/index.html" data-zh="指南" data-en="Guides">指南</a><a href="../downloads/index.html" data-zh="下载" data-en="Downloads">下载</a></nav></dialog>
 
-  <script src="../visitor-language.js" defer></script>
-  <script src="../assets/translations.js?v=contact-discussions-20260911" defer></script>
-  <script src="../assets/i18n.js" defer></script>
-  <script src="../assets/site-data.js?v=contact-discussions-20260911" defer></script>
-  <script src="../assets/footer.js?v=models-launch-1" defer></script>
+  <script>
+    // ja/ko/es/fr carry their own catalog file; zh and en need none. Resolve the language the way i18n.js does and load only that file.
+    (function (up) {
+      var ok = /^(zh|en|ja|ko|es|fr)$/, c = window.RM_CATALOG = { base: up + 'assets/translations/', v: 'catalogs-20261004' };
+      c.load = function () {
+        var s; try { s = localStorage.getItem('rm-soft-lang'); } catch (e) {}
+        var l = [new URLSearchParams(location.search).get('lang'), (location.hash.match(/^#(zh|en|ja|ko|es|fr)-/) || [])[1], s, window.RM_DEFAULT_LANG].filter(function (x) { return ok.test(x); })[0];
+        if (l && l !== 'zh' && l !== 'en') document.write('<script src="' + c.base + l + '.js?v=' + c.v + '" defer><\/script>');
+        if (l) c.fonts(l);
+        return l;
+      };
+      // Each CJK face is requested only when its language is shown: every page used to ask for Noto Sans SC, JP and KR (about 0.9 MB of fonts and
+      // 210 KB of stylesheet that English, Spanish and French visitors never use). While the head is parsing, document.write keeps the link
+      // render-blocking like a static one; i18n.js calls this again (late) when the visitor switches language.
+      var cjk = { zh: 'assets/fonts/noto-sans-sc.css', ja: 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap', ko: 'https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap' };
+      c.fonts = function (l, late) {
+        if (!cjk[l] || document.querySelector('link[data-cjk="' + l + '"]')) return;
+        var h = /^https:/.test(cjk[l]) ? cjk[l] : up + cjk[l];
+        if (late || document.readyState !== 'loading') { var k = document.createElement('link'); k.rel = 'stylesheet'; k.href = h; k.setAttribute('data-cjk', l); document.head.appendChild(k); }
+        else document.write('<link rel="stylesheet" href="' + h + '" data-cjk="' + l + '">');
+      };
+      if (!c.load()) document.write('<script src="' + up + 'visitor-language.js"><\/script><script>RM_CATALOG.load()<\/script>');
+    })('../');
+  </script>
+  <script src="../assets/i18n.js?v=catalogs-20261004" defer></script>
+  <script src="../assets/site-data.js?v=footer-portable-20261003" defer></script>
+  <script src="../assets/footer.js?v=d9-nav-1" defer></script>
   <script src="benchmark-particles.js" defer></script>
-  <script src="models.js?v=models-inference-2" defer></script>
+  <script src="models.js?v=stage3-1" defer></script>
 </body>
 </html>

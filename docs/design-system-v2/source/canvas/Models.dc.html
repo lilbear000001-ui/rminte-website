@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>模型页 优化稿</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+@font-face{font-family:"Quantify RM";src:url("/_blob/bd9447c74671299c084a3a03488fedc6") format("truetype");font-weight:700}
+body{margin:0;background:#000}
+.p{width:1440px;box-sizing:border-box;background:#000;color:#F2F4F6;font-family:"Geist","Noto Sans SC",sans-serif;-webkit-font-smoothing:antialiased;padding:120px 88px 96px;display:flex;flex-direction:column;gap:56px}
+.p h1,.p h2,.p h3,.p p{margin:0}
+.k{font-size:11px;letter-spacing:.14em;color:#B6BCC4;display:flex;align-items:center;gap:12px}
+.cd{position:relative;border-radius:16px;background:#0D0F12;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);overflow:hidden;display:flex;flex-direction:column;padding:40px;gap:24px}
+.cd:before{content:"";position:absolute;left:24px;right:24px;top:0;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.34),rgba(255,255,255,0))}
+.nm{font-family:"Quantify RM","Geist",sans-serif;font-weight:700;font-size:60px;letter-spacing:.02em;line-height:1.05}
+.tg{display:inline-flex;align-items:center;height:30px;padding:0 14px;border-radius:999px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);font-size:12px;font-weight:500}
+.mx{display:grid;grid-template-columns:repeat(24,minmax(0,1fr));gap:8px;padding:22px 24px;border-radius:8px;background:#000;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.mx i{display:block;aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.1)}
+.mx i.a{background:#F2F4F6}
+.mx i.s{background:#A8B8F0}
+.li div{padding:16px 0;border-top:1px solid rgba(255,255,255,.08);display:grid;grid-template-columns:150px 1fr;column-gap:20px}
+.li b{font-size:15px;font-weight:500}
+.li span{font-size:13px;line-height:1.75;color:#B6BCC4}
+.pl{display:inline-flex;align-items:center;gap:10px;height:42px;padding:0 20px;border-radius:999px;font-size:12px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);color:#858C95}
+</style>
+</helmet>
+<div class="p">
+
+<div style="display:grid;grid-template-columns:1fr 1fr;column-gap:64px;align-items:end">
+<div style="display:flex;flex-direction:column;gap:28px">
+<span class="k"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#A8B8F0" stroke-width="2" stroke-linejoin="round"><path d="M2 3h20L12 21z"/></svg> RMQ 系列模型</span>
+<h1 style="font-size:64px;font-weight:500;letter-spacing:-.04em;line-height:1.18">专业分析，更深入。<br><span style="color:#858C95">模型推理，更高效。</span></h1>
+</div>
+<div style="display:flex;flex-direction:column;gap:28px;align-items:flex-start">
+<p style="font-size:16px;line-height:1.9;color:#B6BCC4;max-width:580px">RMQ3x 与 RMQ4，RMinte 专业模型系列。为法律、调查、安全治理、科研与社会研究打造，连接领域知识、深度推理与工具执行。</p>
+<div style="display:flex;gap:12px"><span style="display:inline-flex;align-items:center;height:48px;padding:0 24px;border-radius:999px;background:#F2F4F6;color:#000;font-size:13px;font-weight:500">探索模型</span><span style="display:inline-flex;align-items:center;height:48px;padding:0 24px;border-radius:999px;background:#0D0F12;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);font-size:13px">查看评测</span></div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px">
+
+<div class="cd">
+<div style="display:flex;justify-content:space-between;align-items:center"><span class="nm">RMQ3x</span><span class="tg">Dense</span></div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div class="mx"><i></i><i></i><i></i><i></i><i></i><i class="s"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="s"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="s"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<span style="font-family:'Geist Mono',monospace;font-size:11px;color:#858C95">每个 token 激活全部参数 · 示意</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:26px;font-weight:500;letter-spacing:-.02em;line-height:1.4">专业推理，驱动实际行动。</p>
+<p style="font-size:14px;line-height:1.9;color:#B6BCC4">针对法律、调查、安全治理、科研与社会研究打造的专业模型。连接方案设计、代码生成、工具调用与结果验证，让 Agent 将专业判断转化为行动。</p>
+</div>
+<div class="li">
+<div><b>理解专业问题</b><span>联系事实、证据与领域知识，推演因果、检验假设，形成有依据的判断与方案。</span></div>
+<div><b>完成实际工作</b><span>制定检索策略，生成数据查询与验证代码，调用专业工具执行任务、检验结果。</span></div>
+<div><b>延续任务进程</b><span>承接前序发现与执行反馈，修订方案、推进验证，完成调查、研究与业务工作。</span></div>
+</div>
+<div style="padding-top:20px;border-top:1px solid rgba(255,255,255,.08);margin-top:auto"><span class="pl">Hugging Face</span></div>
+</div>
+
+<div class="cd">
+<div style="display:flex;justify-content:space-between;align-items:center"><span class="nm">RMQ4</span><span class="tg">MoE</span></div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div class="mx"><i></i><i></i><i></i><i class="s"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="s"></i><i></i><i></i><i></i><i></i><i class="s"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<span style="font-family:'Geist Mono',monospace;font-size:11px;color:#858C95">每个 token 只激活部分专家 · 示意</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:26px;font-weight:500;letter-spacing:-.02em;line-height:1.4">深入复杂问题，驾驭长程任务。</p>
+<p style="font-size:14px;line-height:1.9;color:#B6BCC4">为跨领域、多阶段、需要反复验证的专业工作打造。衔接任务规划、代码计算、工具使用与研究迭代，保持目标、约束和阶段成果的连续性。</p>
+</div>
+<div class="li">
+<div><b>建立完整论证</b><span>联结不同领域的知识与证据，解释问题机制，检验竞争性假设，形成逻辑严密的专业判断。</span></div>
+<div><b>贯通复杂任务</b><span>统筹调查规划、信息检索、代码计算与结果复核，将阶段性发现转化为后续行动。</span></div>
+<div><b>推进研究迭代</b><span>吸收新增证据、计算结果与实验反馈，修订假设、完善方案，产出可检验的研究成果。</span></div>
+</div>
+<div style="padding-top:20px;border-top:1px solid rgba(255,255,255,.08);margin-top:auto"><span class="pl">Hugging Face</span></div>
+</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -158,7 +158,8 @@ class Emoji2Pixel {
         const browserLang = (navigator.language || '').toLowerCase();
         const siteLang = localStorage.getItem('rm-soft-lang');
         const fallback = siteLang === 'zh' ? 'zh-CN' : siteLang === 'en' ? 'en-US' : browserLang.startsWith('en') ? 'en-US' : 'zh-CN';
-        await this.setLanguage(saved || fallback, true);
+        // A language that is no longer offered (an old saved choice) falls back to the browser-based pick instead of Chinese.
+        await this.setLanguage(this.availableLocales.includes(saved) ? saved : fallback, true);
         if (this.langSelect) {
             this.langSelect.addEventListener('change', (e) => {
                 this.setLanguage(e.target.value);
@@ -451,6 +452,11 @@ class Emoji2Pixel {
         byId('outputSummary').textContent = has ? `${this.gridWidth} × ${this.gridHeight} · ${this.frames.length > 1 ? this.t('frameCount',{count:this.frames.length}) : this.t('currentGraphic')}` : this.t('startHint');
         byId('sendSummary').textContent = `${this.t('target')}: ${this.tianshanHost} · ${this.tianshanDevice} — ${this.gridWidth} × ${this.gridHeight} ${this.frames.length > 1 ? this.t('animationGif') + ' · ' + this.t('frameCount',{count:this.frames.length}) : this.t('currentPng')}`;
         this.canvasHint.textContent = this.t(this.isPlaying ? 'playing' : this.isColorSelecting ? 'pickColorPrompt' : this.isSelecting ? 'dragSelect' : 'touchMoveHint');
+        // Hooks for styles.css: the unlit-lamp dots on the stage follow the matrix size, and the emoji of the current graphic is marked in the list.
+        this.mainCanvas.style.setProperty('--cols', this.gridWidth);
+        this.mainCanvas.style.setProperty('--rows', this.gridHeight);
+        const chosen = frame && !frame.isImage ? frame.emoji : null;
+        document.querySelectorAll('.emoji-btn').forEach(item => item.setAttribute('aria-pressed', String(!!chosen && item.dataset.emoji === chosen)));
     }
 
     fitWorkspaceCanvas() {

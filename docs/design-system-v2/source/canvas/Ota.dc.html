@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>OTA 更新服务 优化稿</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+@font-face{font-family:"Geist Pixel";src:url("/_blob/ef2f0a0417c71c384aa2a7deedce473f") format("woff2")}
+@font-face{font-family:"Quantify RM";src:url("/_blob/bd9447c74671299c084a3a03488fedc6") format("truetype");font-weight:700}
+body{margin:0;background:#0D0F12}
+.d{position:relative;width:1440px;box-sizing:border-box;background:#0D0F12;color:#F2F4F6;font-family:"Geist","Noto Sans SC",sans-serif;-webkit-font-smoothing:antialiased}
+.d h1,.d h2,.d h3,.d p{margin:0}
+.nv{display:flex;gap:4px;padding:4px;border-radius:999px;background:rgba(20,23,27,.85);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.nv span{padding:0 18px;height:34px;display:inline-flex;align-items:center;border-radius:999px;font-size:12px;color:#B6BCC4}
+.pill{display:inline-flex;align-items:center;gap:6px;height:44px;padding:0 18px;border-radius:999px;background:rgba(20,23,27,.85);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);font-size:12px}
+.k{font-size:11px;letter-spacing:.14em;color:#858C95}
+.mono{font-family:"Geist Mono",monospace}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:48px;padding:0 24px;border-radius:999px;font-size:13px;font-weight:500;white-space:nowrap}
+.pri{background:#F2F4F6;color:#000}
+.sec{box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);color:#F2F4F6;background:transparent}
+.card{position:relative;border-radius:16px;background:#14171B;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);overflow:hidden}
+.card:before{content:"";position:absolute;left:20px;right:20px;top:0;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.3),rgba(255,255,255,0))}
+
+</style>
+</helmet>
+<div class="d" style="padding:164px 88px 0;height:1260px">
+<div style="position:absolute;left:88px;right:88px;top:32px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center">
+<img src="/_blob/b39ee964399b456ff83dd9c90077a777" alt="RMinte" style="width:142px;height:auto;display:block">
+<div class="nv"><span>图册</span><span>模型</span><span>产品</span><span>架构</span><span>指南</span><span>下载</span></div>
+<div style="display:flex;justify-content:flex-end"><span class="pill">中文 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="flex:none;display:block"><path d="M6 9l6 6 6-6"/></svg></span></div></div>
+<div class="k" style="display:flex;align-items:center;gap:10px;letter-spacing:.06em"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#A8B8F0" stroke-width="2" stroke-linejoin="round"><path d="M2 3h20L12 21z"/></svg><span>RM-01 / TianshanOS</span></div>
+<h1 style="margin-top:28px;font-size:88px;font-weight:500;letter-spacing:-.05em;line-height:1">OTA 更新服务</h1>
+<p style="margin-top:28px;max-width:640px;font-size:16px;line-height:1.85;color:#B6BCC4">为 <span style="font-family:'Quantify RM','Geist',sans-serif;font-weight:700;letter-spacing:.035em">RM-01</span> 本机的 <b style="color:#F2F4F6;font-weight:500">TianshanOS</b> OTA 页面提供正式固件与 WebUI 更新文件。刷写操作仍在设备自己的管理页面中完成。</p>
+<div class="card" style="margin-top:48px;padding:40px 44px;display:flex;align-items:center;justify-content:space-between;gap:40px">
+<div><div class="k">OTA 服务地址</div><div class="mono" style="margin-top:18px;font-size:44px;letter-spacing:-.03em;line-height:1">https://ota.rminte.com</div></div>
+<span class="btn pri" style="height:52px;padding:0 28px">复制地址 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="flex:none;display:block"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></span></div>
+<div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);column-gap:96px;margin-top:80px">
+<div><h2 style="font-size:32px;font-weight:500;letter-spacing:-.03em;margin-bottom:28px">连接更新服务</h2>
+<div style="border-bottom:1px solid rgba(255,255,255,.08)"><div style="display:grid;grid-template-columns:56px 1fr;align-items:center;padding:22px 0;border-top:1px solid rgba(255,255,255,.08)"><span style="font-family:'Geist Pixel','Geist Mono',monospace;font-size:32px;line-height:1;color:#F2F4F6">1</span><p style="font-size:16px;line-height:1.7;color:#B6BCC4">让电脑或平板连接 <span style="font-family:'Quantify RM','Geist',sans-serif;font-weight:700;letter-spacing:.035em">RM-01</span> 所在网络。</p></div><div style="display:grid;grid-template-columns:56px 1fr;align-items:center;padding:22px 0;border-top:1px solid rgba(255,255,255,.08)"><span style="font-family:'Geist Pixel','Geist Mono',monospace;font-size:32px;line-height:1;color:#F2F4F6">2</span><p style="font-size:16px;line-height:1.7;color:#B6BCC4">打开 <span style="font-family:'Quantify RM','Geist',sans-serif;font-weight:700;letter-spacing:.035em">RM-01</span> 的 <b style='color:#F2F4F6;font-weight:500'>TianshanOS</b> WebUI，并进入<b style='color:#F2F4F6;font-weight:500'>“OTA 升级”</b>。</p></div><div style="display:grid;grid-template-columns:56px 1fr;align-items:center;padding:22px 0;border-top:1px solid rgba(255,255,255,.08)"><span style="font-family:'Geist Pixel','Geist Mono',monospace;font-size:32px;line-height:1;color:#F2F4F6">3</span><p style="font-size:16px;line-height:1.7;color:#B6BCC4">把上面的地址填入<b style='color:#F2F4F6;font-weight:500'>“OTA 服务器”</b>并保存。</p></div><div style="display:grid;grid-template-columns:56px 1fr;align-items:center;padding:22px 0;border-top:1px solid rgba(255,255,255,.08)"><span style="font-family:'Geist Pixel','Geist Mono',monospace;font-size:32px;line-height:1;color:#F2F4F6">4</span><p style="font-size:16px;line-height:1.7;color:#B6BCC4">点击<b style='color:#F2F4F6;font-weight:500'>“检查更新”</b>，确认版本后开始升级。</p></div></div>
+<div style="margin-top:28px"><span class="btn sec" style="height:44px;padding:0 20px">阅读使用指南 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="flex:none;display:block"><path d="M7 17L17 7M8 7h9v9"/></svg></span></div></div>
+<div><h2 style="font-size:32px;font-weight:500;letter-spacing:-.03em;margin-bottom:28px">当前发布</h2>
+<div class="k" style="letter-spacing:.06em;margin-bottom:12px">版本</div>
+<div class="mono" style="font-size:24px;letter-spacing:-.02em;margin-bottom:28px"><span style="color:#F2F4F6">0.5.1</span><span style="color:#858C95">+6565cb6.06111330</span></div>
+<div style="border-bottom:1px solid rgba(255,255,255,.08)"><div style="display:grid;grid-template-columns:72px 1fr auto;align-items:center;padding:18px 0;border-top:1px solid rgba(255,255,255,.08)"><span class="k" style="letter-spacing:.06em">固件</span><span class="mono" style="font-size:14px">TianShanOS.bin</span><span class="mono" style="font-size:13px;color:#858C95">2.1 MB</span></div><div style="display:grid;grid-template-columns:72px 1fr auto;align-items:center;padding:18px 0;border-top:1px solid rgba(255,255,255,.08)"><span class="k" style="letter-spacing:.06em">WebUI</span><span class="mono" style="font-size:14px">www.bin</span><span class="mono" style="font-size:13px;color:#858C95">3.0 MB</span></div></div>
+<div style="display:flex;gap:24px;margin-top:28px;font-size:13px;color:#B6BCC4"><span style="display:inline-flex;gap:6px;align-items:center;text-decoration:underline;text-decoration-color:#A8B8F0;text-underline-offset:5px">查看版本信息 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="flex:none;display:block"><path d="M7 17L17 7M8 7h9v9"/></svg></span><span style="display:inline-flex;gap:6px;align-items:center;text-decoration:underline;text-decoration-color:#A8B8F0;text-underline-offset:5px">服务接口信息 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="flex:none;display:block"><path d="M7 17L17 7M8 7h9v9"/></svg></span></div></div>
+</div>
+<div style="position:absolute;left:88px;right:88px;bottom:0;height:96px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.08)">
+<span style="font-size:12px;color:#858C95">RMinte · TianshanOS</span>
+<div style="display:flex;gap:10px"><span class="pill">联系我们</span><span class="pill">返回 RMinte</span><span class="pill">GitHub</span></div></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1260}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

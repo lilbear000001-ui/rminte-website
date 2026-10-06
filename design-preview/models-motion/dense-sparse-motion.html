@@ -1,0 +1,53 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dense Sparse Motion</title>
+<style>
+:root{--motion:cubic-bezier(.22,.8,.2,1);--ink:#eef1f3}
+*{box-sizing:border-box}body{margin:0;background:#0a0c0e;color:var(--ink);font-family:-apple-system,"PingFang SC",system-ui,sans-serif}
+.hero{max-width:1280px;margin:0 auto;padding:60px 40px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:center;column-gap:36px;min-height:100vh}
+h1{margin:0;font-size:56px;font-weight:500;line-height:1.2;letter-spacing:-.04em}h1 span{display:block}h1 span+span{color:#737c84}
+.mp-hero-art{position:relative;height:480px;margin:0}
+.mp-model-visual{position:absolute;width:55%;aspect-ratio:.82;padding:0;border:0;border-radius:8px;background:transparent;color:var(--ink);cursor:pointer;mix-blend-mode:screen}
+.mp-model-visual.dense{left:-3%;top:24%}.mp-model-visual.moe{right:-3%;top:0}
+.mp-glass-stack{display:block;width:100%;height:100%;overflow:visible;pointer-events:none}
+.mp-glass-layer{transition:transform 1.1s var(--motion),filter 1.1s var(--motion)}
+.mp-glass-layer.upper{transition-delay:.07s}.mp-glass-layer.lower{transition-delay:.12s}
+.mp-glass-layer.feature{transform-origin:center;transform-box:fill-box}
+.mp-model-visual[aria-pressed="true"] .upper{transform:translate(-3px,-24px)}
+.mp-model-visual[aria-pressed="true"] .feature{transform:translate(-6px,-2px) scale(1.035);filter:brightness(1.13)}
+.mp-model-visual[aria-pressed="true"] .lower{transform:translate(3px,16px)}
+@media(hover:hover) and (pointer:fine){.mp-model-visual:hover .upper{transform:translate(-3px,-24px)}.mp-model-visual:hover .feature{transform:translate(-6px,-2px) scale(1.035);filter:brightness(1.13)}.mp-model-visual:hover .lower{transform:translate(3px,16px)}}
+.mp-sculpture-name{position:absolute;font:700 25px/1 "Quantify RM","Arial Black",system-ui,sans-serif}
+.dense .mp-sculpture-name{left:8%;top:-27%}.moe .mp-sculpture-name{right:5%;bottom:-24%}
+/* motion */
+.fl{animation:float 7s ease-in-out infinite alternate}
+.upper .fl{animation-duration:8s}.lower .fl{animation-duration:9s;animation-delay:-3s}.feature .fl{animation-duration:6s;animation-delay:-2s}
+@keyframes float{from{transform:translateY(-1.2px)}to{transform:translateY(1.6px)}}
+.sw{mix-blend-mode:plus-lighter;transform:translateX(0);animation:sweep 6s linear infinite;opacity:.9}
+@keyframes sweep{0%{transform:translateX(0)}60%,100%{transform:translateX(var(--tx))}}
+.tl{fill:#fff;opacity:0;transition:opacity .9s ease-in-out;mix-blend-mode:plus-lighter}.tl.on{opacity:.85}
+@media(prefers-reduced-motion:reduce){.fl,.sw{animation:none}.tl{display:none}}
+@media(max-width:900px){.hero{grid-template-columns:1fr}}
+</style></head><body><section class="hero"><div><h1><span>专业分析，更深入。</span><span>模型推理，更高效。</span></h1></div>
+<figure class="mp-hero-art">
+<button class="mp-model-visual dense" type="button" aria-pressed="false" aria-label="RMQ3x Dense"><svg class="mp-glass-stack" viewBox="50 110 710 820" aria-hidden="true"><defs>
+<image id="gd-img" href="../../website/models/model-glass-a.png" width="1536" height="1024"/>
+<clipPath id="gd-upper"><path d="M50 110H760V433H712C712 444 700 448 683 448H134C121 448 112 444 112 433H50Z"/></clipPath>
+<clipPath id="gd-feature"><path d="M50 433H112C112 444 121 448 134 448H683C700 448 712 444 712 433H760V591H50Z"/></clipPath>
+<clipPath id="gd-lower"><polygon points="50,591 760,591 760,930 50,930"/></clipPath>
+<filter id="gd-bst"><feComponentTransfer><feFuncR type="linear" slope="2.4"/><feFuncG type="linear" slope="2.4"/><feFuncB type="linear" slope="2.4"/></feComponentTransfer></filter>
+<mask id="gd-m" maskUnits="userSpaceOnUse" x="50" y="110" width="710" height="820"><use href="#gd-img" filter="url(#gd-bst)"/></mask></defs>
+<g class="mp-glass-layer lower"><g class="fl"><g clip-path="url(#gd-lower)"><use href="#gd-img"/><g mask="url(#gd-m)" class="ov"><rect class="sw" x="-170" y="595" width="200" height="270" fill="url(#lg)" style="--tx:970px;animation-duration:9s;animation-delay:3s"/></g></g></g></g><g class="mp-glass-layer upper"><g class="fl"><g clip-path="url(#gd-upper)"><use href="#gd-img"/><g mask="url(#gd-m)" class="ov"><rect class="sw" x="-170" y="175" width="200" height="270" fill="url(#lg)" style="--tx:970px;animation-duration:9s;animation-delay:0.5s"/></g></g></g></g><g class="mp-glass-layer feature"><g class="fl"><g clip-path="url(#gd-feature)"><use href="#gd-img"/><g mask="url(#gd-m)" class="ov"><rect class="sw" x="-120" y="455" width="150" height="26" fill="url(#lg)" style="--tx:920px;animation-duration:5.5s;animation-delay:0s"/><rect class="sw" x="-120" y="480" width="150" height="26" fill="url(#lg)" style="--tx:920px;animation-duration:5.5s;animation-delay:1.1s"/><rect class="sw" x="-120" y="512" width="150" height="26" fill="url(#lg)" style="--tx:920px;animation-duration:5.5s;animation-delay:2.2s"/><rect class="sw" x="-120" y="540" width="150" height="26" fill="url(#lg)" style="--tx:920px;animation-duration:5.5s;animation-delay:3.3s"/></g></g></g></g></svg><span class="mp-sculpture-name">RMQ3x</span></button>
+<button class="mp-model-visual moe" type="button" aria-pressed="false" aria-label="RMQ4 MoE"><svg class="mp-glass-stack" viewBox="770 110 710 820" aria-hidden="true"><defs>
+<image id="gm-img" href="../../website/models/model-glass-a.png" width="1536" height="1024"/>
+<clipPath id="gm-upper"><path d="M770 110H1480V433H1432C1432 444 1420 448 1403 448H854C841 448 832 444 832 433H770Z"/></clipPath>
+<clipPath id="gm-feature"><path d="M770 433H832C832 444 841 448 854 448H1403C1420 448 1432 444 1432 433H1480V591H770Z"/></clipPath>
+<clipPath id="gm-lower"><polygon points="770,591 1480,591 1480,930 770,930"/></clipPath>
+<filter id="gm-bst"><feComponentTransfer><feFuncR type="linear" slope="2.4"/><feFuncG type="linear" slope="2.4"/><feFuncB type="linear" slope="2.4"/></feComponentTransfer></filter>
+<mask id="gm-m" maskUnits="userSpaceOnUse" x="770" y="110" width="710" height="820"><use href="#gm-img" filter="url(#gm-bst)"/></mask></defs>
+<g class="mp-glass-layer lower"><g class="fl"><g clip-path="url(#gm-lower)"><use href="#gm-img"/><g mask="url(#gm-m)" class="ov"><rect class="sw" x="550" y="595" width="200" height="270" fill="url(#lg)" style="--tx:970px;animation-duration:9s;animation-delay:5.5s"/></g></g></g></g><g class="mp-glass-layer upper"><g class="fl"><g clip-path="url(#gm-upper)"><use href="#gm-img"/><g mask="url(#gm-m)" class="ov"><rect class="sw" x="550" y="175" width="200" height="270" fill="url(#lg)" style="--tx:970px;animation-duration:9s;animation-delay:2.5s"/></g></g></g></g><g class="mp-glass-layer feature"><g class="fl"><g clip-path="url(#gm-feature)"><use href="#gm-img"/><g mask="url(#gm-m)" class="ov"><rect class="tl" x="846" y="497" width="44" height="28" rx="5"/><rect class="tl" x="965" y="495" width="44" height="28" rx="5"/><rect class="tl" x="978" y="536" width="44" height="28" rx="5"/><rect class="tl" x="1078" y="499" width="44" height="28" rx="5"/><rect class="tl" x="1096" y="533" width="44" height="28" rx="5"/><rect class="tl" x="1191" y="491" width="44" height="28" rx="5"/><rect class="tl" x="1203" y="464" width="44" height="28" rx="5"/><rect class="tl" x="1298" y="458" width="44" height="28" rx="5"/><rect class="tl" x="1318" y="496" width="44" height="28" rx="5"/><rect class="tl" x="1343" y="536" width="44" height="28" rx="5"/><rect class="tl" x="1213" y="536" width="44" height="28" rx="5"/><rect class="tl" x="1093" y="466" width="44" height="28" rx="5"/><rect class="tl" x="878" y="531" width="44" height="28" rx="5"/><rect class="tl" x="1038" y="456" width="44" height="28" rx="5"/></g></g></g></g></svg><span class="mp-sculpture-name">RMQ4</span></button>
+</figure></section>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs></svg>
+<script>
+document.querySelectorAll('.mp-model-visual').forEach(b=>b.addEventListener('click',()=>b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true')));
+const tl=[...document.querySelectorAll('.tl')];
+if(!matchMedia('(prefers-reduced-motion:reduce)').matches&&tl.length)setInterval(()=>{tl.forEach(t=>{if(Math.random()<.28)t.classList.toggle('on')});if(tl.filter(t=>t.classList.contains('on')).length>6)tl[Math.floor(Math.random()*tl.length)].classList.remove('on')},700);
+</script></body></html>

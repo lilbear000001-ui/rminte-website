@@ -5,6 +5,24 @@
   const valid = value => Object.hasOwn(names, value);
   const missing = new Set();
   const controls = [];
+  // zh and en ship with each page; ja/ko/es/fr are separate files. The page head loads the one it opens in
+  // (see the snippet before this script); switching language later loads the new one on demand.
+  const hasCatalog = lang => lang === 'zh' || lang === 'en' || Boolean(window.RM_TRANSLATIONS?.[lang]);
+  const pendingCatalogs = new Map();
+  let lastPick = 0; // the newest menu choice wins if catalogs arrive out of order
+  function loadCatalog(lang) {
+    if (hasCatalog(lang)) return Promise.resolve();
+    if (!pendingCatalogs.has(lang)) {
+      pendingCatalogs.set(lang, new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = `${window.RM_CATALOG.base}${lang}.js?v=${window.RM_CATALOG.v}`;
+        script.onload = () => { Object.assign(window.RM_TRANSLATIONS[lang], window.RM_TRANSLATION_EXTRAS?.[lang]); resolve(); };
+        script.onerror = () => { pendingCatalogs.delete(lang); script.remove(); reject(new Error(`Could not load the ${lang} translations`)); };
+        document.head.append(script);
+      }));
+    }
+    return pendingCatalogs.get(lang);
+  }
   function fromHash(hash = location.hash) { return hash.match(/^#(zh|en|ja|ko|es|fr)-/)?.[1] || null; }
   function initial() {
     const explicit = new URL(location.href).searchParams.get('lang');
@@ -40,6 +58,7 @@
   function apply(lang) {
     if (!valid(lang)) throw new Error(`Unsupported language: ${lang}`);
     current = lang;
+    window.RM_CATALOG?.fonts?.(lang, true); // the CJK face of the new language (the page head only asked for the one it opened in)
     synchronizeLinks();
     document.documentElement.lang = locales[lang];
     document.querySelectorAll('[data-i18n-attr]').forEach(element => {
@@ -76,7 +95,13 @@
       button.setAttribute('aria-haspopup','menu'); button.setAttribute('aria-controls',menu.id); button.setAttribute('aria-expanded','false');
       const options = Object.entries(names).map(([code,label]) => {
         const option = document.createElement('button'); option.type = 'button'; option.textContent = label; option.lang = locales[code]; option.dataset.language = code; option.setAttribute('role','menuitemradio'); option.tabIndex = -1;
-        option.addEventListener('click',() => { const state = beforeChange?.(); close(); choose(code); onChange(code, state); button.focus(); }); menu.append(option); return option;
+        option.addEventListener('click',() => {
+          const state = beforeChange?.(); close();
+          const pick = ++lastPick;
+          const switchTo = () => { if (pick !== lastPick) return; choose(code); onChange(code, state); button.focus(); };
+          if (hasCatalog(code)) switchTo();
+          else loadCatalog(code).then(switchTo, error => { console.error(error); button.focus(); });
+        }); menu.append(option); return option;
       });
       wrapper.append(menu); controls.push({button,options});
       function close() { menu.hidden = true; button.setAttribute('aria-expanded','false'); }
@@ -119,6 +144,6 @@
   new MutationObserver(synchronizeLinks).observe(document.documentElement, {
     childList: true, subtree: true, attributes: true, attributeFilter: ['href']
   });
-  window.RM_I18N = {names,locales,valid,initial,fromHash,text,localize,apply,choose,mount,missing};
+  window.RM_I18N = {names,locales,valid,initial,fromHash,text,localize,apply,choose,mount,missing,hasCatalog,loadCatalog};
   apply(current);
 })();
