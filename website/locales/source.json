@@ -3763,5 +3763,173 @@
       "models/index.html:91",
       "models/index.html:103"
     ]
+  },
+  {
+    "zh": "FlashInfer · 融合 MoE",
+    "en": "FlashInfer · Fused MoE",
+    "sources": [
+      "models/index.html:137"
+    ]
+  },
+  {
+    "zh": "Runner 常驻内存",
+    "en": "Runner resident memory",
+    "sources": [
+      "models/index.html:139"
+    ]
+  },
+  {
+    "zh": "不含权重、KV 缓存与上下文",
+    "en": "Excludes weights, KV cache and context",
+    "sources": [
+      "models/index.html:139"
+    ]
+  },
+  {
+    "zh": "模型与接口",
+    "en": "Models and API",
+    "sources": [
+      "assets/site-data.js:193"
+    ]
+  },
+  {
+    "zh": "Hugging Face · OpenAI 兼容",
+    "en": "Hugging Face · OpenAI-compatible",
+    "sources": [
+      "assets/site-data.js:194"
+    ]
+  },
+  {
+    "zh": "RMinte 推理层",
+    "en": "RMinte inference layer",
+    "sources": [
+      "assets/site-data.js:195"
+    ]
+  },
+  {
+    "zh": "定制 vLLM · C++ 引擎",
+    "en": "Custom vLLM · C++ engine",
+    "sources": [
+      "assets/site-data.js:196"
+    ]
+  },
+  {
+    "zh": "NVIDIA CUDA",
+    "en": "NVIDIA CUDA",
+    "sources": [
+      "assets/site-data.js:94"
+    ]
+  },
+  {
+    "zh": "计算平台",
+    "en": "Compute platform",
+    "sources": [
+      "assets/site-data.js:198"
+    ]
+  },
+  {
+    "zh": "连续批处理",
+    "en": "Continuous batching",
+    "sources": [
+      "assets/site-data.js:200"
+    ]
+  },
+  {
+    "zh": "前缀复用 · 递归状态",
+    "en": "Prefix reuse · Recurrent state",
+    "sources": [
+      "assets/site-data.js:202"
+    ]
+  },
+  {
+    "zh": "显存 / 内存",
+    "en": "VRAM / Memory",
+    "sources": [
+      "assets/site-data.js:203"
+    ]
+  },
+  {
+    "zh": "上下文容量",
+    "en": "Context capacity",
+    "sources": [
+      "assets/site-data.js:204"
+    ]
+  },
+  {
+    "zh": "SSD",
+    "en": "SSD",
+    "sources": [
+      "assets/site-data.js:102"
+    ]
+  },
+  {
+    "zh": "分层扩展上下文",
+    "en": "Tiered context extension",
+    "sources": [
+      "assets/site-data.js:206"
+    ]
+  },
+  {
+    "zh": "模型",
+    "en": "Model",
+    "sources": [
+      "assets/site-data.js:207"
+    ]
+  },
+  {
+    "zh": "投影合并 · 算子融合",
+    "en": "Merged projections · Kernel fusion",
+    "sources": [
+      "assets/site-data.js:208"
+    ]
+  },
+  {
+    "zh": "融合算子",
+    "en": "Fused kernel",
+    "sources": [
+      "assets/site-data.js:209"
+    ]
+  },
+  {
+    "zh": "减少数据搬运",
+    "en": "Less data movement",
+    "sources": [
+      "assets/site-data.js:210"
+    ]
+  },
+  {
+    "zh": "GPU 算力",
+    "en": "GPU compute",
+    "sources": [
+      "assets/site-data.js:211"
+    ]
+  },
+  {
+    "zh": "带宽与缓存",
+    "en": "Bandwidth and cache",
+    "sources": [
+      "assets/site-data.js:212"
+    ]
+  },
+  {
+    "zh": "推理软件与 CUDA 的分层示意：同一套接口，两条推理路线",
+    "en": "Layered view of inference software and CUDA: one interface, two inference paths",
+    "sources": [
+      "assets/site-data.js:213"
+    ]
+  },
+  {
+    "zh": "分页 KV 缓存与 SSD 分层存储示意：多路并发共享缓存",
+    "en": "Paged KV cache and tiered SSD storage: concurrent requests share the cache",
+    "sources": [
+      "assets/site-data.js:214"
+    ]
+  },
+  {
+    "zh": "算子融合示意：三次读写合并为一次",
+    "en": "Kernel fusion: three reads and writes merged into one",
+    "sources": [
+      "assets/site-data.js:215"
+    ]
   }
 ]

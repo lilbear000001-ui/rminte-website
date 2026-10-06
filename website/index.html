@@ -61,14 +61,15 @@
   </script>
   <script src="assets/motion.js?v=stage2-2" defer></script>
   <link rel="preload" href="assets/fonts/GeistPixel-Circle.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/brand.css?v=v2-core-1">
+  <link rel="stylesheet" href="assets/brand.css?v=v2-core-2">
   <link rel="stylesheet" href="assets/styles.css?v=stage3-1">
   <link rel="stylesheet" href="assets/tianshanos-demo-modal.css">
   <script src="assets/site-data.js?v=footer-portable-20261003" defer></script>
-  <script src="assets/home-architecture.js?v=architecture-610b2b5" defer></script>
+  <script src="assets/home-architecture.js?v=motion-d9-1" defer></script>
+  <script src="assets/engine-glass.js?v=d9-1" defer></script>
   <script src="assets/main.js?v=stage2-1" defer></script>
   <script src="assets/tianshanos-demo-modal.js" defer></script>
-  <script src="assets/footer.js?v=models-launch-1" defer></script>
+  <script src="assets/footer.js?v=d9-nav-1" defer></script>
 </head>
 <body class="home-body">
   <a class="skip-link" href="#main" data-i18n-text data-zh="跳至主要内容" data-en="Skip to main content">跳至主要内容</a>
@@ -77,7 +78,7 @@
     <a class="brand-mark" href="#hero" aria-label="RMinte">
       <img src="assets/images/logo-white.svg" alt="RMinte">
     </a>
-    <nav class="nav-island" id="desktopNav" aria-label="页面导航" data-i18n-aria-label-zh="页面导航" data-i18n-aria-label-en="Page navigation"></nav>
+    <nav class="nav-island" data-bevel id="desktopNav" aria-label="页面导航" data-i18n-aria-label-zh="页面导航" data-i18n-aria-label-en="Page navigation"></nav>
     <div class="nav-actions">
       <button class="language-toggle" type="button" data-lang-toggle>EN</button>
       <button class="menu-button" type="button" aria-label="打开菜单" aria-controls="mobileOverlay" aria-expanded="false" data-menu-toggle data-i18n-aria-label-zh="打开菜单" data-i18n-aria-label-en="Open menu">
@@ -91,7 +92,7 @@
     <div class="mobile-overlay-panel">
       <div class="mobile-overlay-top">
         <img class="mobile-menu-logo" src="assets/images/logo-white.svg" alt="RMinte">
-        <button class="ghost-button" type="button" data-menu-close>关闭</button>
+        <button class="menu-close" type="button" aria-label="关闭" data-menu-close data-i18n-aria-label-zh="关闭" data-i18n-aria-label-en="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
       </div>
       <nav class="mobile-links" id="mobileNav" aria-label="移动导航" data-i18n-aria-label-zh="移动导航" data-i18n-aria-label-en="Mobile navigation"></nav>
     </div>
@@ -131,12 +132,20 @@
           <p data-ui="engineLead">自研推理引擎提高算力与显存利用率，减少资源消耗。更大模型、更长上下文与更多并发任务，由此获得运行空间。</p>
         </div>
         <div class="engine-experience">
-          <figure class="engine-art" id="engineArt" aria-label="推理软件与 CUDA 计算平台的分层示意" data-i18n-aria-label-zh="推理软件与 CUDA 计算平台的分层示意" data-i18n-aria-label-en="Layered view of inference software and the CUDA computing platform">
-            <div class="software-stack" aria-hidden="true">
-              <div class="stack-plane stack-base"><span>NVIDIA CUDA</span><div class="compute-grid"></div></div>
-              <div class="stack-plane stack-kernel"><span id="kernelLabel"><span class="rm-mark">RMinte</span> Inference</span><div class="memory-grid"></div></div>
-              <div class="stack-plane stack-ecosystem"><span id="ecosystemLabel">C++ · vLLM</span><div class="model-lines"><i></i><i></i><i></i></div></div>
-            </div>
+          <figure class="engine-art" id="engineArt" data-scene="0" aria-label="推理软件与 CUDA 计算平台的分层示意">
+            <canvas class="engine-glass" id="engineGlass" aria-hidden="true"></canvas>
+            <img class="engine-still" data-src="assets/images/engine-glass-still.webp" alt="" width="1520" height="1406" aria-hidden="true">
+            <span class="engine-tag" data-ui="egTag">示意图</span>
+            <div class="engine-label l0" data-plate="3"><div><b data-ui="egL0P3T">模型与接口</b><span data-ui="egL0P3S">Hugging Face · OpenAI 兼容</span></div></div>
+            <div class="engine-label l1" data-plate="3"><div><b data-ui="egL1P3T">并发请求</b><span data-ui="egL1P3S">连续批处理</span></div></div>
+            <div class="engine-label l2" data-plate="3"><div><b data-ui="egL2P3T">模型</b><span data-ui="egL2P3S">投影合并 · 算子融合</span></div></div>
+            <div class="engine-label l0" data-plate="2"><div><b data-ui="egL0P2T">RMinte 推理层</b><span data-ui="egL0P2S">定制 vLLM · C++ 引擎</span></div></div>
+            <div class="engine-label l1" data-plate="2"><div><b data-ui="egL1P2T">分页 KV 缓存</b><span data-ui="egL1P2S">前缀复用 · 递归状态</span></div></div>
+            <div class="engine-label l2" data-plate="2"><div><b data-ui="egL2P2T">融合算子</b><span data-ui="egL2P2S">减少数据搬运</span></div></div>
+            <div class="engine-label l0" data-plate="1"><div><b data-ui="egL0P1T">NVIDIA CUDA</b><span data-ui="egL0P1S">计算平台</span></div></div>
+            <div class="engine-label l1" data-plate="1"><div><b data-ui="egL1P1T">显存 / 内存</b><span data-ui="egL1P1S">上下文容量</span></div></div>
+            <div class="engine-label l2" data-plate="1"><div><b data-ui="egL2P1T">GPU 算力</b><span data-ui="egL2P1S">带宽与缓存</span></div></div>
+            <div class="engine-label l1" data-plate="0"><div><b data-ui="egL1P0T">SSD</b><span data-ui="egL1P0S">分层扩展上下文</span></div></div>
           </figure>
           <div class="engine-reading" id="engineReading"></div>
         </div>
@@ -371,7 +380,7 @@
   </div>
 
   <div class="contact-popover" id="contactPopover" role="dialog" aria-labelledby="contactTitle" aria-hidden="true" data-contact-popover>
-    <div class="contact-card">
+    <div class="contact-card" data-bevel>
       <div class="contact-card-core">
         <div class="contact-top">
           <div>

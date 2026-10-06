@@ -30,7 +30,9 @@
     .mp-model-visual.dense { left:-3%; top:24%; }
     .mp-model-visual.moe { right:-3%; top:0; }
     .mp-glass-stack { display:block; width:100%; height:100%; overflow:visible; pointer-events:none; }
-    .mp-glass-layer { transition:transform .7s var(--motion),filter .7s var(--motion); }
+    .mp-glass-layer { transition:transform 1.1s var(--motion),filter 1.1s var(--motion); }
+    .mp-glass-layer.upper { transition-delay:.07s; }
+    .mp-glass-layer.lower { transition-delay:.12s; }
     .mp-glass-layer.feature { transform-origin:center; transform-box:fill-box; }
     .mp-model-visual[aria-pressed="true"] .upper { transform:translate(-3px,-24px); }
     .mp-model-visual[aria-pressed="true"] .feature { transform:translate(-6px,-2px) scale(1.035); filter:brightness(1.13); }
@@ -39,6 +41,20 @@
       .mp-model-visual:hover .upper { transform:translate(-3px,-24px); }
       .mp-model-visual:hover .feature { transform:translate(-6px,-2px) scale(1.035); filter:brightness(1.13); }
       .mp-model-visual:hover .lower { transform:translate(3px,16px); }
+    }
+    /* Motion layer (D9): each glass layer drifts a little while idle, a soft light sweeps across it where the glass is bright (the mask is
+       the picture itself, boosted), and on RMQ4 a few of the blocks light up and fade at random. Runs only while the hero art is on screen. */
+    @keyframes mp-glass-float { from { transform:translateY(-1.2px); } to { transform:translateY(1.6px); } }
+    @keyframes mp-glass-sweep { 0% { transform:translateX(0); } 60%,100% { transform:translateX(var(--tx)); } }
+    .mp-glass-sweep { mix-blend-mode:plus-lighter; transform:translateX(0); opacity:.9; }
+    .mp-glass-tile { fill:#fff; opacity:0; transition:opacity .9s ease-in-out; mix-blend-mode:plus-lighter; }
+    .mp-glass-tile.on { opacity:.85; }
+    @media(prefers-reduced-motion:no-preference) {
+      .mp-hero-art[data-live] .mp-glass-float { animation:mp-glass-float 7s ease-in-out infinite alternate; }
+      .mp-hero-art[data-live] .upper .mp-glass-float { animation-duration:8s; }
+      .mp-hero-art[data-live] .lower .mp-glass-float { animation-duration:9s; animation-delay:-3s; }
+      .mp-hero-art[data-live] .feature .mp-glass-float { animation-duration:6s; animation-delay:-2s; }
+      .mp-hero-art[data-live] .mp-glass-sweep { animation:mp-glass-sweep 6s linear infinite; }
     }
     .mp-sculpture-name { position:absolute; display:flex; flex-direction:column; align-items:flex-start; gap:10px; text-align:left; }
     .mp-sculpture-name .rm-mark { color:var(--ink); font-size:25px; line-height:1; }
@@ -89,8 +105,14 @@
     .mp-scenarios .mp-lead { max-width:720px; }
     .mp-scenarios .mp-heading { scroll-margin-top:120px; }
     .mp-case-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-top:40px; }
-    .mp-case-card { display:flex; flex-direction:column; min-width:0; padding:22px 24px; text-align:left; color:var(--ink); font:inherit; background:var(--n-2); border:1px solid var(--line); border-radius:16px; cursor:pointer; transition:border-color var(--dur-hover) var(--ease-settle),transform var(--dur-hover) var(--ease-settle); }
+    .mp-case-card { display:flex; flex-direction:column; min-width:0; padding:22px 24px; text-align:left; color:var(--ink); font:inherit; background:var(--n-2); border:1px solid var(--line); border-radius:16px; cursor:pointer; transition:border-color var(--dur-hover) var(--ease-settle),transform var(--dur-hover) var(--ease-settle),--ba var(--dur-hover) var(--ease-settle); }
     .mp-case-card[aria-expanded="true"] { background:var(--n-3); border-color:var(--line-3); }
+    /* Top-edge light (D9 task 6). The nine cards are a row of equal entries, so the light is graded: .18 at rest, .5 on hover, keyboard focus and the open card.
+       --ba has to be registered to be able to transition. Touch and reduced motion: motion.js leaves the line in the middle, and :hover is not applied without a pointer. */
+    @property --ba { syntax:"<number>"; inherits:true; initial-value:.5; }
+    .mp-case-card { --ba:.18; }
+    .mp-case-card:focus-visible, .mp-case-card[aria-expanded="true"] { --ba:.5; }
+    @media(hover:hover) and (pointer:fine) { .mp-case-card:hover { --ba:.5; } }
     .mp-case-industry { display:flex; flex-direction:row; align-items:center; gap:14px; color:var(--ink-soft); font-size:var(--fs-small); line-height:1.65; }
     .mp-case-industry .mp-icon { width:22px; height:22px; color:var(--text-2); flex:none; }
     .mp-case-task { display:block; margin:14px 0 8px; font-size:var(--fs-h3); font-weight:500; line-height:1.5; letter-spacing:-.02em; white-space:pre-line; }
@@ -113,10 +135,10 @@
     @media(max-width:600px) { .mp-case-grid { grid-template-columns:1fr; margin-top:28px; gap:12px; } .mp-case-card { padding:20px; } .mp-case-industry { flex-direction:row; align-items:center; gap:14px; } .mp-case-industry .mp-icon { width:20px; height:20px; } .mp-case-task { font-size:var(--fs-h4); margin-top:14px; } .mp-case-detail { padding:24px; } .mp-case-detail h3 { font-size:var(--fs-h4); margin-right:36px; } .mp-case-close { top:16px; right:16px; } .mp-case-flow { grid-template-columns:1fr; gap:26px; } .mp-case-stage { padding-left:44px; } .mp-case-step { position:absolute; left:0; top:0; } .mp-case-stage:not(:last-child)::before { top:28px; left:14px; width:1px; height:calc(100% - 2px); background:linear-gradient(#60676f,#343b42); } }
     @media(prefers-reduced-motion:reduce) { .mp-case-card,.mp-case-open .mp-icon { transition:none; } .mp-case-card:hover,.mp-case-card:hover .mp-case-open .mp-icon { transform:none; } }
     .mp-engines { padding-top:48px; }
-    .mp-engine-layout { display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:84px; align-items:center; margin-top:42px; }
+    .mp-engine-layout { display:grid; grid-template-columns:minmax(0,1.32fr) minmax(0,1fr); gap:64px; align-items:center; margin-top:42px; }
     .mp-engine-visual { min-width:0; }
-    .mp-engine-art { position:relative; aspect-ratio:1.22; margin:0; min-width:0; }
-    .mp-engine-stack { position:absolute; width:60%; height:54%; left:23%; top:36%; transform:rotateX(48deg) rotateZ(-30deg); transform-style:preserve-3d; }
+    .mp-engine-art { position:relative; aspect-ratio:1.5; margin:0; min-width:0; }
+    .mp-engine-stack { position:absolute; width:80%; height:52%; left:10%; top:34%; transform:rotateX(48deg) rotateZ(-30deg); transform-style:preserve-3d; }
     .mp-engine-plane { position:absolute; inset:0; border:1px solid #727c83; border-radius:8px; background:linear-gradient(140deg,#353d43,#151b20 70%); box-shadow:2px 5px 0 #0b0e10,3px 6px 0 #58616a,12px 24px 28px #0009; transform-style:preserve-3d; }
     .mp-engine-plane > span { position:absolute; bottom:16px; left:20px; font-size:17px; font-weight:500; white-space:nowrap; color:var(--ink); }
     html:is(:lang(ja),:lang(ko),:lang(es),:lang(fr)) .mp-engine-plane.runtime > span { right:20px; white-space:normal; line-height:1.25; }
@@ -130,10 +152,46 @@
     .mp-engine-traces i { display:block; width:100%; height:2px; background:linear-gradient(90deg,#dce1e5,#5a697766); box-shadow:0 5px 0 #6778894d; }
     .mp-engine-traces i:nth-child(2) { width:72%; }
     .mp-engine-traces i:nth-child(3) { width:88%; }
-    .mp-engine-core { position:absolute; inset:22px 20px 53px; display:grid; grid-template-columns:repeat(6,1fr); gap:6px; }
-    .mp-engine-core i { background:linear-gradient(135deg,#9aa7b2,#556471); border:1px solid #c3cbd15e; }
+    /* translateZ(0) gives the cell grid its own layer. Without it Safari lifts the animated cells out of the grid and draws them above the
+       model glass in the vLLM state (the C++ state sets its own transform below). */
+    .mp-engine-core { position:absolute; inset:22px 20px 53px; display:grid; grid-template-columns:repeat(6,1fr); gap:6px; transform:translateZ(0); transition:gap .6s var(--motion),transform .6s var(--motion); }
+    .mp-engine-core i { background:linear-gradient(135deg,#9aa7b2,#556471); border:1px solid #c3cbd15e; transition:transform .5s; }
     .mp-engine-compute { position:absolute; inset:24px 22px 60px; display:grid; grid-template-columns:repeat(12,1fr); gap:5px; }
     .mp-engine-compute i { background:#454c52; border:1px solid #747e86; box-shadow:1px 2px 0 #07090b; }
+    /* Motion layer (D9). A light block travels model -> runtime -> CUDA; traces and cells pulse. C++ closes the cells into one lit core and
+       counts the runner's memory; vLLM keeps them open, lifts two and names FlashInfer. It runs only while the figure is on screen (data-live). */
+    .mp-engine-plane > span.mp-engine-tag-v { left:auto; right:20px; bottom:16px; font-size:var(--fs-label); color:#dfe6ff; opacity:0; transition:opacity .4s; white-space:nowrap; }
+    .mp-engine-art[data-engine="vllm"] .mp-engine-tag-v { opacity:.9; }
+    .mp-engine-tokens { position:absolute; inset:0; transform-style:preserve-3d; }
+    .mp-token { position:absolute; width:14px; height:14px; border-radius:3px; background:linear-gradient(135deg,#fff,#c9d4ff); box-shadow:0 0 10px #a8b8f0aa; opacity:0; transform-style:preserve-3d; }
+    .mp-engine-traces i { position:relative; overflow:hidden; }
+    .mp-engine-traces i::after { content:""; position:absolute; top:-1px; left:0; width:30%; height:4px; background:linear-gradient(90deg,transparent,#fff,transparent); opacity:.9; }
+    .mp-engine-traces i:nth-child(2) { --d:.4s; }
+    .mp-engine-traces i:nth-child(3) { --d:.8s; }
+    .mp-engine-core::after { content:""; position:absolute; inset:36% 36%; border-radius:4px; background:radial-gradient(circle,#fff,#a8b8f0 55%,transparent 75%); opacity:0; transition:opacity .5s; }
+    .mp-engine-art[data-engine="cpp"] .mp-engine-core { gap:0; transform:translateZ(14px) scale(.44); }
+    .mp-engine-art[data-engine="cpp"] .mp-engine-core i { border-color:#e6ecf455; }
+    .mp-engine-art[data-engine="cpp"] .mp-engine-core::after { opacity:1; }
+    @keyframes mp-tok { 0% { opacity:0; transform:translate3d(0,-60px,100px); } 12% { opacity:1; } 40% { transform:translate3d(0,-60px,92px); } 55% { transform:translate3d(0,-30px,38px); opacity:1; } 85% { transform:translate3d(0,0,-38px); opacity:.9; } 100% { transform:translate3d(0,0,-44px); opacity:0; } }
+    @keyframes mp-tpulse { from { transform:translateX(-120%); } to { transform:translateX(420%); } }
+    /* brightness(1) instead of none keeps a filter on the cell all the time; with none, Safari drops a cell to black for one frame each time the filter switches on. */
+    @keyframes mp-cpulse { 0%,50%,100% { filter:brightness(1); } 65% { filter:brightness(1.55); box-shadow:0 0 8px #cfd9ff88; } }
+    @keyframes mp-core { 0%,100% { filter:brightness(.9); } 55% { filter:brightness(1.5); } }
+    @keyframes mp-swap { 0%,100% { transform:translateZ(0); } 30%,50% { transform:translateZ(18px); background:#c9d4ff; } }
+    @media(prefers-reduced-motion:no-preference) {
+      .mp-engine-art[data-live] .mp-token { animation:mp-tok 2.8s var(--d,0s) infinite cubic-bezier(.45,.05,.4,1); }
+      .mp-engine-art[data-live] .mp-engine-traces i::after { animation:mp-tpulse 2.8s var(--d,0s) infinite linear; }
+      .mp-engine-art[data-live] .mp-engine-core i { animation:mp-cpulse 2.8s calc(var(--k) * .07s) infinite ease-in-out; }
+      .mp-engine-art[data-live] .mp-engine-core::after { animation:mp-core 2.8s infinite ease-in-out; }
+      .mp-engine-art[data-live][data-engine="vllm"] .mp-engine-core i:nth-child(8) { animation:mp-cpulse 2.8s infinite,mp-swap 5.2s infinite ease-in-out; }
+      .mp-engine-art[data-live][data-engine="vllm"] .mp-engine-core i:nth-child(15) { animation:mp-cpulse 2.8s infinite,mp-swap 5.2s 2.6s infinite ease-in-out; }
+    }
+    .mp-engine-mb { position:absolute; right:1%; bottom:4%; text-align:right; opacity:0; transition:opacity .5s; pointer-events:none; }
+    .mp-engine-art[data-engine="cpp"] .mp-engine-mb { opacity:1; }
+    .mp-engine-mb b { display:block; font:500 clamp(36px,5vw,64px)/1 var(--font-pixel); color:var(--ink); letter-spacing:-.02em; }
+    .mp-engine-mb b em { font-style:normal; color:var(--sapphire-300); font-size:.5em; margin-left:.2em; }
+    .mp-engine-mb small { display:block; margin-top:10px; font-size:var(--fs-note); color:var(--dim); line-height:1.6; }
+    .mp-engine-mb small span { display:block; }
     .mp-engine-reading { display:grid; min-width:0; }
     .mp-engine-panel { grid-area:1 / 1; align-self:start; min-width:0; }
     .mp-engine-tabs { display:flex; width:max-content; max-width:100%; border-radius:var(--radius-button); padding:4px; gap:4px; border:1px solid var(--line); margin:24px auto 0; }
@@ -167,13 +225,18 @@
     .mp-dialog::backdrop { background:#0009; backdrop-filter:blur(12px); }
     .mp-dialog-top { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:18px; }
     .mp-close { display:grid; place-items:center; flex:none; width:44px; height:44px; border:1px solid var(--line); border-radius:50%; background:transparent; color:var(--ink); cursor:pointer; }
-    /* The phone menu follows the shared overlay (styles.css .mobile-overlay): the page ground, a 118px logo, a Close pill, large links */
-    .mp-menu-dialog { width:100%; height:100dvh; max-width:none; max-height:none; margin:0; padding:calc(24px + env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left)); border:0; border-radius:0; background:color-mix(in srgb,var(--bg) 98%,transparent); backdrop-filter:blur(30px); }
+    /* The phone menu follows the shared overlay (styles.css .mobile-overlay): the page ground, a 118px logo, a round 44px close button, 32px links between line-2 rules with a decorative number */
+    .mp-menu-dialog { width:100%; height:100dvh; max-width:none; max-height:none; margin:0; padding:calc(28px + env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left)); border:0; border-radius:0; background:color-mix(in srgb,var(--bg) 98%,transparent); backdrop-filter:blur(30px); }
     .mp-menu-dialog .mp-dialog-top { margin-bottom:0; }
     .mp-menu-dialog img { width:118px; }
-    .mp-menu-dialog .mp-close { width:auto; min-width:54px; height:auto; padding:13px 17px; border:0; border-radius:var(--radius-button); background:var(--glass-bg); box-shadow:inset 0 0 0 1px var(--line-2); font-size:.82rem; font-weight:500; }
-    .mp-mobile-links { display:grid; gap:10px; margin-top:88px; }
-    .mp-mobile-links a { padding:16px 0; font-size:clamp(2.1rem,9vw,4.4rem); line-height:.96; font-weight:500; letter-spacing:-.02em; color:var(--ink); }
+    .mp-menu-dialog .mp-close { border:1px solid var(--line-2); background:var(--n-4); transition:background var(--dur-hover) var(--ease-settle),border-color var(--dur-hover) var(--ease-settle); }
+    .mp-menu-dialog .mp-close:hover { background:var(--n-5); border-color:var(--line-3); }
+    .mp-mobile-links { display:grid; counter-reset:menu-item; margin-top:40px; }
+    .mp-mobile-links a { display:grid; grid-template-columns:44px 1fr; align-items:center; padding:22px 0; border-top:1px solid var(--line-2); font-size:min(32px,9.2vw); line-height:normal; font-weight:500; letter-spacing:-.03em; color:var(--ink); }
+    .mp-mobile-links a:last-child { border-bottom:1px solid var(--line-2); }
+    /* The number is decoration: the empty text after the slash keeps it out of the link's name */
+    .mp-mobile-links a::before { counter-increment:menu-item; content:counter(menu-item,decimal-leading-zero) / ""; font:400 var(--fs-note)/1 var(--font-mono); letter-spacing:.04em; color:var(--text-3); }
+    .mp-mobile-links a[aria-current="page"]::before { color:var(--sapphire-300); }
     .models-page:has(dialog[open]) { overflow:hidden; }
     @media(min-width:1000px) and (max-height:800px) {
       .mp-models { padding-top:96px; padding-bottom:24px; }
@@ -231,10 +294,12 @@
       .mp-benchmark-status { margin-top:20px; font-size:var(--fs-note); }
       .mp-engines { padding-top:12px; }
       .mp-engine-layout { gap:30px; }
-      .mp-engine-art { aspect-ratio:1.08; }
+      .mp-engine-art { aspect-ratio:1.08; margin-bottom:92px; }
+      .mp-engine-mb { top:100%; bottom:auto; right:0; margin-top:4px; }
       .mp-engine-stack { width:57%; left:24%; height:51%; top:38%; }
       .mp-engine-plane > span { font-size:var(--fs-note); left:13px; bottom:12px; }
       .mp-engine-plane.model span { font-size:var(--fs-compact); }
+      .mp-engine-plane > span.mp-engine-tag-v { left:13px; right:auto; bottom:34px; font-size:var(--fs-label); }
       .mp-engine-plane.base { transform:translateZ(-22px); }
       .mp-engine-plane.runtime { transform:translate3d(0,-20px,22px); }
       .mp-engine-plane.model { transform:translate3d(0,-40px,58px); }

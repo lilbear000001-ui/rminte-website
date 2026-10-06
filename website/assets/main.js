@@ -70,9 +70,6 @@
         return outer;
       }));
     }
-
-    const close = $('[data-menu-close]');
-    if (close) close.textContent = ui('closeMenu');
   }
 
   function renderNav() {
@@ -291,10 +288,9 @@
   const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 
   function updateEngine() {
-    document.getElementById('engineArt').dataset.scene = Math.max(0, expandedEngine);
-    document.getElementById('ecosystemLabel').textContent = ['C++ · vLLM', RM_I18N.text({zh: '并发请求', en: 'Concurrent requests'}, lang), RM_I18N.text({zh: '模型 · 应用', en: 'Model · Application'}, lang)][Math.max(0, expandedEngine)];
-    const label = expandedEngine === 1 ? {zh: '分页 KV 缓存', en: 'Paged KV Cache'} : {zh: 'RMinte 推理引擎', en: 'RMinte Inference'};
-    writeMarkedText(document.getElementById('kernelLabel'), lang === 'zh' || lang === 'en' ? label.en : t(label));
+    // The glass figure (assets/engine-glass.js) follows the open topic; a collapsed list shows the first scene.
+    const scene = Math.max(0, expandedEngine);
+    window.RMEngineGlass.setScene(scene, [0, 1, 2].map(index => ui(`egAria${index}`)));
     document.querySelectorAll('[data-engine-toggle]').forEach((button, index) => {
       button.setAttribute('aria-expanded', String(index === expandedEngine));
       document.getElementById(`engineDetail${index}`).hidden = index !== expandedEngine;
@@ -318,7 +314,6 @@
   }
 
   function renderExperience() {
-    document.getElementById('engineArt').setAttribute('aria-label', RM_I18N.text({zh: '推理软件与 CUDA 计算平台的分层示意', en: 'Software layers above the CUDA compute platform'}, lang));
     document.getElementById('networkGraph').setAttribute('aria-label', RM_I18N.text({zh: '两台计算模组分别经以太网控制器和 PHY 接入板载交换机，ESP32 经 W5500 接入并拥有自己的配置存储；两台计算机各有独立存储。', en: 'Each computer connects through an Ethernet controller and PHY to the onboard switch and has dedicated storage. ESP32 connects through W5500 and has its own configuration storage.'}, lang));
     document.getElementById('engineReading').innerHTML = data.engine.map((item, index) => `<article class="engine-topic">
       <h3><button class="engine-topic-toggle" type="button" id="engineToggle${index}" data-engine-toggle="${index}" aria-expanded="${index === expandedEngine}" aria-controls="engineDetail${index}">${escapeHtml(t(item.title))}<svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></button></h3>
@@ -903,8 +898,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    $('.compute-grid').innerHTML = '<i></i>'.repeat(96);
-    $('.memory-grid').innerHTML = '<i></i>'.repeat(48);
     renderAll();
     setupControls();
     setupThermalScroll();

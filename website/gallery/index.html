@@ -17,7 +17,7 @@
   <link rel="icon" type="image/png" sizes="512x512" href="../assets/images/favicon.png">
   <link rel="preload" href="../assets/fonts/Geist-latin-v1800.woff2" as="font" type="font/woff2" crossorigin>
   <script src="../assets/motion.js?v=stage2-2" defer></script>
-  <link rel="stylesheet" href="../assets/brand.css?v=v2-core-1">
+  <link rel="stylesheet" href="../assets/brand.css?v=v2-core-2">
   <link rel="stylesheet" href="../assets/styles.css?v=stage3-1">
   <link rel="preload" href="../assets/fonts/GeistPixel-Circle.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../assets/gallery.css?v=stage3-1">
@@ -49,7 +49,7 @@
   <script src="../assets/gallery-exif.js?v=stage3-1" defer></script>
   <script src="../assets/gallery.js?v=stage3-1" defer></script>
   <script src="../assets/site-data.js?v=footer-portable-20261003" defer></script>
-  <script src="../assets/footer.js?v=models-launch-1" defer></script>
+  <script src="../assets/footer.js?v=d9-nav-1" defer></script>
 </head>
 <body class="gallery-body">
   <a class="skip-link" href="#galleryMain" data-gallery-text data-zh="跳至图册内容" data-en="Skip to gallery">跳至图册内容</a>
@@ -58,7 +58,7 @@
     <a class="brand-mark" href="../index.html#hero" aria-label="RMinte 首页" data-i18n-aria-label-zh="RMinte 首页" data-i18n-aria-label-en="RMinte home">
       <img src="../assets/images/logo-white.svg" alt="RMinte">
     </a>
-    <nav class="nav-island" aria-label="页面导航" data-i18n-aria-label-zh="页面导航" data-i18n-aria-label-en="Page navigation">
+    <nav class="nav-island" data-bevel aria-label="页面导航" data-i18n-aria-label-zh="页面导航" data-i18n-aria-label-en="Page navigation">
       <a class="active" href="#galleryMain" aria-current="page" data-gallery-text data-zh="图册" data-en="Gallery">图册</a>
       <a href="../models/index.html" data-gallery-text data-zh="模型" data-en="Models">模型</a>
       <a href="../index.html#engine" data-gallery-text data-zh="产品" data-en="Product">产品</a>
@@ -79,7 +79,7 @@
     <div class="mobile-overlay-panel">
       <div class="mobile-overlay-top">
         <img class="mobile-menu-logo" src="../assets/images/logo-white.svg" alt="RMinte">
-        <button class="ghost-button" type="button" data-menu-close data-gallery-text data-zh="关闭" data-en="Close">关闭</button>
+        <button class="menu-close" type="button" aria-label="关闭" data-menu-close data-i18n-aria-label-zh="关闭" data-i18n-aria-label-en="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
       </div>
       <nav class="mobile-links" aria-label="移动导航" data-i18n-aria-label-zh="移动导航" data-i18n-aria-label-en="Mobile navigation">
         <a class="active" href="#galleryMain" aria-current="page" data-gallery-text data-zh="图册" data-en="Gallery">图册</a>
@@ -155,7 +155,7 @@
   </footer>
 
   <div class="contact-popover" id="contactPopover" role="dialog" aria-labelledby="contactTitle" aria-hidden="true" data-contact-popover>
-    <div class="contact-card">
+    <div class="contact-card" data-bevel>
       <div class="contact-card-core">
         <div class="contact-top">
           <div>

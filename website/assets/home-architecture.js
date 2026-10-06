@@ -94,7 +94,11 @@ window.RMArchitecture = (() => {
       }).join('');
       const wires=layout.routes.map(([type,route,points])=>[-2,0,2].map(offset=>`<path class="system-${type}-wire" data-route="${route}" d="${offsetPath(points,offset)}"/>`).join('')).join('');
       const captions=layout.captions.map(([x,y,key,type])=>`<text x="${x}" y="${y}" class="system-label label-${type}" aria-hidden="true">${escape(words[key]||key)}</text>`).join('');
-      return `<div class="network-${size} network-scene" data-scene-width="${layout.width}" style="--scene-width:${layout.width};aspect-ratio:${layout.width}/${layout.height}" role="group" aria-label="${t('设备架构','Device architecture')}"><svg viewBox="0 0 ${layout.width} ${layout.height}" aria-hidden="true">${wires}${captions}</svg>${nodes}</div>`;
+      // Motion layer: the lines layer also carries a light that runs along every route, a pad at each end and the data packets. The lines,
+      // the modules and the text move separately.
+      const flows=layout.routes.map(([type,route,points])=>`<path class="system-flow" data-flow="${route}" style="animation-delay:${-(route.length*.37%4).toFixed(2)}s" d="${points.map((point,i)=>`${i?'L':'M'}${point[0]} ${point[1]}`).join('')}"/>${[points[0],points[points.length-1]].map(point=>`<circle class="system-pad" data-pad="${route}" cx="${point[0]}" cy="${point[1]}" r="2.4"/>`).join('')}`).join('');
+      const packets='<circle class="system-packet" r="3"/>'.repeat(7);
+      return `<div class="network-${size} network-scene" data-scene-width="${layout.width}" style="--scene-width:${layout.width};aspect-ratio:${layout.width}/${layout.height}" role="group" aria-label="${t('设备架构','Device architecture')}"><svg viewBox="0 0 ${layout.width} ${layout.height}" aria-hidden="true"><g class="system-layer system-layer-lines">${wires}${packets}${flows}</g><g class="system-layer system-layer-text">${captions}</g></svg>${nodes}</div>`;
     }
     const graph=document.getElementById('networkGraph');
     // SVG and sibling HTML modules share the same untransformed container.
@@ -105,25 +109,121 @@ window.RMArchitecture = (() => {
       clearInspection();
       graph.querySelectorAll(`[data-part="${button.dataset.part}"]`).forEach(item=>item.setAttribute('aria-pressed',String(pressed)));
     }));
-
+    track(graph);
   }
   function clearInspection() {
     document.querySelectorAll('#networkGraph [aria-pressed=true]').forEach(button=>button.setAttribute('aria-pressed','false'));
   }
   const topics = [
-    {parts:['mcu'],routes:[]},
+    {parts:['mcu','cuda','x86'],routes:[]},
     {parts:['ethernet','switch','nic-cuda','nic-x86'],routes:['management-network','cuda-network','x86-network']},
-    {parts:['config'],routes:[]},
+    {parts:['mcu','config'],routes:['management-config']},
     {parts:['mcu','ethernet','switch'],routes:['management-spi','management-network']}
   ];
+
+  // Motion layer (D9). A light runs along every route (sapphire and faster once the route is lit), data packets travel the north-south
+  // routes in "device control", a config pack is sent from the config storage to ESP32 in a 3.6 s loop, the update sequence runs ESP32,
+  // W5500, RTL8367RB in a 5.4 s loop, and the lines, the modules and the text follow the pointer by different amounts. It all runs only
+  // while the figure is on screen; with reduced motion the figure stands still and the two loops are shown as one lit frame.
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const sequence = [[0,'mcu'],[1.15,'ethernet'],[2.3,'switch']];
+  let scenes = [], graphEl = null, focus = 0, focusAt = 0, frameId = 0, tx = 0, ty = 0, px = 0, py = 0, written = '';
+  const smooth = (a,b,x) => { const k=Math.max(0,Math.min(1,(x-a)/(b-a))); return k*k*(3-2*k); };
+  const setLit = (element,on) => { const value=String(on); if(element.dataset.lit!==value) element.dataset.lit=value; };
+  function track(graph) {
+    const all = (root,selector) => Array.from(root.querySelectorAll(selector));
+    scenes = all(graph,'.network-scene').map(el => {
+      const group = (selector,key) => { const map={}; all(el,selector).forEach(item=>{ (map[item.dataset[key]] ||= []).push(item); }); return map; };
+      return {
+        el,
+        flows:Object.fromEntries(all(el,'[data-flow]').map(path=>[path.dataset.flow,{path,length:0}])),
+        pads:group('[data-pad]','pad'),
+        wires:group('[data-route]','route'),
+        parts:Object.fromEntries(all(el,'[data-part]').map(part=>[part.dataset.part,part])),
+        packets:all(el,'.system-packet')
+      };
+    });
+    if(graphEl) return;
+    graphEl = graph;
+    graph.addEventListener('pointermove',event => {
+      if(reduceMotion.matches) return;
+      const box=graph.getBoundingClientRect();
+      tx=(event.clientX-box.left)/box.width-.5; ty=(event.clientY-box.top)/box.height-.5;
+    });
+    graph.addEventListener('pointerleave',() => { tx=ty=0; });
+    new IntersectionObserver(entries => {
+      const live=entries[0].isIntersecting;
+      graph.toggleAttribute('data-live',live);
+      window.cancelAnimationFrame(frameId);
+      if(live && !reduceMotion.matches) frameId=window.requestAnimationFrame(frame);
+    }).observe(graph);
+  }
+  // A point on a route, taken from the route's own path (the same geometry the wires are offset from)
+  function pointAt(flow,u,reverse) {
+    if(!flow.length) flow.length=flow.path.getTotalLength();
+    return flow.path.getPointAtLength((reverse?1-u:u)*flow.length);
+  }
+  function place(scene,index,route,u,reverse,fade) {
+    const packet=scene.packets[index],point=pointAt(scene.flows[route],u,reverse);
+    packet.setAttribute('cx',point.x); packet.setAttribute('cy',point.y);
+    packet.style.opacity=Math.min(1,u*fade,(1-u)*fade);
+  }
+  function frame(now) {
+    frameId=window.requestAnimationFrame(frame);
+    px+=(tx-px)*.08; py+=(ty-py)*.08;
+    const shift=`${px.toFixed(3)} ${py.toFixed(3)}`;
+    if(shift!==written) { written=shift; graphEl.style.setProperty('--px',px.toFixed(3)); graphEl.style.setProperty('--py',py.toFixed(3)); }
+    const t=Math.max(0,(now-focusAt)/1000);
+    scenes.forEach(scene => {
+      if(!scene.el.offsetParent) return;
+      if(focus>0) scene.packets.forEach(packet=>{ packet.style.opacity=0; });
+      if(focus===1) {
+        [['management-network',false],['cuda-network',true],['x86-network',true]].forEach(([route,reverse],r) => {
+          for(let j=0;j<2;j++) place(scene,r*2+j,route,(t*.3+j*.5+r*.2)%1,reverse,6);
+        });
+      }
+      if(focus===2) {
+        // Config pack: the config storage lights, one packet runs from it to ESP32, and ESP32 lights as the packet arrives.
+        const c=t%3.6,fade=1-smooth(2.9,3.4,c),on=smooth(.3,.5,c)*fade>.5;
+        setLit(scene.parts.config,smooth(.2,.6,c)*fade>.5);
+        setLit(scene.parts.mcu,smooth(1.05,1.35,c)*fade>.5);
+        scene.wires['management-config'].forEach(wire=>setLit(wire,on));
+        scene.flows['management-config'].path.classList.toggle('on',on);
+        scene.pads['management-config'].forEach(pad=>pad.classList.toggle('on',on));
+        const u=(c-.35)/.75;
+        if(u>0&&u<1) place(scene,0,'management-config',u,true,8);
+      }
+      if(focus===3) {
+        const c=t%5.4,fade=1-smooth(4.5,5.1,c);
+        sequence.forEach(([start,key]) => setLit(scene.parts[key],smooth(start+.2,start+.6,c)*fade>.5));
+        [['management-spi',smooth(.3,.5,c)*fade],['management-network',smooth(1.4,1.6,c)*fade]].forEach(([route,amount]) => {
+          const on=amount>.5;
+          scene.wires[route].forEach(wire=>setLit(wire,on));
+          scene.flows[route].path.classList.toggle('on',on);
+          scene.pads[route].forEach(pad=>pad.classList.toggle('on',on));
+        });
+        let u=(c-.35)/.75;
+        if(u>0&&u<1) place(scene,0,'management-spi',u,true,8);
+        u=(c-1.5)/.9;
+        if(u>0&&u<1) place(scene,1,'management-network',u,false,8);
+      }
+    });
+  }
   function setFocus(index) {
     const topic=topics[index];
+    focus=index; focusAt=performance.now();
+    // In the config pack and the update sequence (and with motion allowed) the loop lights the parts and routes one after the other.
+    const sequenced=(index===2||index===3)&&!reduceMotion.matches;
     document.querySelectorAll('#networkGraph [data-part]').forEach(part=>{
-      part.dataset.lit=String(topic.parts.includes(part.dataset.part));
+      part.dataset.lit=String(!sequenced&&topic.parts.includes(part.dataset.part));
     });
     document.querySelectorAll('#networkGraph [data-route]').forEach(wire=>{
-      wire.dataset.lit=String(topic.routes.includes(wire.dataset.route));
+      wire.dataset.lit=String(!sequenced&&topic.routes.includes(wire.dataset.route));
     });
+    document.querySelectorAll('#networkGraph [data-flow],#networkGraph [data-pad]').forEach(item=>{
+      item.classList.toggle('on',!sequenced&&topic.routes.includes(item.dataset.flow||item.dataset.pad));
+    });
+    document.querySelectorAll('#networkGraph .system-packet').forEach(packet=>{ packet.style.opacity=0; });
   }
   return {render,clearInspection,setFocus};
 })();

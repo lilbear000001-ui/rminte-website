@@ -446,7 +446,7 @@ function siteNavigationTemplate() {
     <a class="brand-mark" href="../index.html#hero" aria-label="RMinte 首页" data-i18n-aria-label-zh="RMinte 首页" data-i18n-aria-label-en="RMinte home">
       <img src="../assets/images/logo-white.svg" alt="RMinte">
     </a>
-    <nav class="nav-island" aria-label="页面导航" data-i18n-aria-label-zh="页面导航" data-i18n-aria-label-en="Page navigation">
+    <nav class="nav-island" data-bevel aria-label="页面导航" data-i18n-aria-label-zh="页面导航" data-i18n-aria-label-en="Page navigation">
       <a href="../gallery/index.html" data-guide-text data-zh="图册" data-en="Gallery">图册</a>
       <a href="../models/index.html" data-guide-text data-zh="模型" data-en="Models">模型</a>
       <a href="../index.html#engine" data-guide-text data-zh="产品" data-en="Product">产品</a>
@@ -467,7 +467,7 @@ function siteNavigationTemplate() {
     <div class="mobile-overlay-panel">
       <div class="mobile-overlay-top">
         <img class="mobile-menu-logo" src="../assets/images/logo-white.svg" alt="RMinte">
-        <button class="ghost-button" type="button" data-menu-close data-guide-text data-zh="关闭" data-en="Close">关闭</button>
+        <button class="menu-close" type="button" aria-label="关闭" data-menu-close data-i18n-aria-label-zh="关闭" data-i18n-aria-label-en="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
       </div>
       <nav class="mobile-links" aria-label="移动导航" data-i18n-aria-label-zh="移动导航" data-i18n-aria-label-en="Mobile navigation">
         <a href="../gallery/index.html" data-guide-text data-zh="图册" data-en="Gallery">图册</a>
@@ -506,7 +506,7 @@ function pageTemplate(config, rendered) {
   <link rel="icon" type="image/png" sizes="512x512" href="../assets/images/favicon.png">
   <link rel="preload" href="../assets/fonts/Geist-latin-v1800.woff2" as="font" type="font/woff2" crossorigin>
   <script src="../assets/motion.js?v=stage2-2" defer></script>
-  <link rel="stylesheet" href="../assets/brand.css?v=v2-core-1">
+  <link rel="stylesheet" href="../assets/brand.css?v=v2-core-2">
   <link rel="stylesheet" href="../assets/styles.css?v=stage3-1">
   <link rel="stylesheet" href="../assets/guides.css?v=stage3-1">
   <script id="guidePageData" type="application/json">${pageData}</script>
@@ -537,7 +537,7 @@ function pageTemplate(config, rendered) {
   <script src="../assets/i18n.js?v=catalogs-20261004" defer></script>
   <script src="../assets/guides.js?v=stage3-1" defer></script>
   <script src="../assets/site-data.js?v=footer-portable-20261003" defer></script>
-  <script src="../assets/footer.js?v=models-launch-1" defer></script>
+  <script src="../assets/footer.js?v=d9-nav-1" defer></script>
 </head>
 <body class="guide-body guide-doc-body guide-accent-${config.accent}">
   <a class="skip-link" href="#guideContent" data-guide-text data-zh="跳至指南正文" data-en="Skip to guide content">跳至指南正文</a>
@@ -616,7 +616,7 @@ ${languages.map(lang => renderLanguagePane(lang, rendered[lang], config)).join('
   </footer>
 
   <div class="contact-popover" id="contactPopover" role="dialog" aria-labelledby="contactTitle" aria-hidden="true" data-contact-popover>
-    <div class="contact-card">
+    <div class="contact-card" data-bevel>
       <div class="contact-card-core">
         <div class="contact-top">
           <div>
