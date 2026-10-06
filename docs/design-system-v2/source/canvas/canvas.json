@@ -1,7 +1,55 @@
 {
-  "v": 3,
   "attachments": {},
   "boards": {
+    "BgCompare.dc.html": {
+      "h": 940,
+      "title": "14 底色对比（D6）",
+      "w": 1440,
+      "x": 1520,
+      "y": 10380
+    },
+    "Downloads.dc.html": {
+      "h": 990,
+      "title": "11 下载中心 · 优化稿",
+      "w": 1440,
+      "x": 1520,
+      "y": 8200
+    },
+    "Gallery.dc.html": {
+      "h": 900,
+      "title": "09 图册 · 优化稿",
+      "w": 1440,
+      "x": 1520,
+      "y": 6300
+    },
+    "GuideDoc.dc.html": {
+      "h": 1320,
+      "title": "13 指南正文 · 优化稿",
+      "w": 1440,
+      "x": 0,
+      "y": 10380
+    },
+    "GuideDocB.dc.html": {
+      "h": 2910,
+      "title": "16 指南正文 · 续（第 2–3 章）",
+      "w": 1440,
+      "x": 0,
+      "y": 11780
+    },
+    "GuideMobile.dc.html": {
+      "h": 1100,
+      "title": "15 指南正文 · 手机",
+      "w": 390,
+      "x": 3040,
+      "y": 10380
+    },
+    "Guides.dc.html": {
+      "h": 1410,
+      "title": "12 指南入口 · 优化稿",
+      "w": 1440,
+      "x": 3040,
+      "y": 8200
+    },
     "Hardware.dc.html": {
       "h": 1130,
       "title": "05 硬件模块 · 优化稿",
@@ -15,6 +63,20 @@
       "w": 1440,
       "x": 0,
       "y": 4700
+    },
+    "Lamp.dc.html": {
+      "h": 1000,
+      "title": "18 灯板工具 · 已载入",
+      "w": 1440,
+      "x": 1520,
+      "y": 14850
+    },
+    "LampEmpty.dc.html": {
+      "h": 1000,
+      "title": "19 灯板工具 · 起始状态",
+      "w": 1440,
+      "x": 3040,
+      "y": 14850
     },
     "Main.dc.html": {
       "h": 2480,
@@ -30,19 +92,19 @@
       "x": 3040,
       "y": 4700
     },
-    "Review.dc.html": {
-      "h": 4220,
-      "title": "02 诊断、评分与决定",
-      "w": 1440,
-      "x": 1520,
-      "y": 0
-    },
-    "Spec.dc.html": {
-      "h": 3290,
-      "title": "03 设计规范 v2（提案）",
+    "Models.dc.html": {
+      "h": 1240,
+      "title": "10 模型页 · 优化稿",
       "w": 1440,
       "x": 3040,
-      "y": 0
+      "y": 6300
+    },
+    "Ota.dc.html": {
+      "h": 1260,
+      "title": "17 OTA 更新服务 · 优化稿",
+      "w": 1440,
+      "x": 0,
+      "y": 14850
     },
     "Pages.dc.html": {
       "h": 1810,
@@ -51,33 +113,12 @@
       "x": 0,
       "y": 6300
     },
-    "Gallery.dc.html": {
-      "h": 900,
-      "title": "09 图册 · 优化稿",
+    "Review.dc.html": {
+      "h": 4220,
+      "title": "02 诊断、评分与决定",
       "w": 1440,
       "x": 1520,
-      "y": 6300
-    },
-    "Models.dc.html": {
-      "h": 1240,
-      "title": "10 模型页 · 优化稿",
-      "w": 1440,
-      "x": 3040,
-      "y": 6300
-    },
-    "Downloads.dc.html": {
-      "h": 990,
-      "title": "11 下载中心 · 优化稿",
-      "w": 1440,
-      "x": 1520,
-      "y": 8200
-    },
-    "Guides.dc.html": {
-      "h": 1410,
-      "title": "12 指南入口 · 优化稿",
-      "w": 1440,
-      "x": 3040,
-      "y": 8200
+      "y": 0
     },
     "Signature.dc.html": {
       "h": 2100,
@@ -86,33 +127,12 @@
       "x": 0,
       "y": 8200
     },
-    "GuideDoc.dc.html": {
-      "h": 1320,
-      "title": "13 指南正文 · 优化稿",
+    "Spec.dc.html": {
+      "h": 3290,
+      "title": "03 设计规范 v2（提案）",
       "w": 1440,
-      "x": 0,
-      "y": 10380
-    },
-    "BgCompare.dc.html": {
-      "h": 940,
-      "title": "14 底色对比（D6）",
-      "w": 1440,
-      "x": 1520,
-      "y": 10380
-    },
-    "GuideMobile.dc.html": {
-      "h": 1100,
-      "title": "15 指南正文 · 手机",
-      "w": 390,
       "x": 3040,
-      "y": 10380
-    },
-    "GuideDocB.dc.html": {
-      "h": 2910,
-      "title": "16 指南正文 · 续（第 2–3 章）",
-      "w": 1440,
-      "x": 0,
-      "y": 11780
+      "y": 0
     }
   },
   "createdOnFiles": {
@@ -165,8 +185,12 @@
     "GuideDoc.dc.html",
     "BgCompare.dc.html",
     "GuideMobile.dc.html",
-    "GuideDocB.dc.html"
+    "GuideDocB.dc.html",
+    "Ota.dc.html",
+    "Lamp.dc.html",
+    "LampEmpty.dc.html"
   ],
   "pages": [],
-  "title": "RMinte 官网设计方案"
+  "title": "RMinte 官网设计方案",
+  "v": 3
 }

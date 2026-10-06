@@ -1,0 +1,364 @@
+<title>推理引擎动效试点</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500&display=swap">
+<style>
+/* Layout: 左侧一摞 WebGL 玻璃板，银白的光在玻璃里承载含义；右侧三条主题。沿用 RMinte 设计系统 v2：黑、石墨、银白，蓝宝石只作细点缀 */
+:root{
+  --n0:#000;--t1:#F2F4F6;--t2:#B6BCC4;--t3:#858C95;
+  --line1:rgba(255,255,255,.08);--sap3:#A8B8F0;
+  --ui:'Geist','Noto Sans SC',system-ui,sans-serif;--mono:'Geist Mono',ui-monospace,monospace;
+  --settle:cubic-bezier(.2,.8,.2,1);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--n0);color:var(--t1);font-family:var(--ui);margin:0;padding-inline:max(16px,4vw);padding-block:56px 72px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto}
+.eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--t2)}
+.eyebrow svg{width:12px;height:12px}
+h1{font-size:clamp(34px,5.2vw,64px);font-weight:500;letter-spacing:-.045em;line-height:1.05;margin:22px 0 18px;text-wrap:balance}
+.lead{max-width:640px;font-size:17px;line-height:1.85;color:var(--t2);margin:0}
+.exp{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:center;margin-top:24px}
+.topic{border-bottom:1px solid var(--line1);padding:24px 0}
+.topic:first-child{padding-top:0}.topic:last-child{border-bottom:0;padding-bottom:0}
+.topic h3{margin:0;font:inherit}
+.tg{all:unset;box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:space-between;gap:20px;cursor:pointer;font:500 21px/1.5 var(--ui);letter-spacing:-.015em;color:var(--t3);transition:color 200ms}
+.tg:hover,.tg[aria-expanded=true]{color:var(--t1)}
+.tg:focus-visible{outline:2px solid var(--sap3);outline-offset:6px;border-radius:2px}
+.tg svg{width:18px;height:18px;flex:none;transition:transform 240ms var(--settle)}
+.tg[aria-expanded=true] svg{transform:rotate(180deg)}
+.det{display:grid;grid-template-rows:0fr;transition:grid-template-rows 480ms var(--settle)}
+.det>div{overflow:hidden}
+.topic.on .det{grid-template-rows:1fr}
+.det p{font-size:16px;line-height:1.9;color:var(--t2);margin:16px 0 0}
+.stage{overflow-x:clip;position:relative;aspect-ratio:1.08;min-width:0;width:100%;max-width:760px;margin:0 auto}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tag{position:absolute;left:0;top:0;font:400 11px/1 var(--mono);letter-spacing:.12em;color:var(--t3)}
+.lbl{position:absolute;left:0;top:0;opacity:0;transition:opacity 500ms ease;pointer-events:none;display:flex;align-items:center;gap:10px;will-change:transform}
+.lbl::before{content:"";width:28px;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.55),rgba(255,255,255,.1));flex:none}
+.lbl b{display:block;font:500 14px/1.3 var(--ui);color:var(--t1);white-space:nowrap}
+.lbl span{display:block;font:400 11px/1.4 var(--mono);color:var(--t3);margin-top:3px;white-space:nowrap}
+[data-scene="0"] .l0,[data-scene="1"] .l1,[data-scene="2"] .l2{opacity:1;transition:opacity 700ms var(--settle) 300ms}
+.nogl{position:absolute;inset:0;display:none;align-items:center;justify-content:center;color:var(--t3);font:400 13px var(--mono)}
+@media (max-width:900px){.exp{grid-template-columns:1fr}}
+@media (max-width:520px){.lbl span{display:none}}
+</style>
+<div class="wrap">
+  <div class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="#A8B8F0" stroke-width="2" stroke-linejoin="round"><path d="M2 3h20L12 21z"/></svg><span>推理引擎</span></div>
+  <h1>让有限的算力，承载更多任务</h1>
+  <p class="lead">自研推理引擎提高算力与显存利用率，减少资源消耗。更大模型、更长上下文与更多并发任务，由此获得运行空间。</p>
+  <div class="exp">
+    <figure class="stage" id="stage" data-scene="0" style="margin-block:0" aria-label="推理软件与 CUDA 计算平台的分层示意">
+      <canvas id="gl" aria-hidden="true"></canvas><div class="nogl" id="nogl">此浏览器不支持 WebGL，无法显示示意图</div>
+      <span class="tag">示意图</span>
+      <div class="lbl l0" data-p="3"><div><b>模型与接口</b><span>Hugging Face · OpenAI 兼容</span></div></div>
+      <div class="lbl l1" data-p="3"><div><b>并发请求</b><span>连续批处理</span></div></div>
+      <div class="lbl l2" data-p="3"><div><b>模型</b><span>投影合并 · 算子融合</span></div></div>
+      <div class="lbl l0" data-p="2"><div><b>RMinte 推理层</b><span>定制 vLLM · C++ 引擎</span></div></div>
+      <div class="lbl l1" data-p="2"><div><b>分页 KV 缓存</b><span>前缀复用 · 递归状态</span></div></div>
+      <div class="lbl l2" data-p="2"><div><b>融合算子</b><span>减少数据搬运</span></div></div>
+      <div class="lbl l0" data-p="1"><div><b>NVIDIA CUDA</b><span>计算平台</span></div></div>
+      <div class="lbl l1" data-p="1"><div><b>显存 / 内存</b><span>上下文容量</span></div></div>
+      <div class="lbl l2" data-p="1"><div><b>GPU 算力</b><span>带宽与缓存</span></div></div>
+      <div class="lbl l1" data-p="0"><div><b>SSD</b><span>分层扩展上下文</span></div></div>
+    </figure>
+    <div id="rd"></div>
+  </div>
+</div>
+<script>
+(()=>{
+/* ---------- 文案与交互 ---------- */
+const scenes=[
+ ['沿用生态，减少适配','定制 vLLM 沿用 Hugging Face 模型生态，自研内核优化推理计算；C++ 专用引擎面向模型架构与硬件平台，组织权重加载、算子和运行时。两条路线支持 RMQ 模型，并通过兼容 OpenAI 等接口的服务连接应用，减少接入与适配工作。'],
+ ['容纳更长的上下文，处理更多并发','分页缓存与递归状态管理承接上下文，前缀缓存复用已有计算。专用引擎通过内存与 SSD 分层存储扩展上下文容量，结合批量输入处理与连续批处理，减少权重重复读取，让文档分析、多轮交互和并发请求共用推理资源。'],
+ ['从推理需求出发，设计整机','主板与推理引擎协同设计，围绕 GPU、内存带宽和缓存安排计算与数据访问。投影合并、算子融合与专家归组减少搬运开销；MTP 与批量解码分别服务于单请求生成和并发任务，将硬件资源转化为模型执行效率。']
+];
+const rd=document.getElementById('rd'),stage=document.getElementById('stage');
+rd.innerHTML=scenes.map((s,i)=>`<article class="topic" data-i="${i}"><h3><button class="tg" type="button" id="tg${i}" aria-expanded="false" aria-controls="dt${i}">${s[0]}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></button></h3><div class="det" id="dt${i}" role="region" aria-labelledby="tg${i}"><div><p>${s[1]}</p></div></div></article>`).join('');
+let scene=0,sceneT=0;
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+function go(s){scene=s;sceneT=performance.now();stage.dataset.scene=s;
+  document.querySelectorAll('.topic').forEach((t,i)=>{t.classList.toggle('on',i===s);t.querySelector('.tg').setAttribute('aria-expanded',i===s)});
+  stage.setAttribute('aria-label',['推理软件与 CUDA 的分层示意：同一套接口，两条推理路线','分页 KV 缓存与 SSD 分层存储示意：多路并发共享缓存','算子融合示意：三次读写合并为一次'][s]);}
+rd.addEventListener('click',e=>{const b=e.target.closest('.tg');if(b)go(+b.closest('.topic').dataset.i)});
+
+/* ---------- WebGL ---------- */
+const cv=document.getElementById('gl');
+const gl=cv.getContext('webgl2',{antialias:true,alpha:false,powerPreference:'high-performance'});
+if(!gl){document.getElementById('nogl').style.display='flex';go(0);return}
+const sh=(t,s)=>{const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))console.error(gl.getShaderInfoLog(o),s);return o};
+const prog=(v,f)=>{const p=gl.createProgram();gl.attachShader(p,sh(gl.VERTEX_SHADER,'#version 300 es\n'+v));gl.attachShader(p,sh(gl.FRAGMENT_SHADER,'#version 300 es\nprecision highp float;\n'+f));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))console.error(gl.getProgramInfoLog(p));return p};
+const U=(p,n)=>gl.getUniformLocation(p,n);
+
+// 数学
+const m4={
+ persp(f,a,n,fa){const t=1/Math.tan(f/2),r=1/(n-fa);return[t/a,0,0,0,0,t,0,0,0,0,(n+fa)*r,-1,0,0,2*n*fa*r,0]},
+ look(e,c,u){let z=[e[0]-c[0],e[1]-c[1],e[2]-c[2]];let l=Math.hypot(...z);z=z.map(v=>v/l);let x=[u[1]*z[2]-u[2]*z[1],u[2]*z[0]-u[0]*z[2],u[0]*z[1]-u[1]*z[0]];l=Math.hypot(...x);x=x.map(v=>v/l);const y=[z[1]*x[2]-z[2]*x[1],z[2]*x[0]-z[0]*x[2],z[0]*x[1]-z[1]*x[0]];
+  return[x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-(x[0]*e[0]+x[1]*e[1]+x[2]*e[2]),-(y[0]*e[0]+y[1]*e[1]+y[2]*e[2]),-(z[0]*e[0]+z[1]*e[1]+z[2]*e[2]),1]},
+ mul(a,b){const o=new Array(16);for(let i=0;i<4;i++)for(let j=0;j<4;j++){let s=0;for(let k=0;k<4;k++)s+=a[k*4+j]*b[i*4+k];o[i*4+j]=s}return o}
+};
+
+/* 玻璃板几何：圆角矩形外轮廓 + 圆弧倒角 */
+const PW=4.5,PD=2.7,PH=.28,PR=.42,BV=.085;
+function slabGeo(W,D,H,R,b){
+  const pts=[],nor=[];const cs=[[1,1,0],[-1,1,90],[-1,-1,180],[1,-1,270]];
+  for(const [sx,sz,a0] of cs){for(let k=0;k<=14;k++){const th=(a0+k*90/14)*Math.PI/180;pts.push([sx*(W/2-R)+R*Math.cos(th),sz*(D/2-R)+R*Math.sin(th)]);nor.push([Math.cos(th),Math.sin(th)])}}
+  const rings=[];const S=7;
+  rings.push({inset:b,y:-H/2,c:0,s:-1});
+  for(let k=1;k<=S;k++){const f=-Math.PI/2+k*(Math.PI/2)/S;rings.push({inset:b-b*Math.cos(f),y:-H/2+b+b*Math.sin(f),c:Math.cos(f),s:Math.sin(f)})}
+  for(let k=1;k<=S;k++){const f=k*(Math.PI/2)/S;rings.push({inset:b-b*Math.cos(f),y:H/2-b+b*Math.sin(f),c:Math.cos(f),s:Math.sin(f)})}
+  const v=[],idx=[];
+  rings.forEach(r=>pts.forEach((p,i)=>{v.push(p[0]-nor[i][0]*r.inset,r.y,p[1]-nor[i][1]*r.inset,nor[i][0]*r.c,r.s,nor[i][1]*r.c)}));
+  const n=pts.length;
+  for(let r=0;r<rings.length-1;r++)for(let i=0;i<n;i++){const j=(i+1)%n,a=r*n+i,b2=r*n+j,c=(r+1)*n+i,d=(r+1)*n+j;idx.push(a,b2,c,b2,d,c)}
+  // 顶盖与底盖
+  const capV=(y,ny,ring)=>{const base=v.length/6;v.push(0,y,0,0,ny,0);pts.forEach((p,i)=>v.push(p[0]-nor[i][0]*ring.inset,y,p[1]-nor[i][1]*ring.inset,0,ny,0));for(let i=0;i<n;i++)idx.push(base,base+1+i,base+1+(i+1)%n)};
+  capV(H/2,1,rings[rings.length-1]);capV(-H/2,-1,rings[0]);
+  return{v:new Float32Array(v),i:new Uint32Array(idx)}
+}
+const g=slabGeo(PW,PD,PH,PR,BV);
+const slabVao=gl.createVertexArray();gl.bindVertexArray(slabVao);
+let b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,g.v,gl.STATIC_DRAW);
+gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,24,0);gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,3,gl.FLOAT,false,24,12);
+b=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,b);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,g.i,gl.STATIC_DRAW);const slabN=g.i.length;
+
+const glassP=prog(`layout(location=0) in vec3 aP;layout(location=1) in vec3 aN;
+uniform mat4 uVP;uniform vec3 uOff;uniform vec3 uSc;out vec3 vW;out vec3 vN;
+void main(){vec3 w=aP*uSc+uOff;vW=w;vN=aN;gl_Position=uVP*vec4(w,1.);}`,
+`in vec3 vW;in vec3 vN;out vec4 o;
+uniform vec3 uCam;uniform sampler2D uBack;uniform vec2 uRes;uniform mat4 uView;uniform float uT;uniform vec3 uLight;
+float strip(vec3 r,vec3 d,vec3 a,float w){return exp(-pow(dot(r,a)/w,2.))*smoothstep(.1,.6,dot(r,d));}
+vec3 env(vec3 r){
+  float h=r.y*.5+.5;
+  vec3 e=mix(vec3(.012,.013,.016),vec3(.06,.065,.075),h);
+  e+=vec3(.95,.97,1.)*pow(max(dot(r,normalize(vec3(.1,1.,-.25))),0.),5.)*.9;
+  e+=vec3(.9,.93,1.)*pow(max(dot(r,normalize(vec3(-.15,.42,-.9))),0.),3.)*.55;
+  e+=vec3(1.)*strip(r,normalize(vec3(-1.,.25,.15)),normalize(vec3(0.,0.,1.)),.09)*1.5;
+  e+=vec3(.9,.94,1.)*strip(r,normalize(vec3(.7,.2,-.8)),normalize(vec3(.7,0.,.7)),.08)*1.3;
+  e+=vec3(1.)*strip(r,normalize(vec3(.2,.35,1.)),normalize(vec3(1.,0.,0.)),.07)*.9;
+  e+=vec3(1.)*pow(max(dot(r,uLight),0.),30.)*1.6;
+  return e;}
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+void main(){
+  vec3 N=normalize(vN);
+  // 缓慢流动的微起伏，让大平面的反光有流体感
+  float tt=uT*.35;
+  N=normalize(N+vec3(sin(vW.x*1.7+tt)*.012+sin(vW.z*3.1-tt*1.3)*.008,0.,cos(vW.z*1.9+tt*.8)*.012+cos(vW.x*2.3+tt)*.008)*step(.9,N.y));
+  vec3 V=normalize(uCam-vW);
+  float cosv=max(dot(N,V),0.);
+  float F=.04+.96*pow(1.-cosv,5.);
+  vec2 uv=gl_FragCoord.xy/uRes;
+  vec3 nv=(uView*vec4(N,0.)).xyz,nu=(uView*vec4(0.,1.,0.,0.)).xyz;
+  vec2 off=(nv.xy-nu.xy)*38.+vec2(0.,-3.);
+  float bevel=1.-abs(N.y);
+  float rad=1.1+length(off)*.18;
+  vec3 acc=vec3(0.),fro=vec3(0.);
+  for(int i=0;i<9;i++){
+    float a=float(i)*2.39996,r=sqrt((float(i)+.5)/9.)*rad;
+    vec2 d=vec2(cos(a),sin(a))*r;
+    vec2 u0=uv+(off+d)/uRes;
+    acc.r+=textureLod(uBack,u0+off*.06/uRes,.4).r;
+    acc.g+=textureLod(uBack,u0,.4).g;
+    acc.b+=textureLod(uBack,u0-off*.06/uRes,.4).b;
+  }
+  acc/=9.;
+  // 磨砂：宽模糊的散射层，亮处向外晕开一圈淡雾
+  float flat_=smoothstep(.6,.95,N.y);
+  vec3 f1=textureLod(uBack,uv+off/uRes,2.4).rgb,f2=textureLod(uBack,uv+off/uRes,3.6).rgb;
+  fro=f1*.6+f2*.4;
+  vec3 refr=mix(acc,acc*.62+fro*.55,flat_*.85);
+  refr+=vec3(.022,.024,.028)*flat_;
+  vec3 tint=vec3(.94,.96,.98);
+  vec3 col=refr*tint*(1.-F*.5);
+  vec3 R=reflect(-V,N);
+  col+=env(R)*(F*1.5+.16);
+  // 倒角处的边缘光
+  col+=vec3(.8,.84,.92)*pow(bevel,1.3)*(.16+.26*step(0.,N.y))*(.5+.5*env(R).g);
+  col+=(hash(gl_FragCoord.xy+uT)-.5)/255.;
+  o=vec4(col,1.);}`);
+const uG={vp:U(glassP,'uVP'),off:U(glassP,'uOff'),sc:U(glassP,'uSc'),cam:U(glassP,'uCam'),back:U(glassP,'uBack'),res:U(glassP,'uRes'),view:U(glassP,'uView'),t:U(glassP,'uT'),light:U(glassP,'uLight')};
+
+/* 背景：极淡的石墨光池，给玻璃一点可折射的底 */
+const bgP=prog(`out vec2 vU;void main(){vec2 p=vec2((gl_VertexID<<1)&2,gl_VertexID&2);vU=p;gl_Position=vec4(p*2.-1.,.9999,1.);}`,
+`in vec2 vU;out vec4 o;uniform vec2 uC;uniform float uA;void main(){vec2 d=(vU-uC)*vec2(1.,.8);float k=exp(-dot(d,d)*22.);o=vec4(vec3(.045,.05,.06)*k*uA,1.);}`);
+const bgVao=gl.createVertexArray();
+
+/* 发光块：带小圆角的单位立方体（实例化） */
+const cubeV=[],cubeI=[];
+{const RU=.17,inn=.5-RU,G=[];const strip=[0,.3,.65,1];
+ strip.forEach(t=>G.push(-.5+t*RU));[inn*-0+(-inn)].length;
+ const lo=strip.map(t=>-.5+t*RU),hi=lo.map(v=>-v).reverse();const grid=[...lo,...hi];const N=grid.length;
+ [[0,1,2,1],[0,1,2,-1],[1,2,0,1],[1,2,0,-1],[2,0,1,1],[2,0,1,-1]].forEach(([a,b2,c,sg])=>{
+  const base=cubeV.length/6;
+  for(let i=0;i<N;i++)for(let j=0;j<N;j++){const q=[0,0,0];q[a]=grid[i];q[b2]=grid[j];q[c]=.5*sg;
+   const cc=q.map(v=>Math.max(-inn,Math.min(inn,v))),d=q.map((v,k)=>v-cc[k]),l=Math.hypot(...d)||1;
+   const n=d.map(v=>v/l),p=cc.map((v,k)=>v+n[k]*RU);cubeV.push(...p,...n)}
+  for(let i=0;i<N-1;i++)for(let j=0;j<N-1;j++){const v0=base+i*N+j,v1=v0+1,v2=v0+N,v3=v2+1;cubeI.push(v0,v1,v3,v0,v3,v2)}
+ });}
+const cellP=prog(`layout(location=0) in vec3 aP;layout(location=1) in vec3 aN;layout(location=2) in vec3 iP;layout(location=3) in vec3 iS;layout(location=4) in vec4 iC;
+uniform mat4 uVP;out vec3 vN;out vec4 vC;out vec3 vL;
+void main(){vC=iC;vL=aN;gl_Position=uVP*vec4(aP*iS+iP,1.);vN=normalize(aN/iS);}`,
+`in vec3 vN;in vec4 vC;in vec3 vL;out vec4 o;
+void main(){vec3 n=normalize(vN);float l=max(dot(n,normalize(vec3(-.3,.9,.35))),0.);float side=1.-abs(n.y);
+  vec3 c=vC.rgb*(.5+.5*l)*(1.-side*.25)+vec3(.5,.55,.6)*pow(l,8.)*.12;
+  o=vec4(c,1.);}`);
+const haloP=prog(`layout(location=0) in vec2 aP;layout(location=2) in vec3 iP;layout(location=3) in vec3 iS;layout(location=4) in vec4 iC;
+uniform mat4 uVP;out vec2 vU;out vec4 vC;
+void main(){vU=aP;vC=iC;vec3 s=iS+vec3(.3,0.,.3)*(.4+iC.a*.6);gl_Position=uVP*vec4(iP+vec3(aP.x*s.x,iS.y*.5+.03,aP.y*s.z),1.);}`,
+`in vec2 vU;in vec4 vC;out vec4 o;
+void main(){float d=length(vU);float k=exp(-d*d*2.6)*vC.a;o=vec4(vC.rgb*k*.07,1.);}`);
+const stride=44;
+function instVao(maxN){
+  const vao=gl.createVertexArray();gl.bindVertexArray(vao);
+  let vb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(cubeV),gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,24,0);gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,3,gl.FLOAT,false,24,12);
+  const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(cubeI),gl.STATIC_DRAW);
+  const inb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,inb);gl.bufferData(gl.ARRAY_BUFFER,maxN*stride,gl.DYNAMIC_DRAW);
+  [[2,3,0],[3,3,12],[4,4,24]].forEach(([l,n,o])=>{gl.enableVertexAttribArray(l);gl.vertexAttribPointer(l,n,gl.FLOAT,false,stride,o);gl.vertexAttribDivisor(l,1)});
+  return{vao,buf:inb}
+}
+// halo 的几何：单位四边形，使用同一实例缓冲
+const quadVao=(buf)=>{const vao=gl.createVertexArray();gl.bindVertexArray(vao);
+  const qb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,qb);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,1,1,-1,-1,1,1,-1,1]),gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,2,gl.FLOAT,false,8,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  [[2,3,0],[3,3,12],[4,4,24]].forEach(([l,n,o])=>{gl.enableVertexAttribArray(l);gl.vertexAttribPointer(l,n,gl.FLOAT,false,stride,o);gl.vertexAttribDivisor(l,1)});
+  return vao};
+const uC={vp:U(cellP,'uVP')},uH={vp:U(haloP,'uVP')};
+
+/* ---------- 场景内容 ---------- */
+// 板：0 SSD，1 底层，2 中层，3 顶层。y 为中心高度。
+const plates=[
+ {w:PW,d:1.02,y:[-3.5,-3.5,-3.5],sc:[0,1,0]},
+ {w:PW,d:PD,y:[-1.7,-1.7,-1.7],sc:[1,1,1]},
+ {w:PW,d:PD,y:[0,.06,0],sc:[1,1,1]},
+ {w:PW,d:PD,y:[1.7,1.8,1.66],sc:[1,1,1]}
+];
+const ps=plates.map(p=>({y:p.y[0],s:p.sc[0]}));
+const WH=[.8,.82,.86],SIL=[.68,.71,.76],MID=[.46,.49,.54],DIM=[.13,.145,.17],SAP=[.6,.65,.82];
+const hsh=i=>(((i*2654435761)>>>0)%100);
+const inst=[[],[],[],[]];
+const add=(p,o)=>{inst[p].push(o)};
+const PMX=.36,PMZ=.3; // 板内边距
+// 底层 12×5
+{const cols=12,rows=5,aw=PW-PMX*2,ad=PD-PMZ*2,cw=aw/cols,cd=ad/rows;
+ for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const i=r*cols+c,h=hsh(i);
+  add(1,{x:-aw/2+cw*(c+.5),z:-ad/2+cd*(r+.5),sx:cw*.76,sz:cd*.7,sy:.07,
+   f:(c0)=>{const lit=[h<12,h<38,h<88];let k=0,col=[0,0,0];for(let s=0;s<3;s++){const w=c0.w[s];col=col.map((v,j)=>v+w*(lit[s]?SIL[j]:DIM[j]));k+=w*(lit[s]?(s===2?.7+.3*Math.sin(c0.t*1.2+c*.5+r):1):0)}
+    return{col:col.map(v=>v*(lit[2]&&c0.w[2]>.5?(.8+.2*Math.sin(c0.t*1.2+c*.5+r)):1)),glow:k,vis:1}}})}}
+// 中层：s0 左侧 18 个小块 + 右侧整块；s1 KV 缓存；s2 三块并拢
+{const aw=PW-PMX*2,ad=PD-PMZ*2;
+ // s0
+ for(let r=0;r<3;r++)for(let c=0;c<6;c++){const cw=(aw*.46)/6;
+  add(2,{x:-aw/2+cw*(c+.5),z:-ad/2+ad*.08+(ad*.84/3)*(r+.5),sx:cw*.78,sz:(ad*.84/3)*.72,sy:.08,d:(r*6+c)*18,
+   f:(c0)=>({col:WH.map(v=>v*.9),glow:.6,vis:c0.s(0,(r*6+c)*14)})})}
+ add(2,{x:aw*.26,z:0,sx:aw*.46,sz:ad*.84,sy:.09,
+   f:(c0)=>({col:[.54,.57,.62],glow:.6,vis:c0.s(0,260)})});
+ // s1 KV 5×12
+ const cols=12,rows=5,cw=aw/cols,cd=ad/rows;
+ for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+  let k=-1;if(r<3){if(c<12-3-r)k=r}else if(r===3){if(c<9)k=1}else{if(c<6)k=0}
+  const sh=k>=0&&c<3,col=k<0?DIM:sh?SAP:[WH,SIL,MID][k===0?0:k===1?1:2];
+  const i=r*cols+c;
+  add(2,{x:-aw/2+cw*(c+.5),z:-ad/2+cd*(r+.5),sx:cw*.78,sz:cd*.7,sy:.07,
+   f:(c0)=>({col:col,glow:k<0?0:.55+(sh?.3:0),vis:c0.s(1,i*9)})})}
+ // s2 三个算子，逐步并拢
+ [[-1,'投影'],[0,'注意力'],[1,'激活']].forEach(([n,t])=>{
+  add(2,{x:0,z:0,sx:aw*.3,sz:ad*.5,sy:.09,
+   f:(c0)=>{const m=c0.m;return{x:n*(aw*.36*(1-m)+aw*.3*m),col:MID.map((v,j)=>v+(SIL[j]-v)*m*.3),glow:.4+.1*m,vis:c0.s(2,0)}}})});
+ // 融合外框（四条细边）
+ [[0,-.28,.92,.014],[0,.28,.92,.014]].forEach(([x,z,w,d])=>{add(2,{x:0,z:z*ad,sx:aw*.92,sz:ad*.024,sy:.05,f:(c0)=>({col:WH,glow:.9,vis:c0.m>.6?c0.s(2,0):0})})});
+ [-.46,.46].forEach(x=>add(2,{x:x*aw,z:0,sx:aw*.012,sz:ad*.56,sy:.05,f:(c0)=>({col:WH,glow:.9,vis:c0.m>.6?c0.s(2,0):0})}));
+}
+// 顶层：s0 三条线；s1 三路流动；s2 八层扫描
+{const aw=PW-PMX*2,ad=PD-PMZ*2;
+ [[-.28,.92],[0,.64],[.28,.78]].forEach(([z,w],i)=>add(3,{x:-aw/2+aw*w/2,z:z*ad,sx:aw*w,sz:.045,sy:.05,
+  f:(c0)=>({col:WH,glow:.9,vis:c0.s(0,i*90)})}));
+ [[-.3,WH,.5],[0,SIL,.36],[.3,MID,.62]].forEach(([z,col,sp],li)=>{
+  for(let k=0;k<6;k++)add(3,{x:0,z:z*ad,sx:.46,sz:.12,sy:.06,
+   f:(c0)=>{const L=aw+.9,p=((c0.t*sp+k*(L/6))%L),x=-aw/2-.45+p,fade=Math.min(1,Math.min(p,L-p)/.5);return{x:x,col:col,glow:.8*fade,vis:c0.s(1,k*40)*fade}}})});
+ for(let k=0;k<8;k++)add(3,{x:0,z:-ad*.42+k*(ad*.84/7),sx:aw*.9,sz:.05,sy:.05,
+  f:(c0)=>{const q=.5+.5*Math.sin(c0.t*2.4-k*.7);return{col:SIL.map(v=>v*(.35+.65*q)),glow:q*.9,vis:c0.s(2,k*40)}}});
+}
+// SSD
+{const aw=PW-.5,ad=1.02-.34,cols=12,cw=aw/cols;
+ for(let c=0;c<cols;c++)add(0,{x:-aw/2+cw*(c+.5),z:0,sx:cw*.72,sz:ad*.7,sy:.06,f:(c0)=>({col:MID,glow:.3,vis:c0.s(1,c*25)})})}
+const bufs=inst.map(a=>instVao(a.length+4));
+const quadVaos=bufs.map(b=>quadVao(b.buf));
+const cpu=inst.map(a=>new Float32Array(a.length*11));
+
+/* ---------- 状态与渲染 ---------- */
+const W3=[1,0,0],tW=[1,0,0];
+let az=.62,el=.47,tAz=.62,tEl=.47,px=0,py=0,hov=false;
+const light=[.2,.6,.75];
+stage.addEventListener('pointermove',e=>{if(reduce)return;const r=stage.getBoundingClientRect();px=(e.clientX-r.left)/r.width-.5;py=(e.clientY-r.top)/r.height-.5;tAz=.62+px*.22;tEl=.47-py*.1;hov=true});
+stage.addEventListener('pointerleave',()=>{tAz=.62;tEl=.47;px=py=0});
+let backTex=null,tw=0,th=0;
+function size(){const dpr=Math.min(devicePixelRatio||1,2),w=Math.round(cv.clientWidth*dpr),h=Math.round(cv.clientHeight*dpr);
+  if(w!==tw||h!==th){tw=cv.width=w;th=cv.height=h;
+   if(backTex)gl.deleteTexture(backTex);backTex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,backTex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,w,h,0,gl.RGB,gl.UNSIGNED_BYTE,null);
+   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE)}
+  return dpr}
+const labels=[...document.querySelectorAll('.lbl')];
+let last=performance.now(),vis=true;
+new IntersectionObserver(es=>vis=es[0].isIntersecting).observe(stage);
+function frame(now){
+  requestAnimationFrame(frame);
+  if(!vis)return;
+  const dt=Math.min(.05,(now-last)/1000);last=now;const t=reduce?3:now/1000;const fl=reduce?0:Math.sin(t*.7);
+  const dpr=size();
+  // 场景权重与板的位置
+  for(let s=0;s<3;s++){const tgt=s===scene?1:0;W3[s]+= (tgt-W3[s])*(reduce?1:1-Math.exp(-dt*(tgt?2.6:5)))}
+  const sinceScene=(now-sceneT);
+  for(let i=0;i<4;i++){const p=plates[i];let ty=0,ts=0;for(let s=0;s<3;s++){ty+=p.y[s]*(s===scene?1:0);ts+=p.sc[s]*(s===scene?1:0)}
+    ps[i].y+=(ty-ps[i].y)*(reduce?1:1-Math.exp(-dt*3.2));ps[i].s+=(ts-ps[i].s)*(reduce?1:1-Math.exp(-dt*3.6))}
+  az+=(tAz-az)*(1-Math.exp(-dt*5));el+=(tEl-el)*(1-Math.exp(-dt*5));
+  const R=23,tg=[1.1,-.1,0];
+  const cam=[tg[0]+R*Math.cos(el)*Math.sin(az),tg[1]+R*Math.sin(el),tg[2]+R*Math.cos(el)*Math.cos(az)];
+  const aspect=tw/th,view=m4.look(cam,tg,[0,1,0]),proj=m4.persp(.31,aspect,1,60),vp=m4.mul(proj,view);
+  const ctx={w:W3,t,m:Math.max(0,Math.min(1,(W3[2]-.35)/.65)),
+    s:(sc,delay)=>{const w=W3[sc];if(sc!==scene)return w>.01?w:0;const k=Math.max(0,Math.min(1,(sinceScene-delay)/450));const e=1-Math.pow(1-k,3);return Math.min(e,w*1.4)}};
+  gl.viewport(0,0,tw,th);gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);
+  // 背景
+  gl.useProgram(bgP);gl.depthMask(false);gl.uniform2f(U(bgP,'uC'),.45,.46);gl.uniform1f(U(bgP,'uA'),1);gl.bindVertexArray(bgVao);gl.drawArrays(gl.TRIANGLES,0,3);gl.depthMask(true);
+  light[0]=-.1+px*.9+(reduce?0:Math.sin(t*.25)*.35);light[1]=.55-py*.5;light[2]=.75;const ll=Math.hypot(...light);
+  const order=[0,1,2,3];
+  for(const pi of order){
+    const P=plates[pi],y=ps[pi].y+fl*.025*(pi-1.5),sc=ps[pi].s;
+    if(sc<.02)continue;
+    // 内容
+    const arr=cpu[pi];let n=0;
+    inst[pi].forEach(o=>{const r=o.f(ctx);const v=(r.vis===undefined?1:r.vis);
+      const x=(r.x!==undefined?r.x:o.x)*sc,z=(r.z!==undefined?r.z:o.z)*sc;
+      const k=v*sc;
+      arr[n++]=x;arr[n++]=y-.045*sc;arr[n++]=z;arr[n++]=o.sx*k;arr[n++]=o.sy*Math.max(k,.0001);arr[n++]=o.sz*k;
+      arr[n++]=r.col[0];arr[n++]=r.col[1];arr[n++]=r.col[2];arr[n++]=r.glow*v;arr[n++]=0});
+    // 紧凑为 stride 44 字节：x y z sx sy sz r g b glow pad 已是 11 个 float
+    gl.bindBuffer(gl.ARRAY_BUFFER,bufs[pi].buf);gl.bufferSubData(gl.ARRAY_BUFFER,0,arr);
+    gl.useProgram(cellP);gl.uniformMatrix4fv(uC.vp,false,vp);gl.bindVertexArray(bufs[pi].vao);
+    // 属性布局：iP(0) iS(12) iC(24)；stride 44
+    gl.drawElementsInstanced(gl.TRIANGLES,cubeI.length,gl.UNSIGNED_SHORT,0,inst[pi].length);
+    gl.useProgram(haloP);gl.uniformMatrix4fv(uH.vp,false,vp);gl.bindVertexArray(quadVaos[pi]);
+    gl.blendFunc(gl.ONE,gl.ONE);gl.enable(gl.BLEND);gl.depthMask(false);
+    gl.drawArraysInstanced(gl.TRIANGLES,0,6,inst[pi].length);
+    gl.depthMask(true);gl.disable(gl.BLEND);
+    // 抓取已绘制内容，供玻璃折射
+    gl.bindTexture(gl.TEXTURE_2D,backTex);gl.copyTexSubImage2D(gl.TEXTURE_2D,0,0,0,0,0,tw,th);gl.generateMipmap(gl.TEXTURE_2D);
+    gl.useProgram(glassP);gl.activeTexture(gl.TEXTURE0);gl.uniform1i(uG.back,0);
+    gl.uniformMatrix4fv(uG.vp,false,vp);gl.uniformMatrix4fv(uG.view,false,view);
+    gl.uniform3f(uG.off,0,y,0);gl.uniform3f(uG.sc,sc*(P.w/PW),sc,sc*(P.d/PD));
+    gl.uniform3f(uG.cam,cam[0],cam[1],cam[2]);gl.uniform2f(uG.res,tw,th);gl.uniform1f(uG.t,t);gl.uniform3f(uG.light,light[0]/ll,light[1]/ll,light[2]/ll);
+    gl.bindVertexArray(slabVao);gl.drawElements(gl.TRIANGLES,slabN,gl.UNSIGNED_INT,0);
+  }
+  // 标签：跟随各板最右侧顶点
+  const W=cv.clientWidth,Hh=cv.clientHeight;
+  labels.forEach(el2=>{const pi=+el2.dataset.p,P=plates[pi],y=ps[pi].y,sc=ps[pi].s;
+    let best=null;for(const sx of[-1,1])for(const sz of[-1,1]){const wx=sx*P.w/2*sc,wz=sz*P.d/2*sc;
+      const c=[wx,y,wz,1],o=[0,0,0,0];for(let r=0;r<4;r++)o[r]=vp[r]*c[0]+vp[4+r]*c[1]+vp[8+r]*c[2]+vp[12+r]*c[3];
+      const X=(o[0]/o[3]*.5+.5)*W,Y=(1-(o[1]/o[3]*.5+.5))*Hh;if(!best||X>best[0])best=[X,Y]}
+    const lw=el2.offsetWidth||160,lx=Math.max(0,Math.min(best[0]+8,W-lw-2));el2.style.transform=`translate(${lx.toFixed(1)}px,${(best[1]-14).toFixed(1)}px)`});
+}
+go(0);requestAnimationFrame(frame);
+window.__ready=true;
+})();
+</script>
