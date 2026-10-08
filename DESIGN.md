@@ -83,6 +83,7 @@ RM-01 是高价值的本地 AI 推理硬件。用户描述的价格定位接近 
 ## 4. Logo 与字体
 
 - 深色页面使用 `assets/images/logo-white.svg`，保留原始矢量路径、比例和留白。不得拉伸、描边、加光晕或换成普通文字拼写。
+- 浏览器标签页图标统一使用黑色圆角方块与主页 Logo 的白色图形部分，保持原始矢量比例；SVG 为主，PNG 与根目录 ICO 提供兼容。
 - 首页左上角 Logo 在向下滚动的前 240px 内逐渐淡出，回到顶部恢复；完全隐藏后不接收点击和键盘焦点。其他菜单保持现有行为，图册与支持页 Logo 不变；减少动效模式下 Logo 保持可见。
 - 界面字体使用 Geist / Noto Sans SC；产品字标通过现有 `.rm-mark` 使用 Quantify RM。品牌名称 `RMinte AI` 整体使用该专属字体，包含其中的 `AI`；普通正文中的 AI 沿用界面字体。不要将品牌字体扩展到普通正文。
 - 字体加载（2026-10-06 起英文与中文页面不再请求 Google Fonts）：界面字体 Geist 和中文字体 Noto Sans SC 由本站自己提供（`assets/fonts/`，由 `website/scripts/build-fonts.py` 生成；大陆访客不再受 Google 字体域名连不上的影响）。Geist 直接使用 Google Fonts 提供的两个 Latin 切片原文件（latin、latin-ext，字重 300–800 每档一条 `@font-face`，与原来的 Google 样式表一致，所以字重落点和渲染都不变），声明在 `assets/brand.css`，页头预加载 latin 切片。Noto Sans SC 裁成 ASCII 加站内用到的汉字与标点（约 1,400 字，约 525 KB，字重 300–900），只在页面以中文显示时才请求 `assets/fonts/noto-sans-sc.css`：页头先判断语言（与 `i18n.js` 相同的顺序），运行时切换语言再补载，英、西、法访客不下载它。日文、韩文仍在对应语言显示时才从 Google 加载 Noto Sans JP／KR（这两种访客在大陆之外），页头不静态链接。中文文案出现子集里没有的字时运行 `python3 website/scripts/build-fonts.py` 重新生成，`--check` 核对是否缺字（缺字会退到系统字体，不会空白）。字重沿用现有：标题一般采用 500–550 的中等字重，正文一般采用 400；产品字标保留其 700 字重。

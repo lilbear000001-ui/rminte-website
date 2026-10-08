@@ -7,7 +7,7 @@ export function homePage(origin, defaultLang, RELEASE) {
  return `<!doctype html><html lang="${defaultLang==='zh'?'zh-CN':'en'}" class="support-theme"><head>
  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0d0f12">
  <title>TianshanOS OTA · RMinte</title>
- <link rel="icon" href="https://rminte.com/assets/images/favicon.png">
+ <link rel="icon" type="image/png" sizes="512x512" href="https://rminte.com/assets/images/favicon.png?v=20261009"><link rel="icon" type="image/svg+xml" sizes="any" href="https://rminte.com/assets/images/favicon.svg?v=20261009">
  <link rel="preload" href="https://rminte.com/assets/fonts/Geist-latin-v1800.woff2" as="font" type="font/woff2" crossorigin>
  <script>/* Chinese text is set in Noto Sans SC, served by rminte.com; request it only when the page is shown in Chinese */
  function loadChinese(){if(document.querySelector("link[data-sc]"))return;var l=document.createElement("link");l.rel="stylesheet";l.href="https://rminte.com/assets/fonts/noto-sans-sc.css";l.setAttribute("data-sc","");document.head.appendChild(l)}
