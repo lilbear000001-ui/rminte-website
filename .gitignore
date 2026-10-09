@@ -3,3 +3,4 @@
 .wrangler/
 outputs/
 rm01-website/images/hardware-scroll.mp4
+.font-cache/

@@ -69,7 +69,25 @@
     $$('[data-toc-target]').forEach((link) => {
       link.classList.toggle('active', link.dataset.tocTarget === active.id);
     });
+
+    // The chapter being read: the nearest h2 at or before the active heading, without its number
+    const chapter = active.tagName === 'H2' ? active : headings.filter((heading) => heading.tagName === 'H2' && heading.offsetTop <= active.offsetTop).pop();
+    const chapterName = chapter ? chapter.textContent.replace(/^\s*\d+\.\s*/, '').trim() : '';
+    const crumb = $('[data-guide-crumb-chapter]');
+    if (crumb) {
+      crumb.textContent = chapterName;
+      crumb.hidden = !chapterName;
+      const separator = $('[data-guide-crumb-sep]');
+      if (separator) separator.hidden = !chapterName;
+    }
+    const current = $('[data-guide-toc-current]');
+    if (current) current.textContent = active.textContent.replace(/^\s*\d+\.\s*/, '').trim();
   }
+
+  const TITLE_PHRASES = {
+    ja: /((?:ユーザー|ページ操作|運用)ガイド|ネットワーク|セキュリティ)/g,
+    zh: /(日常使用指南|运维指南|安全页面|完整操作指南|网络配置指南)/g,
+  };
 
   function applyLanguage(nextLang, headingKey = null) {
     lang = nextLang;
@@ -78,11 +96,15 @@
 
     $$('[data-guide-text]').forEach((element) => {
       const value = RM_I18N.text(element.dataset, lang);
-      if (value !== undefined) element.textContent = value;
-      if (lang === 'ja' && element.matches('h1')) {
-        const phrases = /((?:ユーザー|ページ操作|運用)ガイド|ネットワーク|セキュリティ)/g;
+      // Catalog titles may carry a line break meant for card headings; a breadcrumb is one line (ja joins the halves, the others use a space)
+      if (value !== undefined) element.textContent = element.closest('.guide-breadcrumb') ? value.replace(/\s*\n\s*/g, lang === 'ja' ? '' : ' ') : value;
+      if (TITLE_PHRASES[lang] && element.matches('h1')) {
+        // Japanese and Chinese titles may break between any two characters: keep each phrase whole, so a narrow phone breaks between phrases
+        // ("日常使用指南" must not become "日" + "常使用指南").
+        const phrases = TITLE_PHRASES[lang];
+        const whole = new RegExp(`^${phrases.source}$`);
         element.replaceChildren(...value.split(phrases).filter(Boolean).map(part => {
-          if (!/^(?:(?:ユーザー|ページ操作|運用)ガイド|ネットワーク|セキュリティ)$/.test(part)) return document.createTextNode(part);
+          if (!whole.test(part)) return document.createTextNode(part);
           const phrase = document.createElement('span');
           phrase.className = 'guide-title-phrase';
           phrase.textContent = part;
@@ -108,7 +130,9 @@
     RM_I18N.apply(lang);
 
     refreshSearch();
+    setupExamples();
     markBrandText();
+    updateScrollableRegions();
 
     if (headingKey) {
       requestAnimationFrame(() => {
@@ -169,9 +193,12 @@
     if (!overlay || !button) return;
 
     overlay.inert = true;
+    // While the full-screen menu is open nothing behind it may be reached from the keyboard (the overlay covers the page and the menu button)
+    const pageParts = ['.skip-link', '.site-shell', 'main', 'body > .footer'].map((selector) => $(selector)).filter(Boolean);
     function setOpen(open) {
       const restoreFocus = !open && overlay.contains(document.activeElement);
       overlay.inert = !open;
+      pageParts.forEach((part) => { part.inert = open; });
       if (open) requestAnimationFrame(() => $('[data-menu-close]')?.focus({ preventScroll: true }));
       else if (restoreFocus) button.focus({ preventScroll: true });
       overlay.classList.toggle('active', open);
@@ -192,6 +219,7 @@
   function setupCopyButtons() {
     const data = pageData();
     $$('[data-copy-code]').forEach((button) => {
+      button.setAttribute('aria-live', 'polite'); // "Copied" / "Copy failed" replace the label: say so to a screen reader too
       button.addEventListener('click', async () => {
         const code = $('code', button.closest('.guide-code'));
         if (!code) return;
@@ -270,6 +298,22 @@
         render();
       });
 
+    // The words the reader typed are underlined (sapphire) in the title and the snippet of each result
+    function highlight(text, currentQuery) {
+      const words = currentQuery.split(' ').filter(Boolean).map((word) => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+      const fragment = document.createDocumentFragment();
+      if (!words.length) { fragment.append(text); return fragment; }
+      text.split(new RegExp(`(${words.join('|')})`, 'gi')).forEach((part, index) => {
+        if (index % 2) {
+          const hit = document.createElement('span');
+          hit.className = 'guide-hit';
+          hit.textContent = part;
+          fragment.append(hit);
+        } else if (part) fragment.append(part);
+      });
+      return fragment;
+    }
+
     function createResult(entry, currentQuery) {
       const link = document.createElement('a');
       link.className = `guide-search-result guide-search-result-${entry.guide}`;
@@ -280,11 +324,12 @@
       meta.textContent = `${entry.guideLabel} · ${RM_I18N.names[entry.lang]}`;
 
       const title = document.createElement('strong');
-      title.textContent = entry.title;
+      title.append(highlight(entry.title, currentQuery));
 
       const snippet = document.createElement('span');
       snippet.className = 'guide-search-result-snippet';
-      snippet.textContent = resultSnippet(entry, currentQuery);
+      const snippetText = resultSnippet(entry, currentQuery);
+      snippet.append(highlight(snippetText, currentQuery));
 
       const arrow = document.createElement('span');
       arrow.className = 'guide-search-result-arrow';
@@ -292,7 +337,7 @@
       arrow.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;flex-shrink:0;pointer-events:none" aria-hidden="true" focusable="false"><path d="M7 17 17 7M7 7h10v10"/></svg>';
 
       link.append(meta, title);
-      if (snippet.textContent !== entry.title) link.append(snippet);
+      if (snippetText !== entry.title) link.append(snippet);
       link.append(arrow);
       return link;
     }
@@ -377,9 +422,68 @@
 
     refreshSearch = render;
     void indexPromise;
+
+    // Cmd/Ctrl + K moves to the search box; the hint shows the key for this platform
+    const mac = /Mac|iPhone|iPad/i.test(navigator.platform || navigator.userAgent);
+    $$('[data-guide-kbd]').forEach((hint) => { hint.textContent = mac ? '⌘ K' : 'Ctrl K'; });
+    document.addEventListener('keydown', (event) => {
+      if (!(event.metaKey || event.ctrlKey) || event.altKey || event.key.toLowerCase() !== 'k') return;
+      const input = $$('[data-guide-search-input]').find((field) => field.offsetParent !== null);
+      if (!input) return;
+      event.preventDefault();
+      input.focus();
+      input.select();
+    });
+  }
+
+  // "Try: A, B, C": each example becomes a button that fills the search box (the sentence itself is unchanged)
+  function setupExamples() {
+    $$('.guide-search-hint').forEach((hint) => {
+      const match = hint.textContent.match(/^(.*?[:：]\s*)(.+)$/);
+      if (!match) return;
+      const terms = match[2].split(/(?:、|，|,\s*)/).map((term) => term.trim()).filter(Boolean);
+      if (terms.length < 2) return;
+      const separators = match[2].match(/(?:、|，|,\s*)/g) || [];
+      hint.replaceChildren(match[1]);
+      terms.forEach((term, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'guide-search-term';
+        button.textContent = term;
+        button.addEventListener('click', () => {
+          const input = $$('[data-guide-search-input]').find((field) => field.offsetParent !== null);
+          if (!input) return;
+          input.value = term;
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          input.focus();
+        });
+        hint.append(button);
+        if (index < separators.length) hint.append(separators[index]);
+      });
+    });
+  }
+
+  // A table or a code block wider than its column scrolls sideways inside its box. The box is reachable from the keyboard only while it really
+  // scrolls (hidden language panes have no width and stay out of the tab order).
+  function updateScrollableRegions() {
+    $$('.guide-table-wrap, .guide-code pre').forEach((box) => {
+      if (box.clientWidth > 0 && box.scrollWidth > box.clientWidth + 1) {
+        // a focusable region needs a name: use the heading that introduces it (no new wording)
+        let heading = (box.closest('.guide-code') || box).previousElementSibling;
+        while (heading && !/^H[2-4]$/.test(heading.tagName)) heading = heading.previousElementSibling;
+        box.setAttribute('tabindex', '0');
+        box.setAttribute('role', 'region');
+        if (heading && heading.id) box.setAttribute('aria-labelledby', heading.id);
+      } else {
+        ['tabindex', 'role', 'aria-labelledby'].forEach((name) => box.removeAttribute(name));
+      }
+    });
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('resize', updateScrollableRegions);
+    document.fonts?.addEventListener('loadingdone', updateScrollableRegions); // a late-arriving CJK face changes how wide the text is
+    document.fonts?.ready.then(updateScrollableRegions);
     setupLanguage();
     setupMenu();
     setupToc();

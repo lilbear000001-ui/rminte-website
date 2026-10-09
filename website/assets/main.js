@@ -62,11 +62,14 @@
     });
     const title = $('[data-hero-title]');
     if (title) {
-      title.replaceChildren(...ui('heroTitle').split('\n').map((line) => textEl('span', line, 'hero-title-line')));
+      title.replaceChildren(...ui('heroTitle').split('\n').map((line) => {
+        const outer = document.createElement('span');
+        outer.className = 'hero-title-line';
+        outer.dataset.enter = 'line';
+        outer.append(textEl('span', line, 'line-in'));
+        return outer;
+      }));
     }
-
-    const close = $('[data-menu-close]');
-    if (close) close.textContent = ui('closeMenu');
   }
 
   function renderNav() {
@@ -182,26 +185,100 @@
   function renderMetrics() {
     const root = $('#heroMetrics');
     if (!root) return;
+    let glyphs = 0;
     root.replaceChildren(...data.metrics.map((metric, index) => {
       const item = document.createElement('div');
       item.className = 'metric';
       item.style.setProperty('--i', index);
-      item.append(textEl('strong', metric.value), textEl('span', t(metric.label)));
+      // "140W" shows its unit set apart; values such as 7x24 and 30B-200B stay whole.
+      // Every character gets its own span (.ch) and a running index, so the row can light up left to right.
+      let [, number, unit] = /^(\d+)([A-Za-z]+)$/.exec(metric.value) || [];
+      let label = t(metric.label);
+      // A Chinese measure word that opens the caption ("路峰值并发") belongs to the figure before it: "64路" is the value, "峰值并发" the caption.
+      const counter = !unit && /^\d+$/.test(metric.value) ? /^[路个条台次]/.exec(label)?.[0] : undefined;
+      if (counter) { number = metric.value; unit = counter; label = label.slice(1); }
+      const value = document.createElement('strong');
+      const glyph = (character, className) => {
+        const el = document.createElement('span');
+        el.className = `ch ${className}`.trim();
+        el.style.setProperty('--ci', glyphs++);
+        el.textContent = character;
+        return el;
+      };
+      value.append(...[...(number || metric.value)].map((character) => glyph(character, '')));
+      if (unit) {
+        const wrap = document.createElement('span');
+        wrap.className = 'unit';
+        wrap.append(...[...unit].map((character) => glyph(character, 'is-unit')));
+        value.append(wrap);
+      }
+      item.append(value, textEl('span', label));
       return item;
     }));
+    // After the first draw (a language switch), the figures stay lit instead of sweeping again.
+    root.classList.toggle('is-settled', Boolean(root.dataset.drawn));
+    root.dataset.drawn = '1';
+  }
+
+  // One spec cell: each number stays large and the unit right after it is set small, in the order the text gives them.
+  // "512GB–2TB NVMe" becomes 512 GB–2 TB with "NVMe" as a note beneath; text with no number (x86) stays whole.
+  function specCell(text) {
+    const cell = document.createElement('li');
+    cell.className = 'spec-cell';
+    const value = document.createElement('span');
+    value.className = 'spec-value';
+    const notes = [];
+    let seenNumber = false;
+    let unitDue = false;
+    let cursor = 0;
+    for (const match of text.matchAll(/\d+(?:[.,]\d+)?|\p{L}[\p{L}\d]*[,、・]?/gu)) {
+      const [token] = match;
+      const gap = text.slice(cursor, match.index);
+      cursor = match.index + token.length;
+      if (/^\d/.test(token)) {
+        value.append(gap, token);
+        seenNumber = unitDue = true;
+      } else if (unitDue) {
+        if (gap) value.append(textEl('span', gap, 'gap'));
+        value.append(textEl('i', token));
+        unitDue = false;
+      } else if (seenNumber) {
+        notes.push(token);
+      } else {
+        value.append(gap, token);
+      }
+    }
+    const rest = text.slice(cursor).trim(); // anything left after the last token (stray punctuation) is kept, never dropped
+    if (rest) {
+      if (seenNumber) notes.push(rest);
+      else value.append(rest);
+    }
+    cell.append(value);
+    if (notes.length) cell.append(textEl('span', notes.join(' '), 'spec-note'));
+    return cell;
+  }
+
+  function specGrid(spec) {
+    const grid = document.createElement('ul');
+    grid.className = 'spec-grid';
+    grid.append(...spec.split(/\s+[\/·]\s+/).map(specCell));
+    return grid;
   }
 
   function renderModules() {
     const root = $('#moduleBento');
     if (!root) return;
+    const featured = 2; // the first two modules are the large cards
     root.replaceChildren(...data.modules.map((module, index) => {
-      const spec = textEl('span', t(module.spec), 'module-spec');
+      const isFeature = index < featured;
+      const spec = t(module.spec);
       const card = cardShell([
         textEl('h3', t(module.name)),
         textEl('p', t(module.text)),
-        spec
-      ], 'module-card reveal');
-      card.dataset.revealDelay = String(index * 60);
+        isFeature ? specGrid(spec) : textEl('span', spec, 'module-spec')
+      ], `module-card${isFeature ? ' is-feature' : ''} reveal`);
+      card.firstElementChild.dataset.bevel = '';
+      card.dataset.revealDelay = String(index * 70);
       return card;
     }));
   }
@@ -211,10 +288,9 @@
   const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 
   function updateEngine() {
-    document.getElementById('engineArt').dataset.scene = Math.max(0, expandedEngine);
-    document.getElementById('ecosystemLabel').textContent = ['C++ · vLLM', RM_I18N.text({zh: '并发请求', en: 'Concurrent requests'}, lang), RM_I18N.text({zh: '模型 · 应用', en: 'Model · Application'}, lang)][Math.max(0, expandedEngine)];
-    const label = expandedEngine === 1 ? {zh: '分页 KV 缓存', en: 'Paged KV Cache'} : {zh: 'RMinte 推理引擎', en: 'RMinte Inference'};
-    writeMarkedText(document.getElementById('kernelLabel'), lang === 'zh' || lang === 'en' ? label.en : t(label));
+    // The glass figure (assets/engine-glass.js) follows the open topic; a collapsed list shows the first scene.
+    const scene = Math.max(0, expandedEngine);
+    window.RMEngineGlass.setScene(scene, [0, 1, 2].map(index => ui(`egAria${index}`)));
     document.querySelectorAll('[data-engine-toggle]').forEach((button, index) => {
       button.setAttribute('aria-expanded', String(index === expandedEngine));
       document.getElementById(`engineDetail${index}`).hidden = index !== expandedEngine;
@@ -238,7 +314,6 @@
   }
 
   function renderExperience() {
-    document.getElementById('engineArt').setAttribute('aria-label', RM_I18N.text({zh: '推理软件与 CUDA 计算平台的分层示意', en: 'Software layers above the CUDA compute platform'}, lang));
     document.getElementById('networkGraph').setAttribute('aria-label', RM_I18N.text({zh: '两台计算模组分别经以太网控制器和 PHY 接入板载交换机，ESP32 经 W5500 接入并拥有自己的配置存储；两台计算机各有独立存储。', en: 'Each computer connects through an Ethernet controller and PHY to the onboard switch and has dedicated storage. ESP32 connects through W5500 and has its own configuration storage.'}, lang));
     document.getElementById('engineReading').innerHTML = data.engine.map((item, index) => `<article class="engine-topic">
       <h3><button class="engine-topic-toggle" type="button" id="engineToggle${index}" data-engine-toggle="${index}" aria-expanded="${index === expandedEngine}" aria-controls="engineDetail${index}">${escapeHtml(t(item.title))}<svg class="topic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></button></h3>
@@ -541,10 +616,16 @@
     requestUpdate();
   }
 
+  // While the full-screen menu is open nothing behind it may be reached from the keyboard (the overlay covers the page and the menu button)
+  function setPageInert(inert) {
+    ['.skip-link', '.site-shell', 'main', 'body > .footer'].forEach((selector) => { const part = $(selector); if (part) part.inert = inert; });
+  }
+
   function openMenu() {
     const overlay = $('#mobileOverlay');
     const button = $('[data-menu-toggle]');
     if (!overlay || !button) return;
+    setPageInert(true);
     overlay.inert = false;
     overlay.classList.add('active');
     requestAnimationFrame(() => $('[data-menu-close]')?.focus({ preventScroll: true }));
@@ -560,6 +641,7 @@
     if (!overlay || !button) return;
     const restoreFocus = overlay.contains(document.activeElement);
     overlay.inert = true;
+    setPageInert(false);
     overlay.classList.remove('active');
     if (restoreFocus) button.focus({ preventScroll: true });
     overlay.setAttribute('aria-hidden', 'true');
@@ -772,19 +854,50 @@
     update();
   }
 
+  // Hero entrance order: eyebrow, title lines, lead, then the button and the figures together,
+  // so the whole sequence stays under 1.2s (the 70ms steps live in the stylesheet).
+  function orderHeroEntrance() {
+    const items = $$('.hero-section [data-enter]');
+    items.forEach((el, index) => el.style.setProperty('--e', Math.min(index, items.length - 2)));
+  }
+
+  // The figures light up left to right when the row comes into view, and again each time it comes back.
+  // Reduced motion needs no script: the stylesheet shows them lit.
+  function setupFigures() {
+    const row = $('#heroMetrics');
+    if (!row || row.dataset.watched || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    row.dataset.watched = '1';
+    let played = false, finished = 0, total = 0;
+    // When the last character has been scanned the row goes back to ordinary text, exactly as it was drawn before the sweep existed.
+    row.addEventListener('animationend', (event) => {
+      if (event.animationName === 'figure-scan' && ++finished >= total) row.classList.add('is-done');
+    });
+    const lightUp = () => {
+      row.classList.remove('is-settled', 'is-lit', 'is-done');
+      row.style.setProperty('--ch-base', played ? '100ms' : ''); // first time: wait for the row's own entrance
+      void row.offsetWidth; // restart the CSS animation
+      finished = 0;
+      total = row.querySelectorAll('.ch').length;
+      row.classList.add('is-lit');
+      played = true;
+    };
+    if (!('IntersectionObserver' in window)) return lightUp();
+    new IntersectionObserver(([entry]) => (entry.isIntersecting ? lightUp() : row.classList.remove('is-lit', 'is-done')), { threshold: 0.6 }).observe(row);
+  }
+
   function renderAll() {
     setUiText();
     renderNav();
     renderMetrics();
     renderModules();
     renderExperience();
+    orderHeroEntrance();
+    setupFigures();
     setupReveal();
     setupActiveNav();
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    $('.compute-grid').innerHTML = '<i></i>'.repeat(96);
-    $('.memory-grid').innerHTML = '<i></i>'.repeat(48);
     renderAll();
     setupControls();
     setupThermalScroll();

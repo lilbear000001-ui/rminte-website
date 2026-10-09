@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="data:,">
+<title>推理引擎 · three.js 玻璃动效试点</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap">
+<style>
+/* Pilot page. Layout and tokens follow the site (DESIGN.md v2): black, graphite, silver; sapphire only as a hairline accent.
+   Fonts come from the production folder (read only); nothing in website/ is modified. */
+@font-face{font-family:"Quantify RM";src:url("../../website/assets/fonts/Quantify-Bold.ttf") format("truetype");font-weight:700;font-display:swap}
+@font-face{font-family:"Geist Mono";src:url("../../website/assets/fonts/GeistMono-Regular.woff2") format("woff2");font-weight:400;font-display:swap}
+:root{
+  --n0:#000;--t1:#F2F4F6;--t2:#B6BCC4;--t3:#858C95;--line1:rgba(255,255,255,.08);--sap3:#A8B8F0;
+  --cjk:'Noto Sans SC';
+  --ui:'Geist',var(--cjk),system-ui,sans-serif;--mono:'Geist Mono',var(--cjk),ui-monospace,monospace;
+  --settle:cubic-bezier(.32,.72,0,1);
+  color-scheme:dark;
+}
+html[lang=ja]{--cjk:'Noto Sans JP'}
+html[lang=ko]{--cjk:'Noto Sans KR'}
+*{box-sizing:border-box}
+html{background:var(--n0)}
+body{background:var(--n0);color:var(--t1);font-family:var(--ui);margin:0;padding-inline:max(16px,4vw);padding-block:56px 72px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:1240px;margin:0 auto}
+.rm-mark{font-family:"Quantify RM","Geist",sans-serif;font-weight:700;letter-spacing:.035em;white-space:nowrap}
+.eyebrow{display:flex;align-items:center;gap:10px;font:500 11px/1 var(--ui);letter-spacing:.16em;color:var(--t2)}
+.eyebrow svg{width:12px;height:12px;flex:none}
+h1{font-size:clamp(34px,5.2vw,64px);font-weight:500;letter-spacing:-.045em;line-height:1.1;margin:22px 0 18px;text-wrap:balance}
+.lead{max-width:640px;font-size:17px;line-height:1.85;color:var(--t2);margin:0}
+.exp{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:center;margin-top:24px}
+.topic{border-bottom:1px solid var(--line1);padding:24px 0}
+.topic:first-child{padding-top:0}.topic:last-child{border-bottom:0;padding-bottom:0}
+.topic h3{margin:0;font:inherit}
+.tg{all:unset;box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:space-between;gap:20px;cursor:pointer;font:500 21px/1.5 var(--ui);letter-spacing:-.015em;color:var(--t3);transition:color 240ms var(--settle)}
+.tg:hover,.tg[aria-expanded=true]{color:var(--t1)}
+.tg:focus-visible{outline:2px solid var(--sap3);outline-offset:6px;border-radius:2px}
+.tg svg{width:18px;height:18px;flex:none;transition:transform 240ms var(--settle)}
+.tg[aria-expanded=true] svg{transform:rotate(180deg)}
+.det{display:grid;grid-template-rows:0fr;transition:grid-template-rows 480ms var(--settle)}
+.det>div{overflow:hidden}
+.topic.on .det{grid-template-rows:1fr}
+.det p{font-size:16px;line-height:1.9;color:var(--t2);margin:16px 0 0}
+html[lang=en] .det p,html[lang=es] .det p,html[lang=fr] .det p{line-height:1.7}
+
+/* The stage: a WebGL canvas with flat HTML labels beside the plates. Nothing is written on the glass itself. */
+.stage{overflow-x:clip;position:relative;aspect-ratio:1.08;min-width:0;width:100%;max-width:760px;margin:0 auto;touch-action:pan-y}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tag{position:absolute;left:0;top:0;font:400 11px/1 var(--mono);letter-spacing:.12em;color:var(--t3);z-index:1}
+.lbl{position:absolute;left:0;top:0;opacity:0;transition:opacity 240ms var(--settle);pointer-events:none;display:flex;align-items:center;gap:10px;will-change:transform;z-index:1}
+.lbl::before{content:"";width:28px;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.55),rgba(255,255,255,.1));flex:none}
+.lbl b{display:block;font:500 14px/1.3 var(--ui);color:var(--t1);white-space:nowrap}
+.lbl .sub{display:block;font:400 11px/1.4 var(--mono);color:var(--t3);margin-top:3px;white-space:nowrap}
+[data-scene="0"] .l0,[data-scene="1"] .l1,[data-scene="2"] .l2{opacity:1;transition:opacity 480ms var(--settle) 300ms}
+.nogl{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:24px;text-align:center;color:var(--t3);font:400 13px/1.7 var(--mono)}
+.stage.is-nogl .nogl{display:flex}
+.stage.is-nogl .lbl,.stage.is-nogl .tag{display:none}
+
+.langs{display:flex;flex-wrap:wrap;gap:8px;margin:56px 0 0}
+.langs button{all:unset;box-sizing:border-box;cursor:pointer;min-height:32px;padding:0 14px;display:inline-flex;align-items:center;border:1px solid rgba(255,255,255,.14);border-radius:999px;font:500 13px/1 var(--ui);color:var(--t2);transition:color 240ms var(--settle),border-color 240ms var(--settle)}
+.langs button:hover{color:var(--t1);border-color:rgba(255,255,255,.24)}
+.langs button[aria-pressed=true]{color:#000;background:var(--t1);border-color:var(--t1)}
+.langs button:focus-visible{outline:2px solid var(--sap3);outline-offset:3px}
+.hud{position:fixed;right:8px;bottom:8px;margin:0;padding:6px 8px;font:400 11px/1.5 var(--mono);color:var(--t2);background:rgba(0,0,0,.72);border:1px solid var(--line1);border-radius:4px;z-index:9;white-space:pre;display:none}
+.hud.on{display:block}
+@media (max-width:900px){.exp{grid-template-columns:1fr}}
+@media (max-width:520px){.lbl .sub{display:none}.lbl b{font-size:13px}}
+@media (prefers-reduced-motion:reduce){.tg,.tg svg,.det,.lbl,[data-scene] .lbl,.langs button{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="#A8B8F0" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h20L12 21z"/></svg><span id="chapter"></span></div>
+  <h1 id="title"></h1>
+  <p class="lead" id="lead"></p>
+  <div class="exp">
+    <figure class="stage" id="stage" data-scene="0" style="margin-block:0">
+      <canvas id="gl" aria-hidden="true"></canvas>
+      <p class="nogl" id="nogl" data-ui="egNoGl"></p>
+      <span class="tag" data-ui="egTag"></span>
+      <div class="lbl l0" data-p="3"><div><b data-ui="egL0P3T"></b><span class="sub" data-ui="egL0P3S"></span></div></div>
+      <div class="lbl l0" data-p="2"><div><b data-ui="egL0P2T"></b><span class="sub" data-ui="egL0P2S"></span></div></div>
+      <div class="lbl l0" data-p="1"><div><b data-ui="egL0P1T"></b><span class="sub" data-ui="egL0P1S"></span></div></div>
+      <div class="lbl l1" data-p="3"><div><b data-ui="egL1P3T"></b><span class="sub" data-ui="egL1P3S"></span></div></div>
+      <div class="lbl l1" data-p="2"><div><b data-ui="egL1P2T"></b><span class="sub" data-ui="egL1P2S"></span></div></div>
+      <div class="lbl l1" data-p="1"><div><b data-ui="egL1P1T"></b><span class="sub" data-ui="egL1P1S"></span></div></div>
+      <div class="lbl l1" data-p="0"><div><b data-ui="egL1P0T"></b><span class="sub" data-ui="egL1P0S"></span></div></div>
+      <div class="lbl l2" data-p="3"><div><b data-ui="egL2P3T"></b><span class="sub" data-ui="egL2P3S"></span></div></div>
+      <div class="lbl l2" data-p="2"><div><b data-ui="egL2P2T"></b><span class="sub" data-ui="egL2P2S"></span></div></div>
+      <div class="lbl l2" data-p="1"><div><b data-ui="egL2P1T"></b><span class="sub" data-ui="egL2P1S"></span></div></div>
+    </figure>
+    <div id="rd"></div>
+  </div>
+  <nav class="langs" id="langs" aria-label="Language"></nav>
+</div>
+<pre class="hud" id="hud" aria-hidden="true"></pre>
+
+<!-- Copy for the title, lead and the three topics is read from the production data file (read only). -->
+<script src="../../website/assets/site-data.js"></script>
+<script type="module">
+import {UI, LANGS, LOCALE} from './engine-glass.i18n.js';
+
+const q = new URLSearchParams(location.search);
+const NAMES = {zh: '中文', en: 'EN', ja: '日本語', ko: '한국어', es: 'Español', fr: 'Français'};
+let lang = LANGS.includes(q.get('lang')) ? q.get('lang') : 'zh';
+let scene = Math.min(2, Math.max(0, Number(q.get('scene')) || 0));
+const reduced = matchMedia('(prefers-reduced-motion:reduce)').matches || q.get('motion') === 'reduce';
+const D = window.RM_SOFT;
+const $ = (s, r = document) => r.querySelector(s);
+const stage = $('#stage');
+
+/* ---------- language: catalogs are loaded on demand, like assets/i18n.js ---------- */
+window.RM_TRANSLATIONS = window.RM_TRANSLATIONS || {};
+const loading = {};
+function loadCatalog(l) {
+  if (l === 'zh' || l === 'en' || window.RM_TRANSLATIONS[l]) return Promise.resolve();
+  return loading[l] ||= new Promise(res => {
+    const s = document.createElement('script');
+    s.src = `../../website/assets/translations/${l}.js`;
+    s.onload = s.onerror = () => res();
+    document.head.append(s);
+  });
+}
+function tx(pair, l = lang) {
+  if (l === 'zh' || l === 'en') return pair[l];
+  return window.RM_TRANSLATIONS[l]?.[pair.en] ?? pair.en;
+}
+const CJK_FONT = {zh: 'Noto+Sans+SC:wght@400;500', ja: 'Noto+Sans+JP:wght@400;500', ko: 'Noto+Sans+KR:wght@400;500'};
+const fontsAdded = new Set();
+function loadFont(l) {
+  const f = CJK_FONT[l];
+  if (!f || fontsAdded.has(l)) return;
+  fontsAdded.add(l);
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = `https://fonts.googleapis.com/css2?family=${f}&display=swap`;
+  document.head.append(link);
+}
+// RMinte is set in the brand face wherever it appears (same rule as writeMarkedText in assets/main.js)
+function write(el, text) {
+  if (!text.includes('RMinte')) { el.textContent = text; return; }
+  el.replaceChildren(...text.split(/(RMinte)/).filter(Boolean).map(part => {
+    if (part !== 'RMinte') return document.createTextNode(part);
+    const m = document.createElement('span'); m.className = 'rm-mark'; m.textContent = part; return m;
+  }));
+}
+
+/* ---------- page copy ---------- */
+const CHEVRON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>';
+const rd = $('#rd');
+rd.innerHTML = D.engine.map((_, i) => `<article class="topic" data-i="${i}"><h3><button class="tg" type="button" id="tg${i}" aria-expanded="false" aria-controls="dt${i}"><span></span>${CHEVRON}</button></h3><div class="det" id="dt${i}" role="region" aria-labelledby="tg${i}"><div><p></p></div></div></article>`).join('');
+const langNav = $('#langs');
+langNav.innerHTML = LANGS.map(l => `<button type="button" data-lang="${l}" lang="${LOCALE[l]}">${NAMES[l]}</button>`).join('');
+
+function applyLang() {
+  document.documentElement.lang = LOCALE[lang];
+  loadFont(lang);
+  const ui = key => tx({zh: D.ui.zh[key], en: D.ui.en[key]});
+  write($('#chapter'), ui('chapter1'));
+  write($('#title'), ui('engineTitle'));
+  write($('#lead'), ui('engineLead'));
+  D.engine.forEach((item, i) => {
+    write($(`#tg${i} span`), tx(item.title));
+    write($(`#dt${i} p`), tx(item.text));
+  });
+  document.querySelectorAll('[data-ui]').forEach(el => write(el, UI[lang][el.dataset.ui]));
+  stage.setAttribute('aria-label', UI[lang]['egAria' + scene]);
+  langNav.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+}
+function setScene(i, fromUser) {
+  scene = i;
+  stage.dataset.scene = i;
+  document.querySelectorAll('.topic').forEach((t, k) => {
+    t.classList.toggle('on', k === i);
+    t.querySelector('.tg').setAttribute('aria-expanded', String(k === i));
+  });
+  stage.setAttribute('aria-label', UI[lang]['egAria' + i]);
+  engine?.setScene(i);
+}
+async function setLang(l, fromUser) {
+  await loadCatalog(l);
+  lang = l;
+  applyLang();
+  if (fromUser) {
+    const url = new URL(location.href); url.searchParams.set('lang', l); history.replaceState(null, '', url);
+  }
+  engine?.relayout();
+}
+rd.addEventListener('click', e => { const b = e.target.closest('.tg'); if (b) setScene(+b.closest('.topic').dataset.i, true); });
+langNav.addEventListener('click', e => { const b = e.target.closest('button'); if (b) setLang(b.dataset.lang, true); });
+
+/* ---------- the stage ---------- */
+let engine = null;
+const hud = $('#hud');
+await loadCatalog(lang);
+applyLang();
+setScene(scene);
+try {
+  const {createEngineGlass} = await import('./engine-glass.js');
+  engine = createEngineGlass(stage, {
+    reduced,
+    debug: q.has('debug') || q.has('hud'),
+    options: Object.fromEntries(q),
+    onStats: text => { hud.textContent = text; hud.classList.add('on'); }
+  });
+  if (!engine.ok) throw new Error(engine.reason);
+  engine.setScene(scene, true);
+  window.__engine = engine;
+} catch (error) {
+  console.info('Engine diagram unavailable:', error.message || error);
+  stage.classList.add('is-nogl');
+  engine = null;
+}
+window.__ready = true;
+</script>
+</body>
+</html>

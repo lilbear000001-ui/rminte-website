@@ -4,8 +4,13 @@
   <meta charset="UTF-8">
   <script>
     // Reveal after deferred localization; without JavaScript the source page stays readable.
-    document.documentElement.classList.add('i18n-loading');
-    document.addEventListener('DOMContentLoaded', () => document.documentElement.classList.remove('i18n-loading'), { once: true });
+    // motion-js lets the hero start hidden, motion-ready (two frames after the page is shown) starts its entrance.
+    const root = document.documentElement;
+    root.classList.add('i18n-loading', 'motion-js');
+    document.addEventListener('DOMContentLoaded', () => {
+      root.classList.remove('i18n-loading');
+      requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('motion-ready')));
+    }, { once: true });
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="RM-01 便携 AI 超算，面向本地部署、低功耗推理和生产级 AI 应用交付。" data-i18n-attr="content" data-zh="RM-01 便携 AI 超算，面向本地部署、低功耗推理和生产级 AI 应用交付。" data-en="RM-01 Portable AI Supercomputer for local deployment, low-power inference, and production AI applications.">
@@ -13,14 +18,35 @@
   <meta property="og:description" content="RM-01 便携 AI 超算，面向本地部署、低功耗推理和生产级 AI 应用交付。" data-i18n-attr="content" data-zh="RM-01 便携 AI 超算，面向本地部署、低功耗推理和生产级 AI 应用交付。" data-en="RM-01 Portable AI Supercomputer for local deployment, low-power inference, and production AI applications.">
   <meta property="og:image" content="assets/images/img4.png">
   <title data-zh="RM-01 便携 AI 超算 · RMinte" data-en="RM-01 Portable AI Supercomputer · RMinte">RM-01 便携 AI 超算 · RMinte</title>
-  <link rel="icon" type="image/png" sizes="512x512" href="assets/images/favicon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&amp;family=Noto+Sans+SC:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/images/favicon.png?v=20261009"><link rel="icon" type="image/svg+xml" sizes="any" href="assets/images/favicon.svg?v=20261009">
+  <link rel="preload" href="assets/fonts/Geist-latin-v1800.woff2" as="font" type="font/woff2" crossorigin>
   <meta name="theme-color" content="#000000">
-  <script src="visitor-language.js" defer></script>
-  <script src="assets/translations.js?v=agent-module-20260923" defer></script>
-  <script src="assets/i18n.js" defer></script>
+  <script>
+    // ja/ko/es/fr carry their own catalog file; zh and en need none. Resolve the language the way i18n.js does and load only that file.
+    (function (up) {
+      var ok = /^(zh|en|ja|ko|es|fr)$/, c = window.RM_CATALOG = { base: up + 'assets/translations/', v: 'catalogs-20261004' };
+      c.load = function () {
+        var s; try { s = localStorage.getItem('rm-soft-lang'); } catch (e) {}
+        var l = [new URLSearchParams(location.search).get('lang'), (location.hash.match(/^#(zh|en|ja|ko|es|fr)-/) || [])[1], s, window.RM_DEFAULT_LANG].filter(function (x) { return ok.test(x); })[0];
+        if (l && l !== 'zh' && l !== 'en') document.write('<script src="' + c.base + l + '.js?v=' + c.v + '" defer><\/script>');
+        if (l) c.fonts(l);
+        return l;
+      };
+      // Each CJK face is requested only when its language is shown: every page used to ask for Noto Sans SC, JP and KR (about 0.9 MB of fonts and
+      // 210 KB of stylesheet that English, Spanish and French visitors never use). While the head is parsing, document.write keeps the link
+      // render-blocking like a static one; i18n.js calls this again (late) when the visitor switches language.
+      var cjk = { zh: 'assets/fonts/noto-sans-sc.css', ja: 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap', ko: 'https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap' };
+      c.fonts = function (l, late) {
+        if (!cjk[l] || document.querySelector('link[data-cjk="' + l + '"]')) return;
+        var h = /^https:/.test(cjk[l]) ? cjk[l] : up + cjk[l];
+        if (late || document.readyState !== 'loading') { var k = document.createElement('link'); k.rel = 'stylesheet'; k.href = h; k.setAttribute('data-cjk', l); document.head.appendChild(k); }
+        else document.write('<link rel="stylesheet" href="' + h + '" data-cjk="' + l + '">');
+      };
+      if (!c.load()) document.write('<script src="' + up + 'visitor-language.js"><\/script><script>RM_CATALOG.load()<\/script>');
+    })('');
+  </script>
+  <script src="assets/demo-copy.js?v=catalogs-20261004" defer></script>
+  <script src="assets/i18n.js?v=catalogs-20261004" defer></script>
   <script>
     (function () {
       if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -33,13 +59,17 @@
       }
     })();
   </script>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/brand.css?v=product-black-1">
-  <link rel="stylesheet" href="assets/styles.css?v=craft-footer-1">
-  <script src="assets/site-data.js?v=agent-module-20260923" defer></script>
-  <script src="assets/home-architecture.js?v=architecture-610b2b5" defer></script>
-  <script src="assets/main.js?v=craft-footer-1" defer></script>
-  <script src="assets/footer.js?v=models-launch-1" defer></script>
+  <script src="assets/motion.js?v=stage2-2" defer></script>
+  <link rel="preload" href="assets/fonts/GeistPixel-Circle.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/brand.css?v=v2-core-2">
+  <link rel="stylesheet" href="assets/styles.css?v=stage3-1">
+  <link rel="stylesheet" href="assets/tianshanos-demo-modal.css">
+  <script src="assets/site-data.js?v=inference-specs-20261007" defer></script>
+  <script src="assets/home-architecture.js?v=motion-d9-1" defer></script>
+  <script src="assets/engine-glass.js?v=d9-1" defer></script>
+  <script src="assets/main.js?v=stage2-1" defer></script>
+  <script src="assets/tianshanos-demo-modal.js" defer></script>
+  <script src="assets/footer.js?v=d9-nav-1" defer></script>
 </head>
 <body class="home-body">
   <a class="skip-link" href="#main" data-i18n-text data-zh="跳至主要内容" data-en="Skip to main content">跳至主要内容</a>
@@ -48,7 +78,7 @@
     <a class="brand-mark" href="#hero" aria-label="RMinte">
       <img src="assets/images/logo-white.svg" alt="RMinte">
     </a>
-    <nav class="nav-island" id="desktopNav" aria-label="页面导航" data-i18n-aria-label-zh="页面导航" data-i18n-aria-label-en="Page navigation"></nav>
+    <nav class="nav-island" data-bevel id="desktopNav" aria-label="页面导航" data-i18n-aria-label-zh="页面导航" data-i18n-aria-label-en="Page navigation"></nav>
     <div class="nav-actions">
       <button class="language-toggle" type="button" data-lang-toggle>EN</button>
       <button class="menu-button" type="button" aria-label="打开菜单" aria-controls="mobileOverlay" aria-expanded="false" data-menu-toggle data-i18n-aria-label-zh="打开菜单" data-i18n-aria-label-en="Open menu">
@@ -62,7 +92,7 @@
     <div class="mobile-overlay-panel">
       <div class="mobile-overlay-top">
         <img class="mobile-menu-logo" src="assets/images/logo-white.svg" alt="RMinte">
-        <button class="ghost-button" type="button" data-menu-close>关闭</button>
+        <button class="menu-close" type="button" aria-label="关闭" data-menu-close data-i18n-aria-label-zh="关闭" data-i18n-aria-label-en="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
       </div>
       <nav class="mobile-links" id="mobileNav" aria-label="移动导航" data-i18n-aria-label-zh="移动导航" data-i18n-aria-label-en="Mobile navigation"></nav>
     </div>
@@ -70,24 +100,24 @@
 
   <main id="main">
     <section class="hero-section" id="hero" aria-labelledby="heroTitle">
-      <video class="hero-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
-        <source src="assets/images/hero-bg.mp4?v=20260907-trim" type="video/mp4">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="assets/images/hero-bg-poster.jpg" aria-hidden="true">
+        <source src="assets/images/hero-bg.mp4?v=20261003-silent" type="video/mp4">
       </video>
       <div class="hero-shade" aria-hidden="true"></div>
-      <div class="section-inner hero-grid reveal">
+      <div class="section-inner hero-grid">
         <div class="hero-copy">
-          <p class="chapter-label hero-eyebrow"><span data-ui="chapter0">为模型推理及AI应用原生设计</span></p>
-          <h1 id="heroTitle" data-hero-title><span class="hero-title-line"><span class="rm-mark">RM-01</span></span><span class="hero-title-line">让 AI 在本地，</span><span class="hero-title-line">为你工作</span></h1>
-          <p class="hero-lead" data-ui="heroLead">RM-01 为模型推理与 Agent 应用运行提供各自独立的计算空间，让智能在你的业务现场持续行动、交付结果。</p>
-          <div class="hero-actions">
-            <a class="cta-button" href="#teardown">
+          <p class="chapter-label hero-eyebrow" data-enter="rise"><svg class="prism" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M2 3h20L12 21z"/></svg><span data-ui="chapter0">为模型推理及AI应用原生设计</span></p>
+          <h1 id="heroTitle" data-hero-title><span class="hero-title-line" data-enter="line"><span class="line-in"><span class="rm-mark">RM-01</span></span></span><span class="hero-title-line" data-enter="line"><span class="line-in">让 AI 在本地，</span></span><span class="hero-title-line" data-enter="line"><span class="line-in">为你工作</span></span></h1>
+          <p class="hero-lead" data-ui="heroLead" data-enter="rise">RM-01 为模型推理与 Agent 应用运行提供各自独立的计算空间，让智能在你的业务现场持续行动、交付结果。</p>
+          <div class="hero-actions" data-enter="rise">
+            <a class="cta-button" href="#teardown" data-bevel>
               <span data-ui="explore">继续探索</span>
               <svg class="cta-dot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
             </a>
           </div>
-          <div class="hero-metrics-row" id="heroMetrics" aria-label="RM-01 核心指标" data-i18n-aria-label-zh="RM-01 核心指标" data-i18n-aria-label-en="RM-01 key specifications"></div>
         </div>
       </div>
+      <div class="section-inner hero-metrics-row" id="heroMetrics" data-enter="rise" role="group" aria-label="RM-01 核心指标" data-i18n-aria-label-zh="RM-01 核心指标" data-i18n-aria-label-en="RM-01 key specifications"></div>
       <a class="scroll-cue" href="#engine">
         <span data-ui="scroll">继续向下</span>
         <span aria-hidden="true" style="display:inline-flex;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;flex-shrink:0;pointer-events:none" aria-hidden="true" focusable="false"><path d="M12 5v14m-5-5 5 5 5-5"/></svg></span>
@@ -98,16 +128,24 @@
       <div class="section-inner">
         <div class="section-heading visual-heading">
           <p class="chapter-label" data-ui="chapter1">推理引擎</p>
-          <h2 id="engineTitle" data-ui="engineTitle" data-title-size="large">让有限的算力，承载更多任务</h2>
+          <h2 id="engineTitle" data-ui="engineTitle" data-title-size="large">让算力，承载更多任务</h2>
           <p data-ui="engineLead">自研推理引擎提高算力与显存利用率，减少资源消耗。更大模型、更长上下文与更多并发任务，由此获得运行空间。</p>
         </div>
         <div class="engine-experience">
-          <figure class="engine-art" id="engineArt" aria-label="推理软件与 CUDA 计算平台的分层示意" data-i18n-aria-label-zh="推理软件与 CUDA 计算平台的分层示意" data-i18n-aria-label-en="Layered view of inference software and the CUDA computing platform">
-            <div class="software-stack" aria-hidden="true">
-              <div class="stack-plane stack-base"><span>NVIDIA CUDA</span><div class="compute-grid"></div></div>
-              <div class="stack-plane stack-kernel"><span id="kernelLabel"><span class="rm-mark">RMinte</span> Inference</span><div class="memory-grid"></div></div>
-              <div class="stack-plane stack-ecosystem"><span id="ecosystemLabel">C++ · vLLM</span><div class="model-lines"><i></i><i></i><i></i></div></div>
-            </div>
+          <figure class="engine-art" id="engineArt" data-scene="0" aria-label="推理软件与 CUDA 计算平台的分层示意">
+            <canvas class="engine-glass" id="engineGlass" aria-hidden="true"></canvas>
+            <img class="engine-still" data-src="assets/images/engine-glass-still.webp" alt="" width="1520" height="1406" aria-hidden="true">
+            <span class="engine-tag" data-ui="egTag">示意图</span>
+            <div class="engine-label l0" data-plate="3"><div><b data-ui="egL0P3T">模型与接口</b><span data-ui="egL0P3S">Hugging Face · OpenAI 兼容</span></div></div>
+            <div class="engine-label l1" data-plate="3"><div><b data-ui="egL1P3T">并发请求</b><span data-ui="egL1P3S">连续批处理</span></div></div>
+            <div class="engine-label l2" data-plate="3"><div><b data-ui="egL2P3T">模型</b><span data-ui="egL2P3S">投影合并 · 算子融合</span></div></div>
+            <div class="engine-label l0" data-plate="2"><div><b data-ui="egL0P2T">RMinte 推理层</b><span data-ui="egL0P2S">定制 vLLM · C++ 引擎</span></div></div>
+            <div class="engine-label l1" data-plate="2"><div><b data-ui="egL1P2T">分页 KV 缓存</b><span data-ui="egL1P2S">前缀复用 · 递归状态</span></div></div>
+            <div class="engine-label l2" data-plate="2"><div><b data-ui="egL2P2T">融合算子</b><span data-ui="egL2P2S">减少数据搬运</span></div></div>
+            <div class="engine-label l0" data-plate="1"><div><b data-ui="egL0P1T">NVIDIA CUDA</b><span data-ui="egL0P1S">计算平台</span></div></div>
+            <div class="engine-label l1" data-plate="1"><div><b data-ui="egL1P1T">显存 / 内存</b><span data-ui="egL1P1S">上下文容量</span></div></div>
+            <div class="engine-label l2" data-plate="1"><div><b data-ui="egL2P1T">GPU 算力</b><span data-ui="egL2P1S">带宽与缓存</span></div></div>
+            <div class="engine-label l1" data-plate="0"><div><b data-ui="egL1P0T">SSD</b><span data-ui="egL1P0S">分层扩展上下文</span></div></div>
           </figure>
           <div class="engine-reading" id="engineReading"></div>
         </div>
@@ -120,6 +158,7 @@
           <p class="chapter-label" data-ui="chapter2">整机协同</p>
           <h2 id="productTitle" data-ui="productTitle" data-title-size="large">TianshanOS 让整机协同有序</h2>
           <p data-ui="productLead">一台设备的运行，离不开内部各个部分的配合。TianshanOS 管理 RM-01 的内部设备与系统行为，让推理、应用与存储共同工作。无需专门建设供电、网络与机房环境，RM-01 就能走进业务现场。</p>
+          <button class="cta-button system-demo-action" type="button" data-bevel aria-haspopup="dialog" aria-controls="tsDemoModal" data-demo-open><span data-ui="systemDemoAction">查看界面演示</span><svg class="cta-dot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button>
         </div>
         <figure class="network-graph" id="networkGraph" aria-label="两台计算机分别经以太网控制器和 PHY 接入板载交换机，ESP32 经 W5500 接入并拥有配置存储；两台计算机各有独立存储。" data-i18n-aria-label-zh="两台计算机分别经以太网控制器和 PHY 接入板载交换机，ESP32 经 W5500 接入并拥有配置存储；两台计算机各有独立存储。" data-i18n-aria-label-en="Both computers connect to the onboard switch through Ethernet controllers and PHYs. ESP32 connects through W5500 and has configuration storage. Each computer has its own storage."></figure>
         <div class="system-reading" id="systemReading"></div>
@@ -166,7 +205,7 @@
 
     <section class="thermal-section" id="thermal" aria-labelledby="thermalTitle">
       <video class="thermal-bg-video" autoplay muted loop playsinline preload="metadata" poster="assets/images/thermal-airflow-poster.jpg" aria-hidden="true">
-        <source src="assets/images/thermal-airflow-loop-hd.mp4?v=3" type="video/mp4">
+        <source src="assets/images/thermal-airflow-loop-hd.mp4?v=4" type="video/mp4">
       </video>
       <div class="thermal-shade" aria-hidden="true"></div>
       <div class="section-inner thermal-stage">
@@ -177,7 +216,7 @@
         </div>
         <figure class="thermal-detail">
           <div class="thermal-detail-photo">
-            <img src="assets/images/thermal-fan-blade.png" alt="EricLake 定制风扇叶片微距特写" width="1254" height="1254" loading="lazy" decoding="async" data-i18n-alt-zh="EricLake 定制风扇叶片微距特写" data-i18n-alt-en="Macro photograph of an EricLake custom fan blade">
+            <img src="assets/images/thermal-fan-blade.webp" alt="EricLake 定制风扇叶片微距特写" width="1254" height="1254" loading="lazy" decoding="async" data-i18n-alt-zh="EricLake 定制风扇叶片微距特写" data-i18n-alt-en="Macro photograph of an EricLake custom fan blade">
           </div>
           <figcaption><strong>0.13 <small>mm</small></strong><span data-ui="thermalDetailCaption">超高速射出成型叶片承担持续散热</span></figcaption>
         </figure>
@@ -290,7 +329,7 @@
             </article>
             <article class="craft-story-panel">
               <figure class="craft-story-photo">
-                <img src="assets/images/craft-card-slot-detail.png" alt="工艺公差工艺细节" loading="lazy" decoding="async" data-i18n-alt-zh="工艺公差工艺细节" data-i18n-alt-en="Manufacturing tolerance detail">
+                <img src="assets/images/craft-card-slot-detail.webp" alt="工艺公差工艺细节" loading="lazy" decoding="async" data-i18n-alt-zh="工艺公差工艺细节" data-i18n-alt-en="Manufacturing tolerance detail">
               </figure>
               <div class="craft-story-text">
                 <p class="craft-story-value">＜0.03 <small>mm</small></p>
@@ -307,7 +346,7 @@
               <img src="assets/images/logo-white.svg" alt="RMinte">
               <div>
               <p data-ui="footer">泛灵（成都）人工智能科技有限公司</p>
-              <span data-ui="copyright">© 2026 <span class="rm-mark">RMinte</span> ( Chengdu ) Artificial Intelligence Technology Co., Ltd. · RM-01 Protable AI Supercomputer</span>
+              <span data-ui="copyright">© 2026 <span class="rm-mark">RMinte</span> ( Chengdu ) Artificial Intelligence Technology Co., Ltd. · RM-01 Portable AI Supercomputer</span>
               </div>
             </div>
             <div class="footer-actions">
@@ -326,8 +365,22 @@
 
   </main>
 
-  <aside class="contact-popover" id="contactPopover" role="dialog" aria-labelledby="contactTitle" aria-hidden="true" data-contact-popover>
-    <div class="contact-card">
+  <div class="demo-modal" id="tsDemoModal" role="dialog" aria-modal="true" aria-labelledby="tsDemoTitle" aria-hidden="true" data-demo-modal>
+    <div class="demo-modal-panel">
+      <div class="demo-modal-head">
+        <h2 id="tsDemoTitle" data-i18n-text data-zh="TianshanOS 界面演示" data-en="TianshanOS interface demo">TianshanOS 界面演示</h2>
+        <button class="demo-modal-close" type="button" aria-label="关闭演示" data-i18n-aria-label-zh="关闭演示" data-i18n-aria-label-en="Close demo" data-demo-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <div class="demo-modal-content">
+        <p class="demo-modal-note" data-i18n-text data-zh="以下为 TianshanOS 界面演示，数据仅供展示，不代表真实设备状态。" data-en="This is a TianshanOS interface demo. All data is illustrative and does not represent a real device.">以下为 TianshanOS 界面演示，数据仅供展示，不代表真实设备状态。</p>
+        <iframe id="ts-demo" data-src="/tianshanos-demo/index.html" title="天山OS 界面预览" data-i18n-title-zh="天山OS 界面预览" data-i18n-title-en="TianshanOS interface preview"></iframe>
+        <p class="demo-mobile-message" data-i18n-text data-zh="请用电脑查看完整演示。" data-en="Please use a computer to view the full demo.">请用电脑查看完整演示。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-popover" id="contactPopover" role="dialog" aria-labelledby="contactTitle" aria-hidden="true" data-contact-popover>
+    <div class="contact-card" data-bevel>
       <div class="contact-card-core">
         <div class="contact-top">
           <div>
@@ -356,6 +409,6 @@
         </div>
       </div>
     </div>
-  </aside>
+  </div>
 </body>
 </html>

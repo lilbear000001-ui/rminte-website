@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>标志性设计语言</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+@font-face{font-family:"Geist Pixel";src:url("/_blob/ef2f0a0417c71c384aa2a7deedce473f") format("woff2")}
+body{margin:0;background:#000}
+.r{width:1440px;box-sizing:border-box;background:#000;color:#F2F4F6;font-family:"Geist","Noto Sans SC",sans-serif;-webkit-font-smoothing:antialiased;padding:96px;display:flex;flex-direction:column;gap:64px}
+.r h1,.r h2,.r h3,.r p{margin:0}
+.k{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#858C95}
+.m{font-size:13px;line-height:1.75;color:#B6BCC4}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.mv{position:relative;display:flex;flex-direction:column;gap:20px;padding:36px;border-radius:16px;background:#0D0F12;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);overflow:hidden;min-height:480px}
+.mv:before{content:"";position:absolute;left:24px;right:24px;top:0;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.32),rgba(255,255,255,0))}
+.mv h2{font-size:28px;font-weight:500;letter-spacing:-.025em}
+.stage{flex:1;display:flex;align-items:center;justify-content:center;min-height:200px;border-radius:8px;background:#000;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);position:relative;overflow:hidden}
+.use{display:grid;grid-template-columns:72px 1fr;row-gap:6px;font-size:12px;line-height:1.7}
+.use b{font-weight:500;color:#858C95}
+.use span{color:#B6BCC4}
+.chip{display:inline-flex;align-items:center;gap:8px;height:30px;padding:0 14px;border-radius:999px;font-size:12px;color:#B6BCC4;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+</style>
+</helmet>
+<div class="r">
+
+<div style="display:flex;flex-direction:column;gap:24px">
+<span class="k">Signature · 让官网只属于 RM-01</span>
+<h1 style="font-size:72px;font-weight:500;letter-spacing:-.04em;line-height:1.02">标志性设计语言</h1>
+<p style="font-size:20px;line-height:1.6;color:#B6BCC4;max-width:900px">不借用行业模板，只从产品本身取材：蓝宝石窗口的三角、前面板的 LED 点阵、机身倒角上的一线反光、散热的冷暖气流。五个手法，贯穿所有页面，互相呼应。</p>
+<p class="m" style="color:#858C95">带「D6 / D7」的项目需要你确认：D6 = 采用 Geist Pixel（OFL 开源，与 Geist 同一家族）；D7 = 图册显示照片真实 EXIF。</p>
+</div>
+
+<div class="g2">
+
+<div class="mv">
+<span class="k">01 · 棱镜 Prism</span>
+<h2>蓝宝石窗口，变成一枚符号</h2>
+<div class="stage" style="gap:56px">
+<svg width="132" height="132" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 3h20L12 21z" stroke="#A8B8F0" stroke-width=".7" stroke-linejoin="round"/><path d="M6.6 5.9h10.8L12 15.2z" fill="rgba(168,184,240,.28)" stroke="rgba(168,184,240,.7)" stroke-width=".35" stroke-linejoin="round"/></svg>
+<div style="display:flex;flex-direction:column;gap:22px">
+<div style="display:flex;align-items:center;gap:12px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 3h20L12 21z" stroke="#A8B8F0" stroke-width="2" stroke-linejoin="round"/></svg><span style="font-size:11px;letter-spacing:.14em;color:#B6BCC4">热管理</span></div>
+<div style="width:132px;height:84px;position:relative;background:url(/_blob/b01e1334f1f482fe813d5db697bbbdf0) center/cover;clip-path:polygon(8% 4%,92% 4%,50% 96%)"></div>
+</div>
+</div>
+<div class="use"><b>章节标记</b><span>取代现在的短横线，章节名左侧一枚 12px 空心棱镜。</span><b>光标</b><span>悬停影像时，光标变成棱镜 + 「查看」。</span><b>转场</b><span>页面切换用三角形光圈展开（480ms，reveal 缓动）。</span><b>边界</b><span>只描边与 12% 填充，不发光；每屏最多出现一次大尺寸。</span></div>
+</div>
+
+<div class="mv">
+<span class="k">02 · LED 点阵数字 <b style="color:#A8B8F0;font-weight:500">D6</b></span>
+<h2>数字像前面板那样亮起</h2>
+<div class="stage" style="flex-direction:column;gap:14px">
+<div style="font-family:'Geist Pixel',monospace;font-size:132px;line-height:1;letter-spacing:-.02em;display:flex;align-items:baseline;gap:10px">140<span style="font-size:36px;color:#A8B8F0">W</span></div>
+<div style="font-family:'Geist Pixel',monospace;font-size:28px;color:#585F69;letter-spacing:.02em">138 → 139 → 140</div>
+</div>
+<div class="use"><b>用在哪</b><span>首屏指标、规格大数字、图册计数。进入视口时从 0 逐位点亮，1.2s。</span><b>为什么</b><span>RM-01 前面板本身就是圆点 LED 矩阵；这套字体与 Geist 同家族，授权为 OFL。</span><b>边界</b><span>只用于数字与单位，不用于标题和正文；小于 28px 改回 Geist Mono，保证清晰。</span></div>
+</div>
+
+<div class="mv">
+<span class="k">03 · 倒角边缘光</span>
+<h2>一线反光，跟着指针走</h2>
+<div class="stage" style="gap:28px;background:#000">
+<div style="position:relative;width:240px;height:150px;border-radius:16px;background:#0D0F12;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);overflow:hidden"><div style="position:absolute;top:0;left:12%;width:120px;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.8),rgba(255,255,255,0))"></div><div style="position:absolute;left:22px;top:26px;font-size:11px;letter-spacing:.14em;color:#858C95">推理模块</div></div>
+<div style="position:relative;width:240px;height:150px;border-radius:16px;background:#0D0F12;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);overflow:hidden"><div style="position:absolute;top:0;left:52%;width:120px;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.8),rgba(255,255,255,0))"></div><div style="position:absolute;left:22px;top:26px;font-size:11px;letter-spacing:.14em;color:#858C95">应用模块</div></div>
+</div>
+<div class="use"><b>用在哪</b><span>所有卡片、按钮、搜索框。指针经过时，顶边的高光段跟随指针横向移动。</span><b>为什么</b><span>像灯光扫过阳极氧化铝的倒角——这是金属的反应，不是发光特效。</span><b>边界</b><span>只有 1px 线，无模糊、无阴影；触屏与减少动效时固定在中间。</span></div>
+</div>
+
+<div class="mv">
+<span class="k">04 · 遥测栏 Telemetry</span>
+<h2>像设备一样报告自己在哪</h2>
+<div class="stage" style="justify-content:flex-start;padding-left:56px;gap:40px">
+<div style="display:flex;flex-direction:column;gap:0;position:relative;padding-left:20px;border-left:1px solid rgba(255,255,255,.14)">
+<div style="position:absolute;left:-1px;top:70px;width:1px;height:28px;background:#A8B8F0"></div>
+<span style="font-family:'Geist Mono',monospace;font-size:11px;color:#585F69;line-height:2.6">推理引擎</span>
+<span style="font-family:'Geist Mono',monospace;font-size:11px;color:#585F69;line-height:2.6">机身展开</span>
+<span style="font-family:'Geist Mono',monospace;font-size:11px;color:#F2F4F6;line-height:2.6">热管理</span>
+<span style="font-family:'Geist Mono',monospace;font-size:11px;color:#585F69;line-height:2.6">蓝宝石</span>
+<span style="font-family:'Geist Mono',monospace;font-size:11px;color:#585F69;line-height:2.6">绒光玻璃</span>
+</div>
+<div style="font-family:'Geist Mono',monospace;font-size:11px;line-height:1.9;color:#858C95">SECTION  热管理<br>SCROLL   42%<br>LANG     zh-CN</div>
+</div>
+<div class="use"><b>用在哪</b><span>首页与长文页的左侧细栏：当前章节、滚动进度。只显示名称，不带序号。</span><b>为什么</b><span>长页面里给人方向感，也是「硬件产品」的语气。</span><b>边界</b><span>≥1280px 才显示；手机隐藏；不遮挡内容。</span></div>
+</div>
+
+<div class="mv" style="grid-column:1 / -1;min-height:0">
+<span class="k">05 · 冷暖线 Thermal line</span>
+<h2>全站唯一允许的渐变：热量</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
+<div class="stage" style="min-height:170px;padding:0 32px;justify-content:flex-start">
+<svg width="520" height="120" viewBox="0 0 520 120" fill="none" aria-hidden="true"><defs><linearGradient id="tl" x1="0" x2="1"><stop offset="0" stop-color="#E58B5A"/><stop offset=".55" stop-color="#C79AA8"/><stop offset="1" stop-color="#6E86E0"/></linearGradient></defs><path d="M0 20 C120 24 170 30 230 62 S400 104 520 100" stroke="url(#tl)" stroke-width="2" stroke-linecap="round"/><path d="M0 119.5H520" stroke="rgba(255,255,255,.08)"/></svg>
+</div>
+<div class="use" style="grid-template-columns:72px 1fr"><b>用在哪</b><span>热管理章节的温度示意、模型评测发布后的曲线、功耗条。暖色 #E58B5A 代表热，蓝宝石 #6E86E0 代表被带走的热。</span><b>为什么</b><span>来自散热视频里真实的气流颜色，是产品自带的色彩语言。</span><b>边界</b><span>只在数据线与细条上出现，宽度 ≤ 2px；不做背景渐变，不做按钮渐变。（示意曲线，非实测数据。）</span></div>
+</div>
+</div>
+
+</div>
+
+<div style="display:flex;flex-wrap:wrap;gap:12px"><span class="chip">守住：纯黑 / 银白 / 真实影像</span><span class="chip">守住：不发光、不蓝紫渐变</span><span class="chip">守住：滚动叙事与蓝宝石参数</span><span class="chip">新增：5 个源自产品的手法</span></div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1700}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

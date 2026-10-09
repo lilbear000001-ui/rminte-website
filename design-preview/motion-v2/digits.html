@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>点阵数字逐位点亮 · 动效原型</title>
+<link rel="stylesheet" href="motion.css">
+<style>
+  .spacer { min-height: 62vh; display: grid; place-items: end start; color: var(--n-6); font-size: 13px; padding-bottom: 24px; }
+  .stage { padding: 56px 0 72px; border-top: 1px solid var(--line-1); }
+  /* Hero metric row as specified: 1px line, 40px sapphire stub, Geist Pixel figures at 56px (32px on phones). */
+  .metrics { --fig: 56px; position: relative; display: grid; grid-template-columns: .85fr .9fr .9fr 1.25fr; max-width: 760px; padding-top: 26px; border-top: 1px solid var(--line-2); }
+  .metrics::before { content: ""; position: absolute; left: 0; top: -1px; width: 40px; height: 1px; background: var(--sapphire-300); }
+  .metrics.phone { --fig: 32px; grid-template-columns: 1fr 1fr; gap: 28px 0; max-width: 360px; }
+  .metric { padding: 0 28px; min-width: 0; }
+  .metric:first-child { padding-left: 0; }
+  .metrics:not(.phone) .metric + .metric { border-left: 1px solid var(--line-1); }
+  .metrics.phone .metric { padding: 0; border: 0 !important; }
+  .fig { position: relative; display: inline-flex; align-items: flex-end; height: calc(var(--fig) * 1.3); font: 400 var(--fig)/1 var(--font-pixel); letter-spacing: 0; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .fig canvas { display: block; margin-bottom: calc(var(--fig) * .069); } /* puts the lattice baseline where the font's baseline sits */
+  .cap { display: block; margin-top: 10px; font-size: 11px; line-height: 1.5; color: var(--n-7); }
+  .ch { --lit: var(--n-9); --dim: #20262c; color: var(--lit); }
+  .ch.unit { --lit: var(--sapphire-300); --dim: #262c3e; }
+  .ch.sep { --lit: var(--n-8); --dim: #20262c; }
+  /* variant: sweep — a hard-edged scan line crosses each character, lighting dots as it passes */
+  .v-sweep .ch { color: transparent; background: linear-gradient(90deg, var(--lit) 50%, var(--dim) 50%) 100% 0 / 200% 100% no-repeat; -webkit-background-clip: text; background-clip: text; }
+  .v-fade .ch { color: var(--dim); }
+  .v-dots .ch { position: absolute; left: 0; bottom: 0; opacity: 0; pointer-events: none; }
+  .row { display: flex; gap: 40px; flex-wrap: wrap; align-items: flex-end; margin-top: 18px; }
+  .rm-note { color: var(--n-7); font-size: 12px; margin-top: 10px; }
+</style>
+</head>
+<body class="motion-demo">
+<div class="wrap">
+  <div class="topbar"><a href="index.html">← 动效原型</a><span>LED 点阵数字 · 逐位点亮</span><span class="tag">PROTOTYPE · 未进入生产</span></div>
+  <span class="label"><i class="prism"><svg viewBox="0 0 12 11"><path d="M1.2 1.2h9.6L6 9.8z"/></svg></i>首屏指标行</span>
+  <h1>点阵数字逐位点亮</h1>
+  <p>Geist Pixel（Circle）只用于数字与单位。数字进入视口时，从暗态逐位点亮，总长 1.2s；单位用蓝宝石色。三种做法放在一起，用上方控制条切换，向下滚动可以验证「进入视口才触发」。</p>
+  <ul class="notes">
+    <li><b>逐位扫描</b>：一条硬边扫描线依次划过每个字符，点阵被一列列点亮；纯 CSS，文字仍是真文字。</li>
+    <li><b>逐位渐亮</b>：字符按顺序从暗灰亮到银白（一次极短的提亮后落回），最稳、最省。</li>
+    <li><b>点阵点亮</b>：把字形拆成一颗颗圆点，自左向右带一点随机地逐点点亮，像 LED 面板自检；用 canvas 覆盖，真实文字保留给读屏和复制。</li>
+  </ul>
+
+  <div class="controls">
+    <div class="seg" role="radiogroup" aria-label="做法">
+      <input type="radio" name="v" id="v-sweep" value="sweep" checked><label for="v-sweep">逐位扫描</label>
+      <input type="radio" name="v" id="v-fade" value="fade"><label for="v-fade">逐位渐亮</label>
+      <input type="radio" name="v" id="v-dots" value="dots"><label for="v-dots">点阵点亮</label>
+    </div>
+    <label>总时长 <input id="dur" type="range" min="600" max="2400" step="100" value="1200"><output id="durOut">1.2 s</output></label>
+    <label><input id="phone" type="checkbox"> 手机尺寸 32px</label>
+    <label><input id="rm" type="checkbox"> 模拟「减少动效」</label>
+    <button class="btn" id="replay" type="button">重播</button>
+  </div>
+
+  <div class="spacer">↓ 向下滚动，指标行进入视口时自动点亮；滚出再滚回会重播</div>
+
+  <section class="stage" id="stage" aria-label="RM-01 核心指标">
+    <div class="metrics" id="metrics"></div>
+    <p class="rm-note" id="rmNote" hidden>减少动效：不播放点亮，数字直接以最终状态显示（内容始终完整可见）。</p>
+  </section>
+
+  <h2>边界（来自 Signature.md）</h2>
+  <ul class="notes">
+    <li>Geist Pixel 只用于数字与单位，28px 以下改回 Geist Mono；本页手机尺寸取 32px。</li>
+    <li>无发光、无模糊；亮态只用银白与蓝宝石色，唯一的「提亮」是颜色本身短暂更白。</li>
+    <li>真实文案沿用站点首屏指标：<code>140W</code>、<code>64</code>、<code>7x24</code>、<code>30B-200B</code> 及其标签。</li>
+  </ul>
+</div>
+
+<script>
+const METRICS = [
+  { text: '140W', cap: '整机功耗' },
+  { text: '64', cap: '路峰值并发' },
+  { text: '7x24', cap: '工业级运行' },
+  { text: '30B-200B', cap: '模型参数规模' },
+];
+const UNITS = new Set(['W', 'B']);
+const SEPS = new Set(['x', '-']);
+const $ = (s) => document.querySelector(s);
+const metricsEl = $('#metrics');
+const state = { variant: 'sweep', dur: 1200, phone: false, reduced: matchMedia('(prefers-reduced-motion: reduce)').matches };
+$('#rm').checked = state.reduced;
+let timers = [], raf = 0, anims = [];
+
+function mount() {
+  cancelAll();
+  metricsEl.classList.toggle('phone', state.phone);
+  metricsEl.className = `metrics v-${state.variant}` + (state.phone ? ' phone' : '');
+  metricsEl.innerHTML = METRICS.map((m) => `<div class="metric"><span class="fig" role="img" aria-label="${m.text}">${[...m.text].map((c) => `<span class="ch ${UNITS.has(c) ? 'unit' : SEPS.has(c) ? 'sep' : ''}" aria-hidden="true">${c}</span>`).join('')}</span><span class="cap">${m.cap}</span></div>`).join('');
+  $('#rmNote').hidden = !state.reduced;
+  reset();
+}
+function cancelAll() { timers.forEach(clearTimeout); timers = []; cancelAnimationFrame(raf); anims.forEach((a) => a.cancel()); anims = []; dotsToken++; }
+
+/* ---------- reset to the unlit state ---------- */
+function reset() {
+  cancelAll();
+  if (state.reduced) return showFinal();
+  if (state.variant === 'dots') return dots(false);
+  document.querySelectorAll('.ch').forEach((c) => { c.style.backgroundPosition = '100% 0'; c.style.color = ''; });
+}
+function showFinal() {
+  if (state.variant === 'dots') return dots(true);
+  document.querySelectorAll('.ch').forEach((c) => { c.style.backgroundPosition = '0 0'; c.style.color = state.variant === 'fade' ? 'var(--lit)' : ''; });
+}
+
+/* ---------- play ---------- */
+function play() {
+  cancelAll();
+  if (state.reduced) return showFinal();
+  const D = state.dur;
+  if (state.variant === 'dots') return dots(false, true);
+  const figs = [...document.querySelectorAll('.fig')];
+  // Characters are lit one after another across the whole row, left to right.
+  const chars = figs.flatMap((f) => [...f.querySelectorAll('.ch')]);
+  const n = chars.length, each = Math.min(D * 0.34, 420), gap = (D - each) / Math.max(1, n - 1);
+  chars.forEach((c, i) => {
+    const delay = i * gap;
+    if (state.variant === 'sweep') {
+      anims.push(c.animate([{ backgroundPosition: '100% 0' }, { backgroundPosition: '0 0' }], { duration: each, delay, easing: 'linear', fill: 'both' }));
+    } else {
+      anims.push(c.animate([{ color: getComputedStyle(c).getPropertyValue('--dim') }, { color: 'var(--lit)', offset: .55 }, { color: '#fff', offset: .7 }, { color: 'var(--lit)' }], { duration: Math.min(each, 360), delay, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'both' }));
+    }
+  });
+}
+
+/* ---------- dot-matrix variant ---------- */
+const CELL = 38 / 1000; // Geist Pixel Circle: dots sit on a 38-unit lattice (1000 units per em)
+const ROWS = 22, BASE_ROW = 20; // 19 dot rows for digits/caps, baseline on a lattice line, a little headroom
+function sampleDots(text) {
+  const px = 4, size = px / CELL; // render large so one lattice cell is exactly 4px
+  const probe = document.createElement('canvas').getContext('2d');
+  probe.font = `${size}px "Geist Pixel"`;
+  const cols = Math.round(probe.measureText(text).width / px);
+  const cv = document.createElement('canvas'); cv.width = cols * px; cv.height = ROWS * px;
+  const g = cv.getContext('2d', { willReadFrequently: true });
+  g.font = `${size}px "Geist Pixel"`; g.textBaseline = 'alphabetic'; g.fillStyle = '#fff';
+  g.fillText(text, 0, BASE_ROW * px);
+  const img = g.getImageData(0, 0, cv.width, cv.height).data, dots = [];
+  for (let r = 0; r < ROWS; r++) for (let c = 0; c < cols; c++) {
+    const x = Math.floor(c * px + px / 2), y = Math.floor(r * px + px / 2);
+    if (img[(y * cv.width + x) * 4 + 3] > 120) dots.push({ c, r, rnd: Math.random() });
+  }
+  // which character does each lattice column belong to
+  const edges = [...text].map((_, i) => probe.measureText(text.slice(0, i + 1)).width / px);
+  dots.forEach((d) => { const i = edges.findIndex((e) => d.c < e); d.ch = text[i < 0 ? text.length - 1 : i]; d.pos = (d.c + .5) / cols; });
+  return { cols, dots };
+}
+const rgbHex = (c) => (c.startsWith('#') ? c : '#' + c.match(/\d+/g).slice(0, 3).map((n) => (+n).toString(16).padStart(2, '0')).join(''));
+function mixHex(a, b, t) { const p = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)); const A = p(rgbHex(a)), B = p(rgbHex(b)); return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',')})`; }
+const cssVar = (v) => getComputedStyle(metricsEl).getPropertyValue(v).trim();
+let dotsToken = 0;
+
+async function dots(final, run) {
+  const token = ++dotsToken;
+  await document.fonts.load('105px "Geist Pixel"');
+  if (token !== dotsToken) return;
+  const size = parseFloat(cssVar('--fig')) || 56, dpr = devicePixelRatio || 1, cell = size * CELL, D = state.dur;
+  const palette = { num: [cssVar('--n-9'), '#20262c'], unit: [cssVar('--sapphire-300'), '#262c3e'], sep: [cssVar('--n-8'), '#20262c'] };
+  const layers = [...document.querySelectorAll('.fig')].map((fig, idx) => {
+    const { cols, dots } = sampleDots(METRICS[idx].text);
+    fig.querySelectorAll('canvas').forEach((x) => x.remove());
+    const cv = document.createElement('canvas'); cv.setAttribute('aria-hidden', 'true');
+    cv.style.width = cols * cell + 'px'; cv.style.height = ROWS * cell + 'px'; cv.width = Math.ceil(cols * cell * dpr); cv.height = Math.ceil(ROWS * cell * dpr);
+    fig.prepend(cv);
+    dots.forEach((d) => { d.kind = UNITS.has(d.ch) ? 'unit' : SEPS.has(d.ch) ? 'sep' : 'num'; });
+    return { cv, g: cv.getContext('2d'), dots };
+  });
+  const t0 = performance.now(), n = layers.length;
+  function frame(now) {
+    if (token !== dotsToken) return;
+    const t = final ? Infinity : now - t0;
+    let done = true;
+    layers.forEach((L, li) => {
+      const g = L.g; g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, L.cv.width, L.cv.height);
+      L.dots.forEach((d) => {
+        // a left-to-right scan across the whole row, with per-dot jitter
+        const on = (((li + d.pos) / n) * 0.62 + d.rnd * 0.38) * (D - 220);
+        const k = final ? 1 : run ? Math.max(0, Math.min(1, (t - on) / 220)) : 0;
+        if (run && k < 1) done = false;
+        const [lit, dim] = palette[d.kind];
+        g.fillStyle = k >= 1 ? lit : k <= 0 ? dim : k < .55 ? mixHex(dim, lit, k / .55) : k < .75 ? mixHex(lit, '#ffffff', (k - .55) / .2) : mixHex('#ffffff', lit, (k - .75) / .25);
+        g.beginPath(); g.arc((d.c + .5) * cell, (d.r + .5) * cell, cell * .46, 0, 6.2832); g.fill();
+      });
+    });
+    if (run && !done) raf = requestAnimationFrame(frame);
+  }
+  frame(performance.now());
+}
+
+/* ---------- controls and viewport trigger ---------- */
+document.querySelectorAll('input[name=v]').forEach((r) => r.addEventListener('change', () => { state.variant = r.value; mount(); if (visible) play(); }));
+$('#dur').addEventListener('input', (e) => { state.dur = +e.target.value; $('#durOut').textContent = (state.dur / 1000).toFixed(1) + ' s'; });
+$('#phone').addEventListener('change', (e) => { state.phone = e.target.checked; mount(); play(); });
+$('#rm').addEventListener('change', (e) => { state.reduced = e.target.checked; mount(); play(); });
+$('#replay').addEventListener('click', () => { reset(); requestAnimationFrame(() => requestAnimationFrame(play)); });
+let visible = false;
+new IntersectionObserver((es) => es.forEach((e) => { visible = e.isIntersecting; if (visible) { reset(); requestAnimationFrame(() => requestAnimationFrame(play)); } else reset(); }), { threshold: .6 }).observe($('#stage'));
+document.fonts.ready.then(mount);
+</script>
+</body>
+</html>

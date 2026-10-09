@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>硬件模块 优化稿</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+body{margin:0;background:#000}
+.h{width:1440px;box-sizing:border-box;padding:120px 88px 96px;background:#000;color:#F2F4F6;font-family:"Geist","Noto Sans SC",sans-serif;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;gap:64px}
+.h h2,.h h3,.h p{margin:0}
+.k{font-size:11px;letter-spacing:.16em;color:#858C95}
+.cd{position:relative;border-radius:16px;background:#0D0F12;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);overflow:hidden;display:flex;flex-direction:column;padding:36px}
+.cd:before{content:"";position:absolute;left:20px;right:20px;top:0;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.34),rgba(255,255,255,0))}
+.sp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;margin-top:auto;border-top:1px solid rgba(255,255,255,.08)}
+.sp div{padding:22px 0 0;display:flex;flex-direction:column;gap:8px}
+.sp div:nth-child(2n){padding-left:24px;border-left:1px solid rgba(255,255,255,.08)}
+.sp div:nth-child(n+3){margin-top:22px;border-top:1px solid rgba(255,255,255,.08)}
+.sp b{font-family:"Geist Mono",monospace;font-weight:400;font-size:30px;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.sp b i{font-style:normal;font-size:12px;letter-spacing:0;color:#A8B8F0;margin-left:5px}
+.sp span{font-size:12px;color:#858C95}
+.sm{padding:28px;border-radius:16px;background:#0D0F12;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden}
+.sm:before{content:"";position:absolute;left:16px;right:16px;top:0;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.28),rgba(255,255,255,0))}
+</style>
+</helmet>
+<div class="h">
+
+<div style="display:grid;grid-template-columns:1fr 1fr;column-gap:64px;align-items:end">
+<div style="display:flex;flex-direction:column;gap:24px">
+<span class="k">硬件架构</span>
+<h2 style="font-size:56px;font-weight:500;letter-spacing:-.04em;line-height:1.08">各司其职，<br>整机交付</h2>
+</div>
+<p style="font-size:18px;line-height:1.8;color:#B6BCC4;max-width:520px">应用拥有自己的运行空间，推理拥有专用算力。RM-01 把模型、应用和运行环境放进同一台设备，每个模块各司其职，服务你的业务。</p>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px">
+<div class="cd" style="min-height:400px;gap:20px">
+<span class="k">应用模块</span>
+<h3 style="font-size:28px;font-weight:500;letter-spacing:-.02em;line-height:1.25">Agent 与应用模块</h3>
+<p style="font-size:15px;line-height:1.8;color:#B6BCC4;max-width:520px">独立的 x86 计算机为智能体与应用提供专属算力，承担工具调用、代码执行与数据库访问，推理模块专注运行模型。广泛的 x86 软件生态，让现有工具与业务应用更容易接入智能体工作流。</p>
+<div class="sp">
+<div><b>x86</b><span>架构</span></div>
+<div><b>8<i>核</i> 8<i>线程</i></b><span>处理器</span></div>
+<div><b>16–32<i>GB ECC</i></b><span>内存</span></div>
+<div><b>512<i>GB</i>–2<i>TB</i></b><span>NVMe 存储</span></div>
+</div>
+</div>
+<div class="cd" style="min-height:400px;gap:20px">
+<span class="k">推理模块</span>
+<h3 style="font-size:28px;font-weight:500;letter-spacing:-.02em;line-height:1.25">推理模块</h3>
+<p style="font-size:15px;line-height:1.8;color:#B6BCC4;max-width:520px">自研推理引擎与高速互联提升推理效率，算力集中于模型推理与 KV Cache，为更大模型、更长上下文与更高并发留出空间。</p>
+<div class="sp">
+<div><b>64<i>GB</i></b><span>显存（基础）</span></div>
+<div><b>128+128<i>GB</i></b><span>显存（扩展）</span></div>
+<div><b>275<i>TOPS</i></b><span>INT8</span></div>
+<div><b>1200–2070<i>TFLOPS</i></b><span>FP4</span></div>
+</div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px">
+<div class="sm"><span class="k">网络模块</span><p style="font-size:20px;font-weight:500;letter-spacing:-.01em">[沿用现有文案]</p><p style="font-size:13px;line-height:1.7;color:#858C95">[一句话说明]</p></div>
+<div class="sm"><span class="k">加密模块</span><p style="font-size:20px;font-weight:500;letter-spacing:-.01em">[沿用现有文案]</p><p style="font-size:13px;line-height:1.7;color:#858C95">[一句话说明]</p></div>
+<div class="sm"><span class="k">电源与散热</span><p style="font-size:20px;font-weight:500;letter-spacing:-.01em">[沿用现有文案]</p><p style="font-size:13px;line-height:1.7;color:#858C95">[一句话说明]</p></div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1140}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>诊断与优化方案</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+body{margin:0;background:#000}
+.r{width:1440px;box-sizing:border-box;background:#000;color:#F2F4F6;font-family:"Geist","Noto Sans SC",sans-serif;-webkit-font-smoothing:antialiased;padding:96px;display:flex;flex-direction:column;gap:80px}
+.r h1,.r h2,.r h3,.r p{margin:0}
+.k{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#858C95}
+.sec{display:flex;flex-direction:column;gap:28px}
+.hd{display:flex;align-items:baseline;gap:20px;border-top:1px solid rgba(255,255,255,.14);padding-top:24px}
+.hd h2{font-size:28px;font-weight:500;letter-spacing:-.02em}
+.m{font-size:13px;line-height:1.7;color:#B6BCC4}
+.is{display:grid;grid-template-columns:48px 1.1fr 1.5fr 1.5fr 64px;column-gap:28px;padding:22px 0;border-bottom:1px solid rgba(255,255,255,.08);align-items:start}
+.is.h{padding:0 0 12px;border-bottom:1px solid rgba(255,255,255,.14)}
+.is b{font-size:15px;font-weight:500;line-height:1.5}
+.is p{font-size:13px;line-height:1.7;color:#B6BCC4}
+.n{font-size:13px;color:#858C95;font-variant-numeric:tabular-nums}
+.p{display:inline-flex;align-items:center;justify-content:center;height:24px;border-radius:999px;font-size:11px;font-weight:600;box-shadow:inset 0 0 0 1px rgba(255,255,255,.24);color:#F2F4F6}
+.p0{background:#F2F4F6;color:#000;box-shadow:none}
+.sc{display:grid;grid-template-columns:200px 1fr 1fr 80px 80px;column-gap:24px;align-items:center;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.bar{height:6px;border-radius:3px;background:rgba(255,255,255,.08);position:relative}
+.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:#F2F4F6}
+.bar u{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:#A8B8F0;opacity:.55;text-decoration:none}
+.dc{padding:24px;border-radius:12px;background:#0D0F12;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);display:flex;flex-direction:column;gap:10px}
+.dc b{font-size:16px;font-weight:500}
+.tk2{display:grid;grid-template-columns:200px 1fr;column-gap:32px;padding:20px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.tk2 b{font-size:15px;font-weight:500}
+.tk2 p{margin:0}
+.ph{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
+.phc{display:flex;flex-direction:column;gap:10px;padding-top:20px;border-top:1px solid rgba(255,255,255,.24)}
+.phc b{font-size:15px;font-weight:500}
+</style>
+</helmet>
+<div class="r">
+
+<div style="display:flex;flex-direction:column;gap:24px">
+<span class="k">Diagnosis · Proposal</span>
+<h1 style="font-size:72px;font-weight:500;letter-spacing:-.04em;line-height:1.02">诊断与优化方案</h1>
+<p style="font-size:20px;line-height:1.6;color:#B6BCC4;max-width:860px">八个问题，按对「Awwwards 式评审」的影响排序。其中 P0 两项不改变任何视觉，却决定了网站在评审时的第一印象。</p>
+</div>
+
+<div class="sec">
+<div class="hd"><h2>问题与对策</h2><span class="k">Findings</span></div>
+<div>
+<div class="is h"><span class="k">#</span><span class="k">问题</span><span class="k">证据</span><span class="k">对策</span><span class="k">优先级</span></div>
+
+<div class="is"><span class="n">01</span><b>颜色令牌碎片化</b>
+<p>styles.css 里约 40 种白 / 黑透明度（.035–.94）；#9a9da1、#b9bcbe 等灰写死在令牌之外；产品页与支持页的灰各自调。</p>
+<p>建立 10 阶中性色 + 4 级文字 + 3 级线条，旧值一一映射，视觉几乎不变，后续任何调整只改一处。</p><span class="p p0">P0</span></div>
+
+<div class="is"><span class="n">02</span><b>首屏被「语言切换」卡住，且媒体过重</b>
+<p>html.i18n-loading 令 body 在 333KB 的 translations.js 载入前保持 visibility:hidden；hero-bg.mp4 19.6MB、热管理 HD 视频 10.3MB、img4.png 7.5MB，另有多张 2–3MB 的 PNG。（体积为文件实测；实际加载策略待 Network 面板确认。）</p>
+<p>当前语言文案随 HTML 直出，其余语言按需加载；视频保持原分辨率、只优化编码并海报先行；首页 PNG 转 WebP。目标：LCP &lt; 2.0s（待实测）。</p><span class="p p0">P0</span></div>
+
+<div class="is"><span class="n">03</span><b>字号与行高无体系</b>
+<p>仅标题有流体令牌；正文行高 1.9 偏松；规格参数写成一整句灰字，缺少数字层级。</p>
+<p>九级字阶（含流体显示字号）；参数使用等宽数字（tabular-nums）+ 小号单位；中文正文行高收到 1.8。</p><span class="p p0">P0</span></div>
+
+<div class="is"><span class="n">04</span><b>硬件模块卡片层级弱</b>
+<p>卡片大量空白，规格挤在底部 12px 灰字；两张卡内容长度不同导致底部不齐；没有视觉锚点。</p>
+<p>卡内拆成「标题 / 一句话 / 规格网格」三层；规格大数字化；顶边加一条高光细线模拟倒角。见 05 号画板。</p><span class="p">P1</span></div>
+
+<div class="is"><span class="n">05</span><b>缺少标志性点缀色</b>
+<p>全站纯中性。但产品自身有强辨识度的颜色：蓝宝石的冰蓝紫、热管理的冷暖光——界面没有呼应它们。</p>
+<p>引入单一「蓝宝石信号色」，只用于焦点、选中、进度、关键数值单位，不做渐变与发光。<b style="font-weight:600;color:#A8B8F0">已确认（D1）</b>。</p><span class="p">P1</span></div>
+
+<div class="is"><span class="n">06</span><b>首屏层次平</b>
+<p>指标行 12px 小字埋在视频底部；标题与副标题字号接近；缺入场编排。</p>
+<p>RM-01 字标放大到 168px 作为视觉锚；指标行数字化；文字逐行遮罩入场。见 04 / 06 号画板。</p><span class="p">P1</span></div>
+
+<div class="is"><span class="n">07</span><b>动效只有一条缓动曲线</b>
+<p>仅 --motion 一个令牌；没有时长阶梯、入场编排、悬停与焦点反馈的统一规则。</p>
+<p>5 档时长 + 3 条缓动；入场「行遮罩上移」；数字计数；链接下划线展开；全部遵守 reduced-motion。</p><span class="p">P1</span></div>
+
+<div class="is" style="border-bottom:0"><span class="n">08</span><b>全屏点阵叠层</b>
+<p>body::after 在整页叠 2.2% 不透明度、screen 混合的点阵 + 横线，肉眼几乎不可见，却多占一个全屏合成层。</p>
+<p>要么删除，要么换成 3–4% 的静态颗粒（单张平铺图，无混合模式）。<b style="font-weight:600;color:#A8B8F0">待确认（D4）</b>。</p><span class="p">P2</span></div>
+</div>
+</div>
+
+<div class="sec">
+<div class="hd"><h2>自评分：三个奖项</h2><span class="k">Self-assessment · 我的主观判断，不是预测</span></div>
+<div><div style="margin-bottom:40px"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px"><h3 style="margin:0;font-size:22px;font-weight:500">Awwwards</h3><span class="k">权重 设计40 / 可用性30 / 创意20 / 内容10 · 满分 10</span></div><div class="sc"><b style="font-size:15px;font-weight:500">设计</b><div class="bar"><u style="width:90.0%"></u><i style="width:65.0%"></i></div><p class="m">色阶、字阶、细节密度、版面节奏；本轮新增 Signature 语言。</p><span class="n" style="text-align:right"></span><span class="n" style="text-align:right">6.5 → 9.0</span></div><div class="sc"><b style="font-size:15px;font-weight:500">可用性</b><div class="bar"><u style="width:85.0%"></u><i style="width:75.0%"></i></div><p class="m">首屏性能、语言加载、焦点与键盘、移动端。</p><span class="n" style="text-align:right"></span><span class="n" style="text-align:right">7.5 → 8.5</span></div><div class="sc"><b style="font-size:15px;font-weight:500">创意</b><div class="bar"><u style="width:85.0%"></u><i style="width:70.0%"></i></div><p class="m">滚动分解已强；新增棱镜、LED 点阵数字、倒角边光。</p><span class="n" style="text-align:right"></span><span class="n" style="text-align:right">7.0 → 8.5</span></div><div class="sc" style="border-bottom:0"><b style="font-size:15px;font-weight:500">内容</b><div class="bar"><u style="width:80.0%"></u><i style="width:70.0%"></i></div><p class="m">文案本轮不改，仅改呈现。</p><span class="n" style="text-align:right"></span><span class="n" style="text-align:right">7.0 → 8.0</span></div><p class="m" style="max-width:940px;margin-top:12px">加权：现状约 6.95，目标约 8.65。</p></div><div style="margin-bottom:40px"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px"><h3 style="margin:0;font-size:22px;font-weight:500">Webby Awards</h3><span class="k">六项评审标准 · 1–5 分 · 官方未公布权重，此处等权</span></div><div class="sc"><b style="font-size:15px;font-weight:500">内容 Content</b><div class="bar"><u style="width:80.0%"></u><i style="width:70.0%"></i></div><p class="m">文案与规格表达，呈现更清晰。</p><span class="n" style="text-align:right"></span><span class="n" style="text-align:right">3.5 → 4.0</span></div><div class="sc"><b style="font-size:15px;font-weight:500">结构与导航</b><div class="bar"><u style="width:90.0%"></u><i style="width:80.0%"></i></div><p class="m">六项导航稳定；新增指南目录与章节遥测。</p><span class="n" style="text-align:right"></span><span class="n" style="text-align:right">4.0 → 4.5</span></div><div class="sc"><b style="font-size:15px;font-weight:500">视觉设计</b><div class="bar"><u style="width:94.0%"></u><i style="width:70.0%"></i></div><p class="m">提升空间最大的一项。</p><span class="n" style="text-align:right"></span><span class="n" style="text-align:right">3.5 → 4.7</span></div><div class="sc"><b style="font-size:15px;font-weight:500">功能 Functionality</b><div class="bar"><u style="width:88.00000000000001%"></u><i style="width:76.0%"></i></div><p class="m">语言加载、搜索（⌘K）、下载表格。</p><span class="n" style="text-align:right"></span><span class="n" style="text-align:right">3.8 → 4.4</span></div><div class="sc"><b style="font-size:15px;font-weight:500">交互 Interactivity</b><div class="bar"><u style="width:90.0%"></u><i style="width:76.0%"></i></div><p class="m">边光跟随、点阵点亮、棱镜转场。</p><span class="n" style="text-align:right"></span><span class="n" style="text-align:right">3.8 → 4.5</span></div><div class="sc" style="border-bottom:0"><b style="font-size:15px;font-weight:500">整体体验</b><div class="bar"><u style="width:90.0%"></u><i style="width:72.0%"></i></div><p class="m">各页统一后的整体感。</p><span class="n" style="text-align:right"></span><span class="n" style="text-align:right">3.6 → 4.5</span></div><p class="m" style="max-width:940px;margin-top:12px">等权均值：现状约 3.7，目标约 4.5。分数是我的主观判断。</p></div><div style="margin-bottom:40px"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px"><h3 style="margin:0;font-size:22px;font-weight:500">FWA（代理指标，非官方）</h3><span class="k">FWA 未公开评分细则，只强调创意与大胆，此处自拟五项</span></div><div class="sc"><b style="font-size:15px;font-weight:500">创意与大胆</b><div class="bar"><u style="width:85.0%"></u><i style="width:65.0%"></i></div><p class="m">棱镜、点阵数字等源自产品本身的手法。</p><span class="n" style="text-align:right"></span><span class="n" style="text-align:right">6.5 → 8.5</span></div><div class="sc"><b style="font-size:15px;font-weight:500">视觉</b><div class="bar"><u style="width:90.0%"></u><i style="width:70.0%"></i></div><p class="m">冷灰色阶 + 蓝宝石细线。</p><span class="n" style="text-align:right"></span><span class="n" style="text-align:right">7.0 → 9.0</span></div><div class="sc"><b style="font-size:15px;font-weight:500">交互与动效</b><div class="bar"><u style="width:85.0%"></u><i style="width:75.0%"></i></div><p class="m">滚动叙事已强，补入场编排。</p><span class="n" style="text-align:right"></span><span class="n" style="text-align:right">7.5 → 8.5</span></div><div class="sc"><b style="font-size:15px;font-weight:500">技术与性能</b><div class="bar"><u style="width:80.0%"></u><i style="width:60.0%"></i></div><p class="m">首屏加载与媒体编码，需实测。</p><span class="n" style="text-align:right"></span><span class="n" style="text-align:right">6.0 → 8.0</span></div><div class="sc" style="border-bottom:0"><b style="font-size:15px;font-weight:500">内容</b><div class="bar"><u style="width:80.0%"></u><i style="width:70.0%"></i></div><p class="m">同上。</p><span class="n" style="text-align:right"></span><span class="n" style="text-align:right">7.0 → 8.0</span></div><p class="m" style="max-width:940px;margin-top:12px">这一组只用作自检参考，不应被当成 FWA 的评分结果。</p></div><p class="m" style="max-width:940px">白条为现状，蓝条为目标。静态稿无法证明性能与动效，这两项（可用性、技术与性能、交互）的目标分要等实机测量后才算数。</p></div>
+</div>
+
+<div class="sec">
+<div class="hd"><h2>决定记录</h2><span class="k">Decisions · 2026-10-03 更新</span></div>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px">
+<div class="dc"><span class="k">D1 · 点缀色</span><b>已同意：蓝宝石信号色</b><p class="m">只作细线、焦点、选中和数值单位；不渐变、不发光。图册页不使用。</p></div>
+<div class="dc"><span class="k">D2 · 数据字体</span><b>已同意：Geist Mono</b><p class="m">仅用于参数数值与计数，单位用 sapphire-300。</p></div>
+<div class="dc"><span class="k">D3 · 首屏版式</span><b>已同意：RM-01 字标作视觉锚</b><p class="m">保留视频与自动播放，只改文字层级与指标行。</p></div>
+<div class="dc"><span class="k">D4 · 静态颗粒</span><b>已同意：静态颗粒</b><p class="m">给纯黑背景加一层几乎看不见的细噪点，让大面积黑更有质感、渐变不出现色带。只作用于首页与模型页，图册、下载、指南不加。</p></div>
+<div class="dc"><span class="k">D5 · 媒体</span><b>已同意，范围收窄如右</b><p class="m">视频分辨率不变；PNG 转 WebP；编码优化只限首页；图册图片完全不动（保留最高清与 HDR）。</p></div>
+<div class="dc"><span class="k">D6 · 支持页底色</span><b>已同意：抬升黑 #0D0F12</b><p class="m">指南与下载页原用借来的 #141618，不在色阶内。下载与指南两页统一改用 n-2，面板用 n-3。</p></div>
+<div class="dc"><span class="k">D7 · 点阵数字字体</span><b>已同意：Geist Pixel</b><p class="m">与 Geist 同一家族，OFL 开源，只用于大数字与计数。图册显示照片真实 EXIF 也已同意。</p></div>
+<div class="dc" style="background:transparent"><span class="k">原则</span><b>图册图片是禁区</b><p class="m">任何滤镜、叠层、压缩、尺寸变化都不应用到图册照片本身，叠层颗粒也不覆盖其上。</p></div>
+</div>
+</div>
+
+<div class="sec">
+<div class="hd"><h2>媒体策略（按 D5 修订）</h2><span class="k">Media policy</span></div>
+<div>
+<div class="tk2"><b>首页视频</b><p class="m">分辨率不变（你试过降分辨率效果很差）。只在编码层面做功课：评估更高效的编码参数（同分辨率、同观感下降低码率）、关键帧间隔、faststart、海报先行、仅在进入视口时加载非首屏视频。每一版都要与原片并排比对，观感不如原片则放弃。</p></div>
+<div class="tk2"><b>首页 PNG</b><p class="m">转 WebP。仅限首页使用的 PNG（img3 / img4、散热叶片与模块图、握卡海报等）；先确认每张的实际引用位置，不动被其他页面引用的文件。</p></div>
+<div class="tk2"><b>图册 11 张照片</b><p class="m">保持原文件、原分辨率、原 HDR 信息。可做的只有「不改文件」的加载优化：预取相邻一张、解码提示、缓存头。是否加载策略有问题，需实测后才下结论。</p></div>
+<div class="tk2" style="border-bottom:0"><b>其他页面</b><p class="m">模型页、下载页、指南页的图片与视频本轮不动；如要动，先单独列出请你确认。</p></div>
+</div>
+</div>
+
+<div class="sec">
+<div class="hd"><h2>实施节奏</h2><span class="k">Roadmap</span></div>
+<div class="ph">
+<div class="phc"><span class="k">阶段 0</span><b>令牌与性能</b><p class="m">色阶、字阶、动效令牌；媒体与首屏加载。视觉零变化。</p></div>
+<div class="phc"><span class="k">阶段 1</span><b>首屏与硬件</b><p class="m">按 04 / 05 / 06 落地，桌面与手机。</p></div>
+<div class="phc"><span class="k">阶段 2</span><b>动效编排</b><p class="m">入场、数字、悬停、焦点；reduced-motion 全覆盖。</p></div>
+<div class="phc"><span class="k">阶段 3</span><b>其余章节与子页</b><p class="m">热管理、工艺、图册、下载、指南同一阶梯。</p></div>
+<div class="phc"><span class="k">阶段 4</span><b>自检循环</b><p class="m">Lighthouse、对比度、六语言、320–1920px、键盘；按上面的评分表逐项复盘。</p></div>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3180}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>阅读页底色对比</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+body{margin:0;background:#000}
+.r{width:1440px;box-sizing:border-box;background:#000;color:#F2F4F6;font-family:"Geist","Noto Sans SC",sans-serif;-webkit-font-smoothing:antialiased;padding:96px;display:flex;flex-direction:column;gap:48px}
+.r h1,.r h2,.r p{margin:0}
+.k{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#858C95}
+.cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-radius:16px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.c{padding:40px 36px;display:flex;flex-direction:column;gap:16px}
+.c h2{font-size:26px;font-weight:500;letter-spacing:-.02em;margin-top:8px!important}
+.c p{font-size:16px;line-height:1.85;color:#B6BCC4}
+.c code{font-family:"Geist Mono",monospace;font-size:13px;color:#F2F4F6;padding:2px 7px;border-radius:4px;background:rgba(255,255,255,.06)}
+.tag{display:flex;flex-direction:column;gap:4px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.1)}
+.tag b{font-size:15px;font-weight:500}
+.tag span{font-family:"Geist Mono",monospace;font-size:12px;color:#858C95}
+.m{font-size:13px;line-height:1.75;color:#B6BCC4}
+</style>
+</helmet>
+<div class="r">
+
+<div style="display:flex;flex-direction:column;gap:20px">
+<span class="k">Reading surface · D6</span>
+<h1 style="font-size:56px;font-weight:500;letter-spacing:-.04em;line-height:1.1">指南 / 下载的底色，该是什么</h1>
+<p class="m" style="max-width:860px;font-size:15px">同一段真实指南文字，放在三种底色上。左：现在使用的 #141618（借自其他页面）；中：纳入新色阶的「抬升黑」#0D0F12；右：产品页的纯黑 #000。</p>
+</div>
+
+<div class="cols">
+
+<div class="c" style="background:#141618">
+<div class="tag"><b>现状 · #141618</b><span>文字 #B6BCC4 · 对比度 9.5 : 1 · 不在色阶内</span></div>
+<h2>进入 WebUI</h2>
+<p>首次使用默认密码登录时，页面会显示“安全提醒”。可以在弹窗中输入当前密码和新密码，随后点击“立即修改”。新密码需要输入两次并保持一致。</p>
+<p>用户名保持为 <code>admin</code>，输入设备提供的 admin 密码。登录成功后，右上角会显示当前用户名。</p>
+</div>
+
+<div class="c" style="background:#0D0F12">
+<div class="tag"><b>推荐 · #0D0F12（n-2）</b><span>文字 #B6BCC4 · 对比度 10.0 : 1 · 色阶内</span></div>
+<h2>进入 WebUI</h2>
+<p>首次使用默认密码登录时，页面会显示“安全提醒”。可以在弹窗中输入当前密码和新密码，随后点击“立即修改”。新密码需要输入两次并保持一致。</p>
+<p>用户名保持为 <code>admin</code>，输入设备提供的 admin 密码。登录成功后，右上角会显示当前用户名。</p>
+</div>
+
+<div class="c" style="background:#000">
+<div class="tag"><b>产品页 · #000（n-0）</b><span>文字 #B6BCC4 · 对比度 11.0 : 1 · 色阶内</span></div>
+<h2>进入 WebUI</h2>
+<p>首次使用默认密码登录时，页面会显示“安全提醒”。可以在弹窗中输入当前密码和新密码，随后点击“立即修改”。新密码需要输入两次并保持一致。</p>
+<p>用户名保持为 <code>admin</code>，输入设备提供的 admin 密码。登录成功后，右上角会显示当前用户名。</p>
+</div>
+
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:36px">
+<p class="m"><b style="color:#F2F4F6;font-weight:500">现状。</b>阅读不吃力，但这个灰是「另一个页面的颜色」，不属于品牌色阶；从纯黑的产品页切换过来，是一次突兀的换色，像换了一个网站。</p>
+<p class="m"><b style="color:#F2F4F6;font-weight:500">推荐。</b>仍比纯黑略抬升，缓解长文阅读时亮字在纯黑上的「发光感」，但与产品页同一色相，交接是自然的过渡。让页面不枯燥，靠的是结构（目录、步骤、提示块），而不是换底色。</p>
+<p class="m"><b style="color:#F2F4F6;font-weight:500">纯黑。</b>与产品页完全统一，最「高级」，但 16px 的中文细笔画在纯黑上更容易刺眼。如果你更想要统一，可以选它，正文色保持 #B6BCC4，不用纯白。</p>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

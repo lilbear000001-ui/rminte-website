@@ -382,8 +382,8 @@
           model:'RMQ3x · RMQ4',
           zh:'上下文与并发调度',
           en:'Context & concurrency scheduling',
-          benefitZh:'复用前序计算，合并并发请求，让有限内存与带宽承接更多任务。',
-          benefitEn:'Reuse prior computation and batch concurrent requests so finite memory and bandwidth can serve more tasks.',
+          benefitZh:'复用前序计算，合并并发请求，让内存与带宽承接更多任务。',
+          benefitEn:'Reuse prior computation and batch concurrent requests so memory and bandwidth can serve more tasks.',
           detailZh:[
             '分页 KV Cache 与递归状态管理保存各请求的计算进度，前缀缓存复用重复输入。长上下文采用分块预填充，并通过内存与 SSD 分层存储管理历史状态；流式注意力分批读取 SSD 中的键值块，合并各部分的注意力结果，扩展上下文容量。',
             '等长短输入可合并为一次批量 prefill，多个请求的输出投影也合并计算，减少权重重复读取和首字等待。连续批处理在生成阶段复用计算资源，各请求保留自己的上下文与状态，让文档处理、多轮交互和并发任务共用一套推理服务。'
@@ -449,7 +449,7 @@
         svg.firstChild.setAttribute('d',close ? 'M6 6l12 12M18 6 6 18' : 'M5 12h14m-5-5 5 5-5 5'); return svg;
       }
       cases.forEach((item,index) => {
-        const button = document.createElement('button'); button.type = 'button'; button.className = 'mp-case-card';
+        const button = document.createElement('button'); button.type = 'button'; button.className = 'mp-case-card'; button.setAttribute('data-bevel','');
         button.id = `case-${index}`; button.setAttribute('aria-expanded','false'); button.setAttribute('aria-controls','caseDetail');
         const industry = document.createElement('span'); industry.className = 'mp-case-industry';
         industry.append(caseIcon(item.icon),bilingual('span',item.zh.name,item.en.name));
@@ -509,7 +509,9 @@
         details.append(summary,detail); document.getElementById('optimizations').append(details);
       }
       document.querySelectorAll('[data-cells]').forEach(grid => {
-        for (let i=0;i<Number(grid.dataset.cells);i++) grid.append(document.createElement('i'));
+        for (let i=0;i<Number(grid.dataset.cells);i++) {
+          const cell = document.createElement('i'); cell.style.setProperty('--k',i); grid.append(cell);
+        }
       });
       document.querySelectorAll('[data-model]').forEach(button => {
         const href = modelLinks[button.dataset.model];
@@ -595,6 +597,7 @@
           if (selected && focus) tab.focus();
         });
         updateEngineArt();
+        if (engine === 'cpp') countRunnerMemory();
       }
       engineTabs.forEach((tab,index) => {
         tab.addEventListener('click',() => selectEngine(tab.dataset.engineTab));
@@ -606,5 +609,81 @@
           if (target) { event.preventDefault(); selectEngine(target.dataset.engineTab,true); }
         });
       });
+      // Engine diagram motion (D9): five light blocks travel through the layers (the keyframes are in models.css), and the runner's
+      // "2 MB" counts up when the diagram comes into view and whenever C++ is chosen. The CSS animations run only while data-live is set.
+      const engineArt = document.getElementById('engineArt');
+      const memoryNumber = engineArt.querySelector('.mp-engine-mb-num');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let memoryFrame = 0;
+      for (let k=0;k<5;k++) {
+        const token = document.createElement('span'); token.className = 'mp-token';
+        token.style.left = `${14+k*17}%`; token.style.top = `${40+((k*37)%30)}%`; token.style.setProperty('--d',`${k*.55}s`);
+        engineArt.querySelector('.mp-engine-tokens').append(token);
+      }
+      function countRunnerMemory() {
+        window.cancelAnimationFrame(memoryFrame);
+        if (reduceMotion.matches) { memoryNumber.textContent = '2'; return; }
+        const start = performance.now();
+        (function step(now) {
+          const progress = Math.min(1,Math.max(0,(now-start)/1400));
+          memoryNumber.textContent = (2*(1-Math.pow(1-progress,3))).toFixed(progress < 1 ? 1 : 0);
+          if (progress < 1) memoryFrame = window.requestAnimationFrame(step);
+        })(start);
+      }
+      if (!reduceMotion.matches) memoryNumber.textContent = '0';
+      let diagramShown = false;
+      new IntersectionObserver(entries => {
+        const entry = entries[entries.length-1];
+        engineArt.toggleAttribute('data-live',entry.isIntersecting);
+        const shown = entry.intersectionRatio >= .4;
+        if (shown && !diagramShown && engine === 'cpp') countRunnerMemory();
+        diagramShown = shown;
+      },{ threshold:[0,.4] }).observe(engineArt);
+      // Hero glass motion (D9): on RMQ4 a few of the blocks light up and fade at random. Every 0.7 s each block flips with a 28% chance, and when
+      // more than six are lit one block picked at random is switched off. The idle drift and the sweeps are CSS. It all runs only while the hero art is on screen.
+      (function setupHeroGlass() {
+        const art = document.querySelector('.mp-hero-art');
+        const tiles = Array.from(art.querySelectorAll('.mp-glass-tile'));
+        const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let timer = 0;
+        function blink() {
+          tiles.forEach(tile => { if (Math.random() < .28) tile.classList.toggle('on'); });
+          if (tiles.filter(tile => tile.classList.contains('on')).length > 6) tiles[Math.floor(Math.random() * tiles.length)].classList.remove('on');
+        }
+        new IntersectionObserver(entries => {
+          const live = entries[0].isIntersecting;
+          art.toggleAttribute('data-live',live);
+          window.clearInterval(timer);
+          if (live && !still && tiles.length) timer = window.setInterval(blink,700);
+        }).observe(art);
+      })();
+      // LED illustration inside each model card: Dense lights every dot, MoE only a few "experts" that move on (not a parameter count)
+      (function setupLedIllustrations() {
+        const COLS = 26, ROWS = 3;
+        const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        document.querySelectorAll('.mp-led').forEach(led => {
+          const grid = led.querySelector('.mp-led-grid');
+          for (let row = 0; row < ROWS; row++) for (let col = 0; col < COLS; col++) {
+            const dot = document.createElement('i');
+            dot.style.setProperty('--c', col); dot.style.setProperty('--r', row);
+            grid.append(dot);
+          }
+          if (led.dataset.led !== 'moe') return;
+          const dots = Array.from(grid.children);
+          const pick = () => {
+            dots.forEach(dot => dot.classList.remove('is-lit'));
+            const lit = new Set();
+            while (lit.size < 5) lit.add(Math.floor(Math.random() * dots.length));
+            lit.forEach(index => dots[index].classList.add('is-lit'));
+          };
+          pick();
+          if (still) return;
+          let timer = 0;
+          new IntersectionObserver(entries => {
+            window.clearInterval(timer);
+            if (entries[0].isIntersecting) timer = window.setInterval(pick, 1100);
+          }).observe(led);
+        });
+      })();
       setLanguage(RM_I18N.initial());
     })();
