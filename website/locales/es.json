@@ -512,5 +512,9 @@
   "Bandwidth and cache": "Ancho de banda y cachés",
   "Layered view of inference software and CUDA: one interface, two inference paths": "Vista por capas del software de inferencia y CUDA: una misma interfaz, dos rutas de inferencia",
   "Paged KV cache and tiered SSD storage: concurrent requests share the cache": "Caché KV paginada y almacenamiento SSD por niveles: las solicitudes simultáneas comparten la caché",
-  "Kernel fusion: three reads and writes merged into one": "Fusión de kernels: tres lecturas y escrituras se unen en una"
+  "Kernel fusion: three reads and writes merged into one": "Fusión de kernels: tres lecturas y escrituras se unen en una",
+  "Daily operations guide for Admin users · Chinese and English · 25 pages · PDF · 656 KB · 2026-10-10": "Guía de operaciones diarias para admin · Chino e inglés · 25 páginas · PDF · 656 KB · 2026-10-10",
+  "Operations guide for root users · Chinese and English · 52 pages · PDF · 810 KB · 2026-10-10": "Guía de operaciones para root · Chino e inglés · 52 páginas · PDF · 810 KB · 2026-10-10",
+  "Security Page operations, verification, and recovery · Chinese · 13 pages · PDF · 411 KB · 2026-10-09": "Operaciones, verificación y recuperación de la página de seguridad · Chino · 13 páginas · PDF · 411 KB · 2026-10-09",
+  "Security Page operations, verification, and recovery · English · 16 pages · PDF · 142 KB · 2026-10-09": "Operaciones, verificación y recuperación de la página de seguridad · Inglés · 16 páginas · PDF · 142 KB · 2026-10-09"
 }
