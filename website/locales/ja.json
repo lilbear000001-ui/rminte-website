@@ -512,5 +512,9 @@
   "Bandwidth and cache": "帯域とキャッシュ",
   "Layered view of inference software and CUDA: one interface, two inference paths": "推論ソフトウェアと CUDA の階層構成：共通のインターフェースと 2 つの推論ルート",
   "Paged KV cache and tiered SSD storage: concurrent requests share the cache": "ページ化 KV キャッシュと SSD の階層ストレージ：複数の同時リクエストがキャッシュを共有",
-  "Kernel fusion: three reads and writes merged into one": "演算融合：3 回の読み書きを 1 回にまとめる"
+  "Kernel fusion: three reads and writes merged into one": "演算融合：3 回の読み書きを 1 回にまとめる",
+  "Daily operations guide for Admin users · Chinese and English · 25 pages · PDF · 656 KB · 2026-10-10": "Admin ユーザー向け日常操作ガイド · 中国語・英語 · 25 ページ · PDF · 656 KB · 2026-10-10",
+  "Operations guide for root users · Chinese and English · 52 pages · PDF · 810 KB · 2026-10-10": "root ユーザー向け運用操作ガイド · 中国語・英語 · 52 ページ · PDF · 810 KB · 2026-10-10",
+  "Security Page operations, verification, and recovery · Chinese · 13 pages · PDF · 411 KB · 2026-10-09": "セキュリティページの操作・検証・復旧 · 中国語 · 13 ページ · PDF · 411 KB · 2026-10-09",
+  "Security Page operations, verification, and recovery · English · 16 pages · PDF · 142 KB · 2026-10-09": "セキュリティページの操作・検証・復旧 · 英語 · 16 ページ · PDF · 142 KB · 2026-10-09"
 }

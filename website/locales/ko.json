@@ -512,5 +512,9 @@
   "Bandwidth and cache": "대역폭과 캐시",
   "Layered view of inference software and CUDA: one interface, two inference paths": "추론 소프트웨어와 CUDA의 계층 구조: 하나의 인터페이스, 두 가지 추론 경로",
   "Paged KV cache and tiered SSD storage: concurrent requests share the cache": "페이지 단위 KV 캐시와 SSD 계층형 저장: 여러 동시 요청이 캐시를 공유",
-  "Kernel fusion: three reads and writes merged into one": "연산 융합: 세 번의 읽기·쓰기를 한 번으로 합침"
+  "Kernel fusion: three reads and writes merged into one": "연산 융합: 세 번의 읽기·쓰기를 한 번으로 합침",
+  "Daily operations guide for Admin users · Chinese and English · 25 pages · PDF · 656 KB · 2026-10-10": "Admin 사용자 일상 운영 가이드 · 중국어·영어 · 25페이지 · PDF · 656 KB · 2026-10-10",
+  "Operations guide for root users · Chinese and English · 52 pages · PDF · 810 KB · 2026-10-10": "root 사용자 운영 가이드 · 중국어·영어 · 52페이지 · PDF · 810 KB · 2026-10-10",
+  "Security Page operations, verification, and recovery · Chinese · 13 pages · PDF · 411 KB · 2026-10-09": "보안 페이지 운영·검증·복구 · 중국어 · 13페이지 · PDF · 411 KB · 2026-10-09",
+  "Security Page operations, verification, and recovery · English · 16 pages · PDF · 142 KB · 2026-10-09": "보안 페이지 운영·검증·복구 · 영어 · 16페이지 · PDF · 142 KB · 2026-10-09"
 }
